@@ -8,7 +8,7 @@ import HomeU from "./User/HomeU";
 import CheckInfo from "./Dietitian/CheckInfo";
 import AddPatient from "./Dietitian/AddPatient";
 import DietChart from "./User/DietChart";
-import Dashboard from "./Dietitian/dashboard";
+import Dashboard from "./Dietitian/Dashboard";
 import ProfileU from "./User/ProfileU";
 import MyDietChart from "./User/MyDietChart";
 import CreateOwnChart from "./User/CreateOwnChart";
