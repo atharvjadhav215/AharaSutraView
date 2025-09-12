@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence, color } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 const DOSHAS = [
   {
     type: "Vata",
@@ -379,9 +379,9 @@ const DayChart = ({ plan }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -6 }}
       transition={{ duration: 0.45 }}
-      className="bg-white rounded-2xl p-6 shadow-lg"
+      className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg"
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
         <div>
           <div className="text-xl font-semibold text-emerald-900">
             {plan.name}
@@ -393,7 +393,7 @@ const DayChart = ({ plan }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {Object.entries(plan.meals).map(([mealKey, items]) => {
           const calories = items.reduce((s, it) => s + (it.calories || 0), 0);
           return (
@@ -402,11 +402,11 @@ const DayChart = ({ plan }) => {
               initial={{ scale: 0.995, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.06 }}
-              className="bg-[#f6f3e8]/60 rounded-lg p-4"
+              className="bg-[#f6f3e8]/60 rounded-lg p-3 sm:p-4"
             >
-              <div className="flex items-start justify-between">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
                 <div>
-                  <div className="font-semibold text-emerald-900 capitalize">
+                  <div className="font-semibold text-emerald-900 capitalize text-xl">
                     {mealKey} • {calories} kcal
                   </div>
                   <div className="text-xl text-emerald-800/90">
@@ -461,12 +461,12 @@ const DayChart = ({ plan }) => {
                 ))}
               </div>
 
-              <div className="mt-4 flex gap-2">
-                <button className="px-3 py-1 bg-white rounded shadow text-xl">
+              <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row gap-2">
+                <button className="px-3 py-1 bg-white rounded shadow text-xl flex-1 sm:flex-none">
                   Swap
                 </button>
                 <button
-                  className="px-3 py-1 bg-emerald-600 text-white rounded shadow text-xl"
+                  className="px-3 py-1 bg-emerald-600 text-white rounded shadow text-xl flex-1 sm:flex-none"
                   onClick={() =>
                     navigator.clipboard?.writeText(itineraryCopy(plan))
                   }
@@ -484,11 +484,11 @@ const DayChart = ({ plan }) => {
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.08, duration: 0.45 }}
-        className="mt-6 bg-white rounded-xl p-4 shadow"
+        className="mt-4 sm:mt-6 bg-white rounded-xl p-3 sm:p-4 shadow"
       >
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2 sm:gap-0">
           <div>
-            <div className="text-2xl font-semibold text-emerald-900">
+            <div className="text-xl sm:text-2xl font-semibold text-emerald-900">
               Full-day Nutrition Summary
             </div>
             <div className="text-xl text-emerald-800/90">
@@ -498,15 +498,15 @@ const DayChart = ({ plan }) => {
           <div className="text-xl text-gray-600">Estimated values</div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-4">
           <div className="bg-[#f6f3e8] rounded-lg p-3">
             <div className="text-xl text-emerald-900 font-semibold">
               Calories
             </div>
-            <div className="text-2xl font-extrabold text-emerald-900">
+            <div className="text-xl sm:text-2xl font-extrabold text-emerald-900">
               {totals.calories} kcal
             </div>
-            <div className="text-lg text-gray-600 mt-1">
+            <div className="text-xl text-gray-600 mt-1">
               Daily energy from all meals
             </div>
           </div>
@@ -559,37 +559,37 @@ const DayChart = ({ plan }) => {
         </div>
 
         <div className="bg-white rounded-lg p-3 border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-2 sm:gap-0">
             <div className="text-xl font-semibold text-emerald-900">
               Micronutrient hints
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-xl text-gray-600">
               Based on included ingredients
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="text-xl">
               <div className="text-emerald-900 font-medium">Iron</div>
-              <div className="text-gray-700 text-lg">{totals.micron.iron}</div>
+              <div className="text-gray-700 text-xl">{totals.micron.iron}</div>
             </div>
 
             <div className="text-xl">
               <div className="text-emerald-900 font-medium">Calcium</div>
-              <div className="text-gray-700 text-lg">
+              <div className="text-gray-700 text-xl">
                 {totals.micron.calcium}
               </div>
             </div>
 
             <div className="text-xl">
               <div className="text-emerald-900 font-medium">Vitamin C</div>
-              <div className="text-gray-700 text-lg">
+              <div className="text-gray-700 text-xl">
                 {totals.micron.vitaminC}
               </div>
             </div>
           </div>
 
-          <div className="mt-3 text-lg text-gray-600">
+          <div className="mt-3 text-xl text-gray-600">
             Note: These are estimated values (macro split defaults). For
             clinical precision, use a nutrient database or upload exact recipe
             macros.
@@ -615,11 +615,6 @@ export default function DietChart() {
   const [selected, setSelected] = useState(0);
   const active = DOSHAS[selected];
 
-  // small animated counters for the plate percent totals (demo-friendly)
-  const plateTotal = useMemo(
-    () => active.plate.reduce((s, p) => s + p.value, 0),
-    [active]
-  );
   useEffect(() => {
     // no-op: placeholder in case animation hook needed later
   }, [selected]);
@@ -638,11 +633,6 @@ export default function DietChart() {
   const filteredPlans = useMemo(() => {
     if (!showOnlyMatching || ingredientFilter.length === 0) return PLANS;
     return PLANS.filter((p) => {
-      const planIngredients = new Set(
-        PLANS.flatMap((pl) => Object.values(pl.meals))
-          .flat()
-          .flatMap((m) => m.items)
-      );
       // check whether plan contains all selected ingredients
       const items = new Set(
         Object.values(p.meals).flatMap((arr) => arr.flatMap((m) => m.items))
@@ -654,44 +644,44 @@ export default function DietChart() {
   const selectedPlan = PLANS.find((p) => p.id === selectedPlanId) || PLANS[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8]  p-6">
+    <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8] p-2 sm:p-4 md:p-6">
       <Link to="/dhome">
-        <button className="px-4 py-3 mt-5 ml-5 rounded-full bg-white border text-emerald-700 text-lg disabled:opacity-50">
+        <button className="px-3 sm:px-4 py-2 mt-20 sm:py-3 mb-3 sm:mt-4 md:mt-5 ml-2 sm:ml-3 md:ml-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
           ← Back to Home
         </button>
       </Link>
-      <div className="max-w-8xl mx-auto ">
+      <div className="max-w-8xl mx-auto">
         <motion.header
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-8"
+          className="text-center mb-6 sm:mb-8"
         >
-          <h1 className="text-4xl font-extrabold  text-emerald-900">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-emerald-900">
             Ayurvedic Dosha Diet & Daily Plans
           </h1>
-          <p className="mt-2 text-emerald-800/90">
+          <p className="mt-2 text-xl text-emerald-800/90">
             Select dosha charts above and below pick a daily meal plan. Filter
             plans by ingredients and preview recipes.
           </p>
         </motion.header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Left: Dosha selector (existing) */}
-          <div className="lg:col-span-1 text-xl space-y-4">
+          <div className="lg:col-span-1 text-xl space-y-3 sm:space-y-4">
             <motion.div
               initial="hidden"
               animate="visible"
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-3 sm:gap-4"
             >
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-3 gap-3">
                 {DOSHAS.map((d, i) => (
                   <motion.button
                     key={d.type}
                     onClick={() => setSelected(i)}
                     whileHover={{ scale: 1.025 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`text-left rounded-xl p-4 transition-shadow flex flex-col justify-center items-start gap-3 ${
+                    className={`text-left rounded-xl p-3 sm:p-4 transition-shadow flex flex-col justify-center items-start gap-2 sm:gap-3 ${
                       i === selected
                         ? "ring-2 ring-emerald-300 bg-white shadow-lg"
                         : "bg-white/90 hover:shadow-md"
@@ -699,22 +689,22 @@ export default function DietChart() {
                     aria-pressed={i === selected}
                   >
                     <div
-                      className="w-24 h-24 ml-8 rounded-full flex items-center justify-center text-white font-bold"
+                      className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 ml-4 sm:ml-6 md:ml-8 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl"
                       style={{ background: d.color }}
                     >
                       {d.type.charAt(0)}
                     </div>
                     <div>
-                      <div className="font-semibold text-emerald-900">
+                      <div className="font-semibold text-emerald-900 text-xl">
                         {d.type}
                       </div>
-                      <div className="text-xl mt-5 text-emerald-800/80">
+                      <div className="text-xl mt-2 sm:mt-3 text-emerald-800/80">
                         {d.description.slice(0, 90)}…
                       </div>
                     </div>
 
                     <div
-                      className="text-lg mt-5 p-3 rounded-4xl h-64 text-emerald-100"
+                      className="text-xl mt-3 sm:mt-4 p-2 sm:p-3 rounded-2xl h-32 sm:h-40 md:h-48 lg:h-56 xl:h-64 text-emerald-100"
                       style={{ background: d.color }}
                     >
                       <p className="font-bold">Note:</p> {d.rule}…
@@ -731,11 +721,11 @@ export default function DietChart() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   transition={{ duration: 0.36 }}
-                  className="bg-white rounded-lg p-4 py-12 shadow mt-2"
+                  className="bg-white rounded-lg p-3 sm:p-4 py-8 sm:py-12 shadow mt-2"
                 >
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2 sm:gap-0">
                     <div>
-                      <h3 className="text-2xl font-semibold text-emerald-900">
+                      <h3 className="text-xl sm:text-2xl font-semibold text-emerald-900">
                         Foods to Eat — {DOSHAS[selected].type}
                       </h3>
                       <div className="text-xl text-emerald-800/90 mt-1">
@@ -755,7 +745,7 @@ export default function DietChart() {
                         initial={{ opacity: 0, x: -6 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.04 * idx, duration: 0.28 }}
-                        className="flex items-start gap-3 bg-[#f6f3e8] rounded-md p-3"
+                        className="flex items-start gap-3 bg-[#f6f3e8] rounded-md p-2 sm:p-3"
                       >
                         <div
                           className="w-3 h-3 rounded-full mt-1"
@@ -773,10 +763,10 @@ export default function DietChart() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.08, duration: 0.5 }}
-              className="bg-white rounded-xl p-4 shadow"
+              className="bg-white rounded-xl p-3 sm:p-4 shadow"
             >
-              <div className="lg:col-span-1 space-y-3 ">
-                <div className="bg-white rounded-xl p-4 shadow">
+              <div className="lg:col-span-1 space-y-3">
+                <div className="bg-white rounded-xl p-3 sm:p-4 shadow">
                   <div className="text-xl font-semibold text-emerald-900 mb-2">
                     Plans
                   </div>
@@ -786,16 +776,16 @@ export default function DietChart() {
                         key={p.id}
                         onClick={() => setSelectedPlanId(p.id)}
                         whileHover={{ scale: 1.02 }}
-                        className={`w-full text-left p-3 rounded-lg ${
+                        className={`w-full text-left p-2 sm:p-3 rounded-lg ${
                           p.id === selectedPlanId
                             ? "bg-[#f6f3e8] ring-2 ring-emerald-200"
                             : "bg-white/90"
                         } shadow`}
                       >
-                        <div className="font-medium text-emerald-900">
+                        <div className="font-medium text-emerald-900 text-xl">
                           {p.name}
                         </div>
-                        <div className="text-xs text-emerald-800/80">
+                        <div className="text-xl text-emerald-800/80">
                           {p.description}
                         </div>
                       </motion.button>
@@ -808,16 +798,16 @@ export default function DietChart() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl p-4 shadow">
+                <div className="bg-white rounded-xl p-3 sm:p-4 shadow">
                   <div className="text-xl font-semibold text-emerald-900 mb-2">
                     Quick actions
                   </div>
-                  <div className="flex gap-2">
-                    <button className="px-3 py-1 bg-white rounded shadow">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <button className="px-3 py-1 bg-white rounded shadow text-xl flex-1 sm:flex-none">
                       Shuffle
                     </button>
                     <button
-                      className="px-3 py-1 bg-emerald-600 text-white rounded shadow"
+                      className="px-3 py-1 bg-emerald-600 text-white rounded shadow text-xl flex-1 sm:flex-none"
                       onClick={() =>
                         navigator.clipboard?.writeText(
                           itineraryCopy(selectedPlan)
@@ -827,7 +817,7 @@ export default function DietChart() {
                       Copy day
                     </button>
                     <button
-                      className="px-3 py-1 bg-white rounded shadow"
+                      className="px-3 py-1 bg-white rounded shadow text-xl flex-1 sm:flex-none"
                       onClick={() => alert("Export placeholder")}
                     >
                       Export PDF
@@ -839,11 +829,11 @@ export default function DietChart() {
           </div>
 
           {/* Middle: Daily plan selector and display */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-xl p-4 shadow">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+            <div className="bg-white rounded-xl p-3 sm:p-4 shadow">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
                 <div>
-                  <div className="font-semibold text-2xl text-emerald-900">
+                  <div className="font-semibold text-xl sm:text-2xl text-emerald-900">
                     Daily Meal Plans
                   </div>
                   <div className="text-xl text-emerald-800/90">
@@ -863,8 +853,8 @@ export default function DietChart() {
                 </div>
               </div>
 
-              <div className="mt-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              <div className="mt-3 sm:mt-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                   {ALL_INGREDIENTS.map((ing) => (
                     <button
                       key={ing}
@@ -901,14 +891,14 @@ export default function DietChart() {
         </div>
 
         {/* existing charts and lists (kept as before) */}
-        <div className="mt-8">
-          <div className="bg-white rounded-2xl p-6 shadow-2xl">
-            <div className="flex flex-col lg:flex-row gap-6 items-center">
+        <div className="mt-6 sm:mt-8">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-2xl">
+            <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
               <div className="w-full lg:w-1/2">
                 <div className="text-xl text-emerald-900 font-semibold mb-2">
                   The {active.type} Plate
                 </div>
-                <div className="bg-[#f6f3e8] rounded-xl p-4">
+                <div className="bg-[#f6f3e8] rounded-xl p-3 sm:p-4">
                   <Chart
                     data={active.plate}
                     innerRadius={40}
@@ -921,7 +911,7 @@ export default function DietChart() {
                 <div className="text-xl text-emerald-900 font-semibold mb-2">
                   Taste Palette
                 </div>
-                <div className="bg-[#f6f3e8] rounded-xl p-4">
+                <div className="bg-[#f6f3e8] rounded-xl p-3 sm:p-4">
                   <Chart
                     data={active.taste}
                     innerRadius={30}
@@ -931,7 +921,7 @@ export default function DietChart() {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
               {active.plate.map((p, idx) => (
                 <motion.div
                   key={p.name}
@@ -945,7 +935,7 @@ export default function DietChart() {
                     style={{ background: p.color }}
                   />
                   <div>
-                    <div className="font-semibold text-emerald-900">
+                    <div className="font-semibold text-emerald-900 text-xl">
                       {p.name}
                     </div>
                     <div className="text-xl text-emerald-800/90">

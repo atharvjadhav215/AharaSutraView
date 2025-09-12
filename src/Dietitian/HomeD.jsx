@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
@@ -68,7 +68,6 @@ const STORY_CARDS = [
   },
 ];
 
-
 const TESTIMONIALS = [
   {
     name: "Priya",
@@ -123,7 +122,7 @@ const SlideCard = ({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 1, y: -30, scale: 0.98 }}
         transition={{ duration: D.enter, ease: "easeInOut" }}
-        className="w-full max-w-[1600px] bg-white/90 rounded-2xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center h-[72vh] md:h-[78vh]"
+        className="w-full max-w-[1600px] bg-white/90 rounded-2xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-center h-[85vh] sm:h-[80vh] md:h-[78vh] lg:h-[75vh]"
       >
         {/* Image */}
         <motion.div
@@ -135,16 +134,16 @@ const SlideCard = ({
           <motion.img
             src={data.img}
             alt={data.title}
-            className=" shadow-2xl rounded-full shadow-black h-[60vh] w-[60vh] object-cover"
+            className=" shadow-2xl rounded-full shadow-black h-[30vh] w-[30vh] sm:h-[40vh] sm:w-[40vh] md:h-[45vh] md:w-[45vh] lg:h-[55vh] lg:w-[55vh] object-cover"
             whileHover={{ scale: 1.08 }}
             transition={{ duration: D.imgScale }}
           />
         </motion.div>
 
         {/* Text area */}
-        <div className="p-8 md:p-10 flex flex-col justify-center">
+        <div className="p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-center">
           <motion.h2
-            className="text-3xl md:text-4xl font-extrabold text-emerald-900 mb-3"
+            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-emerald-900 mb-2 sm:mb-3"
             initial={{ x: -30, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: D.textDelay, duration: D.textDur }}
@@ -152,7 +151,7 @@ const SlideCard = ({
             {data.title}
           </motion.h2>
           <motion.p
-            className="text-emerald-800 text-xl mb-4"
+            className="text-emerald-800 text-xl mb-3 sm:mb-4"
             initial={{ x: -30, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: D.textDelay + 0.12, duration: D.textDur }}
@@ -160,11 +159,11 @@ const SlideCard = ({
             {data.subtitle}
           </motion.p>
 
-          <div className="space-y-3 mb-4">
+          <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
             {data.bullets.map((b, i) => (
               <motion.div
                 key={i}
-                className="flex items-start gap-3"
+                className="flex items-start gap-2 sm:gap-3"
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{
@@ -173,10 +172,10 @@ const SlideCard = ({
                 }}
               >
                 <span
-                  className="w-3 h-3 rounded-full mt-1"
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full mt-1 flex-shrink-0"
                   style={{ background: data.accent }}
                 />
-                <p className="text-xl text-emerald-900">{b}</p>
+                <p className="text-xl text-emerald-900 leading-relaxed">{b}</p>
               </motion.div>
             ))}
           </div>
@@ -206,35 +205,25 @@ const SlideCard = ({
           </div>
 
           {/* Prev / Play / Next */}
-          <div className="flex gap-2 mt-20">
+          <div className="flex gap-2 sm:gap-3 mt-4 sm:mt-6 md:mt-8 lg:mt-12 xl:mt-20">
             <motion.button
               onClick={onPrev}
               whileTap={{ scale: 0.92 }}
               whileHover={{ y: -3 }}
               transition={{ duration: D.controlTap }}
-              className="bg-white p-2 rounded-lg shadow hover:shadow-md"
+              className="bg-white p-2 sm:p-3 rounded-lg shadow hover:shadow-md text-xl"
               aria-label="Previous"
             >
               ◀
             </motion.button>
 
-            <motion.button
-              onClick={() => setIsPlaying && setIsPlaying(!isPlaying)}
-              whileTap={{ scale: 0.92 }}
-              whileHover={{ y: -3 }}
-              transition={{ duration: D.controlTap }}
-              className="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md font-semibold"
-              aria-label="Play Pause"
-            >
-              {isPlaying ? "Pause" : "Play"}
-            </motion.button>
 
             <motion.button
               onClick={onNext}
               whileTap={{ scale: 0.92 }}
               whileHover={{ y: -3 }}
               transition={{ duration: D.controlTap }}
-              className="bg-white p-2 rounded-lg shadow hover:shadow-md"
+              className="bg-white p-2 sm:p-3 rounded-lg shadow hover:shadow-md text-xl"
               aria-label="Next"
             >
               ▶
@@ -247,9 +236,8 @@ const SlideCard = ({
 };
 
 export default function HomeD() {
-  // consolidated state: index + direction + playback (isPlaying)
+  // consolidated state: index + playback (isPlaying)
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState("next");
   const [isPlaying, setIsPlaying] = useState(true);
   const navigate = useNavigate();
   const [usersCount, setUsersCount] = useState(1200);
@@ -308,7 +296,6 @@ export default function HomeD() {
   useEffect(() => {
     if (!isPlaying) return;
     const iv = setInterval(() => {
-      setDirection("next");
       setIndex((i) => (i + 1) % STORY_CARDS.length);
     }, 4200);
     return () => clearInterval(iv);
@@ -318,11 +305,9 @@ export default function HomeD() {
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "ArrowRight") {
-        setDirection("next");
         setIndex((i) => (i + 1) % STORY_CARDS.length);
         setIsPlaying(false);
       } else if (e.key === "ArrowLeft") {
-        setDirection("prev");
         setIndex((i) => (i - 1 + STORY_CARDS.length) % STORY_CARDS.length);
         setIsPlaying(false);
       } else if (e.key === " ") {
@@ -335,25 +320,16 @@ export default function HomeD() {
 
   // navigation helpers used by SlideCard
   const onNext = () => {
-    setDirection("next");
     setIndex((prev) => (prev + 1) % STORY_CARDS.length);
   };
   const onPrev = () => {
-    setDirection("prev");
     setIndex((prev) => (prev - 1 + STORY_CARDS.length) % STORY_CARDS.length);
   };
-  const jumpTo = (i) => {
-    setDirection(i > index ? "next" : "prev");
-    setIndex(i);
-    setIsPlaying(false);
-  };
-
-  const current = STORY_CARDS[index];
 
   return (
     <div className="min-h-screen text-gray-800">
       {/* Slider at start - centered */}
-      <section className="w-full h-screen relative overflow-hidden">
+      <section className="w-full h-screen mt-8 relative overflow-hidden">
         <AnimatePresence initial={false} mode="wait">
           {STORY_CARDS.map((item, i) =>
             i === index ? (
@@ -371,56 +347,39 @@ export default function HomeD() {
           )}
         </AnimatePresence>
 
-        {/* Dots centered bottom */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-30 flex gap-3">
-          <div className="mt-4 sm:mt-0 flex gap-3 w-[500px]">
-            <button
-              className="px-4 py-4 w-full rounded-xl bg-emerald-600 text-white shadow hover:-translate-y-1 transition"
-              onClick={() => navigate("/add-patient")}
-            >
-              Add Patient
-            </button>
-            <button
-              className="px-4 py-2 w-full rounded-xl bg-white shadow text-emerald-600 shadow hover:-translate-y-1 transition"
-              onClick={() => navigate("/dashboard")}
-            >
-              View Dashboard
-            </button>
-          </div>
-        </div>
       </section>
 
       {/* keep rest of UI unchanged */}
       <div className="bg-gradient-to-l from-white to-[#f1eacf]">
         {/* HERO */}
         <header
-          className="reveal-on-scroll translate-y-6 transition-all duration-700 ease-[cubic-bezier(.2,.9,.2,1)] py-12"
+          className="reveal-on-scroll  translate-y-6 transition-all duration-700 ease-[cubic-bezier(.2,.9,.2,1)] py-8 sm:py-10 md:py-12"
           aria-hidden={true}
         >
-          <div className="max-w-8xl mx-auto px-6 flex flex-col lg:flex-row justify-evenly items-center gap-8">
+          <div className="max-w-8xl mx-auto px-3 sm:px-4 md:px-6 flex flex-col lg:flex-row justify-evenly items-center gap-4 sm:gap-6 md:gap-8">
             <div className="flex-1 max-w-2xl">
-              <div className="text-2xl font-extrabold text-emerald-800">
+              <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-emerald-800">
                 AharaSutra — Dietitian
               </div>
-              <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-emerald-900">
+              <h1 className="mt-3 sm:mt-4 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight text-emerald-900">
                 Tools for dietitians — plan, review and manage personalised
                 charts
               </h1>
-              <p className="mt-4 text-xl text-emerald-800/90">
+              <p className="mt-3 sm:mt-4 text-xl text-emerald-800/90 leading-relaxed">
                 Fast access to add a patient, review dashboards, personalise
                 meal plans and share recommendations.
               </p>
 
-              <div className="mt-6 flex items-center gap-4">
+              <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center gap-2 sm:gap-3 md:gap-4">
                 <button
-                  className="px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg hover:-translate-y-0.5 transition"
+                  className="px-4 sm:px-5 py-3 sm:py-4 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg hover:-translate-y-0.5 transition w-full sm:w-auto text-xl"
                   onClick={() => navigate("/add-patient")}
                 >
                   Add Patient
                 </button>
 
                 <button
-                  className="px-5 py-3 rounded-xl bg-white shadow-md text-emerald-600 font-semibold"
+                  className="px-4 sm:px-5 py-3 sm:py-4 rounded-xl bg-white shadow-md text-emerald-600 font-semibold w-full sm:w-auto text-xl"
                   onClick={() => navigate("/dashboard")}
                 >
                   View your dashboard
@@ -428,47 +387,47 @@ export default function HomeD() {
               </div>
 
               {/* quick dietitian tools / stats */}
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-white rounded-xl p-4 shadow text-center">
-                  <div className="text-sm text-emerald-900 font-semibold">
+              <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
+                <div className="bg-white rounded-xl p-3 sm:p-4 md:p-5 shadow text-center">
+                  <div className="text-xl text-emerald-900 font-semibold">
                     Patients
                   </div>
-                  <div className="text-2xl font-extrabold text-emerald-900 count-users">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-emerald-900 count-users">
                     {usersCount.toLocaleString()}
                   </div>
-                  <div className="text-xs text-gray-600">connected</div>
+                  <div className="text-xl text-gray-600">connected</div>
                 </div>
-                <div className="bg-white rounded-xl p-4 shadow text-center">
-                  <div className="text-sm text-emerald-900 font-semibold">
+                <div className="bg-white rounded-xl p-3 sm:p-4 md:p-5 shadow text-center">
+                  <div className="text-xl text-emerald-900 font-semibold">
                     Active Plans
                   </div>
-                  <div className="text-2xl font-extrabold text-emerald-900">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-emerald-900">
                     24
                   </div>
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xl text-gray-600">
                     editable templates
                   </div>
                 </div>
-                <div className="bg-white rounded-xl p-4 shadow text-center">
-                  <div className="text-sm text-emerald-900 font-semibold">
+                <div className="bg-white rounded-xl p-3 sm:p-4 md:p-5 shadow text-center">
+                  <div className="text-xl text-emerald-900 font-semibold">
                     Resources
                   </div>
-                  <div className="text-2xl font-extrabold text-emerald-900">
+                  <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-emerald-900">
                     Recipes
                   </div>
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xl text-gray-600">
                     curated & evidence-based
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="w-full sm:w-[500px]">
+            <div className="w-full sm:w-[350px] md:w-[400px] lg:w-[500px]">
               <div className="rounded-full overflow-visible shadow-2xl">
                 <img
                   src={HERO_IMG}
                   alt="hero"
-                  className="w-full h-64 object-contain"
+                  className="w-full h-40 sm:h-48 md:h-56 lg:h-64 object-contain"
                 />
               </div>
             </div>
@@ -476,46 +435,46 @@ export default function HomeD() {
         </header>
 
         {/* INFO STRIP */}
-        <div className="reveal-on-scroll bg-gradient-to-b  from-white to-[#f7f6f2] opacity-0 translate-y-6 transition-all duration-700 ease-[cubic-bezier(.2,.9,.2,1)] max-w-7xl mx-auto mt-8 px-6">
-          <div className="bg-gradient-to-r from-white to-emerald-50 rounded-xl shadow-lg p-5 flex flex-col sm:flex-row gap-4">
-            <div className="flex text-xl items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+        <div className="reveal-on-scroll bg-gradient-to-b  from-white to-[#f7f6f2] opacity-0 translate-y-6 transition-all duration-700 ease-[cubic-bezier(.2,.9,.2,1)] max-w-7xl mx-auto mt-6 sm:mt-8 px-3 sm:px-4 md:px-6">
+          <div className="bg-gradient-to-r from-white to-emerald-50 rounded-xl shadow-lg p-4 sm:p-5 md:p-6 flex flex-col lg:flex-row gap-4 sm:gap-5">
+            <div className="flex text-xl items-start gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xl">
                 1
               </div>
               <div>
-                <div className="font-semibold text-emerald-900">
+                <div className="font-semibold text-emerald-900 text-xl">
                   Easy onboarding
                 </div>
-                <div className="text-emerald-800/80">
+                <div className="text-emerald-800/80 text-xl leading-relaxed">
                   Answer a few simple questions and get your first chart in
                   minutes.
                 </div>
               </div>
             </div>
 
-            <div className="flex text-xl  items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
+            <div className="flex text-xl items-start gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-xl">
                 2
               </div>
               <div>
-                <div className="font-semibold text-emerald-900">
+                <div className="font-semibold text-emerald-900 text-xl">
                   Actionable guidance
                 </div>
-                <div className="text-emerald-800/80">
+                <div className="text-emerald-800/80 text-xl leading-relaxed">
                   Portions, swaps and simple habits you can implement today.
                 </div>
               </div>
             </div>
 
-            <div className="flex  text-xl items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-yellow-100 text-yellow-700 flex items-center justify-center font-bold">
+            <div className="flex text-xl items-start gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-yellow-100 text-yellow-700 flex items-center justify-center font-bold text-xl">
                 3
               </div>
               <div>
-                <div className="font-semibold text-emerald-900">
+                <div className="font-semibold text-emerald-900 text-xl">
                   Sustainable results
                 </div>
-                <div className="text-emerald-800/80">
+                <div className="text-emerald-800/80 text-xl leading-relaxed">
                   Iterate the plan using energy & digestion feedback.
                 </div>
               </div>
@@ -524,27 +483,31 @@ export default function HomeD() {
         </div>
 
         {/* Feature grid */}
-        <section className="max-w-7xl mx-auto text-xl px-6 mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white  rounded-xl p-5 shadow-lg transform hover:-translate-y-2 transition">
-            <h3 className="font-bold text-emerald-900">
+        <section className="max-w-7xl mx-auto text-xl px-3 sm:px-4 md:px-6 mt-6 sm:mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+          <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-lg transform hover:-translate-y-2 transition">
+            <h3 className="font-bold text-emerald-900 text-xl">
               Personalised Portions
             </h3>
-            <p className="mt-2 text-emerald-800">
+            <p className="mt-2 text-emerald-800 text-xl leading-relaxed">
               Visual portion guidance so you eat the right amounts without
               counting calories.
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-5 shadow-lg transform hover:-translate-y-2 transition">
-            <h3 className="font-bold text-emerald-900">Seasonal Wisdom</h3>
-            <p className="mt-2 text-emerald-800">
+          <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-lg transform hover:-translate-y-2 transition">
+            <h3 className="font-bold text-emerald-900 text-xl">
+              Seasonal Wisdom
+            </h3>
+            <p className="mt-2 text-emerald-800 text-xl leading-relaxed">
               Simple swaps depending on season and your constitution.
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-5 shadow-lg transform hover:-translate-y-2 transition">
-            <h3 className="font-bold text-emerald-900">Herbs & Allies</h3>
-            <p className="mt-2 text-emerald-800">
+          <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-lg transform hover:-translate-y-2 transition">
+            <h3 className="font-bold text-emerald-900 text-xl">
+              Herbs & Allies
+            </h3>
+            <p className="mt-2 text-emerald-800 text-xl leading-relaxed">
               Recommendations for gentle herb support like Triphala, Turmeric
               and Tulsi.
             </p>
@@ -552,9 +515,9 @@ export default function HomeD() {
         </section>
 
         {/* FAQ and Testimonials */}
-        <section className="max-w-7xl text-xl mx-auto px-6 mt-12 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
+        <section className="max-w-7xl text-xl mx-auto px-3 sm:px-4 md:px-6 mt-6 sm:mt-8 md:mt-12 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 sm:gap-5 md:gap-6">
           <div>
-            <h3 className="text-emerald-900 font-bold mb-4">
+            <h3 className="text-emerald-900 font-bold mb-4 text-xl">
               Frequently asked
             </h3>
             {FAQ.map((f, i) => (
@@ -563,48 +526,58 @@ export default function HomeD() {
                 className="mb-3 bg-white p-4 rounded-lg shadow"
                 open={i === 0}
               >
-                <summary className="font-semibold text-emerald-900 cursor-pointer">
+                <summary className="font-semibold text-emerald-900 cursor-pointer text-xl">
                   {f.q}
                 </summary>
-                <p className="mt-2 text-emerald-800">{f.a}</p>
+                <p className="mt-2 text-emerald-800 text-xl leading-relaxed">
+                  {f.a}
+                </p>
               </details>
             ))}
           </div>
 
           <aside>
-            <h3 className="text-emerald-900 font-bold mb-4">What users say</h3>
+            <h3 className="text-emerald-900 font-bold mb-4 text-xl">
+              What users say
+            </h3>
             {TESTIMONIALS.map((t, i) => (
               <div
                 key={i}
                 className="bg-white p-4 rounded-lg shadow mb-3 transform hover:-translate-y-1 transition"
               >
-                <div className="font-semibold text-emerald-900">{t.name}</div>
-                <div className="text-emerald-800 mt-2">{t.text}</div>
+                <div className="font-semibold text-emerald-900 text-xl">
+                  {t.name}
+                </div>
+                <div className="text-emerald-800 mt-2 text-xl leading-relaxed">
+                  {t.text}
+                </div>
               </div>
             ))}
           </aside>
         </section>
 
         {/* CTA strip */}
-        <section className="max-w-7xl text-xl mx-auto px-6 mt-12">
-          <div className="bg-gradient-to-r from-emerald-50 to-white rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between shadow-lg">
+        <section className="max-w-7xl text-xl mx-auto px-3 sm:px-4 md:px-6 mt-6 sm:mt-8 md:mt-12">
+          <div className="bg-gradient-to-r from-emerald-50 to-white rounded-xl p-4 sm:p-5 md:p-6 flex flex-col sm:flex-row items-center justify-between shadow-lg">
             <div>
-              <div className="font-bold text-emerald-900">Dietitian tools</div>
-              <div className="text-emerald-800 mt-1">
+              <div className="font-bold text-emerald-900 text-xl">
+                Dietitian tools
+              </div>
+              <div className="text-emerald-800 mt-1 text-xl leading-relaxed">
                 Manage patients, create templates, review analytics and share
                 recommendations.
               </div>
             </div>
 
-            <div className="mt-4 sm:mt-0 flex gap-3">
+            <div className="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button
-                className="px-4 py-2 rounded-xl bg-emerald-600 text-white shadow hover:-translate-y-1 transition"
+                className="px-4 py-3 rounded-xl bg-emerald-600 text-white shadow hover:-translate-y-1 transition text-xl w-full sm:w-auto font-medium"
                 onClick={() => navigate("/add-patient")}
               >
                 Add Patient
               </button>
               <button
-                className="px-4 py-2 rounded-xl bg-white shadow text-emerald-600"
+                className="px-4 py-3 rounded-xl bg-white shadow text-emerald-600 text-xl w-full sm:w-auto font-medium"
                 onClick={() => navigate("/dashboard")}
               >
                 View Dashboard
@@ -614,7 +587,7 @@ export default function HomeD() {
         </section>
 
         {/* Footer */}
-        <footer className="max-w-8xl mx-auto px-6 mt-10 pb-12 text-gray-500">
+        <footer className="max-w-8xl mx-auto px-3 sm:px-4 md:px-6 mt-6 sm:mt-8 md:mt-10 pb-6 sm:pb-8 md:pb-12 text-gray-500 text-xl">
           AharaSutra — quick, animated diet guidance. Designed for new users to
           access core information easily.
         </footer>

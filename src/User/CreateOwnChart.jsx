@@ -249,7 +249,7 @@ export default function CreateOwnChart() {
   return (
     <div className="fixed inset-0 overflow-hidden">
       {/* dynamic background layers */}
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0  -z-10">
         {BG_LAYERS.map((b, i) => (
           <motion.div
             key={b.id}
@@ -269,7 +269,7 @@ export default function CreateOwnChart() {
             duration: 80,
             ease: "linear",
           }}
-          className="absolute -left-40 -top-40 w-[420px] h-[420px] rounded-full bg-gradient-to-tr from-emerald-200 to-emerald-50 opacity-30 blur-3xl pointer-events-none"
+          className="absolute  -left-40 -top-40 w-[420px] h-[420px] rounded-full bg-gradient-to-tr from-emerald-200 to-emerald-50 opacity-30 blur-3xl pointer-events-none"
         />
         <motion.div
           animate={{ rotate: -360 }}
@@ -281,8 +281,8 @@ export default function CreateOwnChart() {
           className="absolute -right-32 bottom-[-60px] w-[360px] h-[360px] rounded-full bg-gradient-to-bl from-pink-200 to-yellow-100 opacity-25 blur-3xl pointer-events-none"
         />
       </div>
-      <Link to ="/uhome">
-        <button className="px-4 py-3 mt-5 ml-5 rounded-full bg-white border text-emerald-700 text-lg disabled:opacity-50">
+      <Link to="/uhome">
+        <button className="px-3 sm:px-4 mt-20 py-2 sm:py-3 sm:mt-4 md:mt-5 ml-2 sm:ml-3 md:ml-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
           ← Back to Home
         </button>
       </Link>
@@ -290,23 +290,23 @@ export default function CreateOwnChart() {
       {/* container changed to top-aligned scrollable column so header is visible */}
       <div
         ref={containerRef}
-        className="h-full flex flex-col items-center justify-start p-6 overflow-auto"
+        className="h-full flex flex-col items-center justify-start p-2 sm:p-4 md:p-6 overflow-auto"
       >
         <div className="w-full max-w-7xl">
           {/* header made sticky + reduced vertical offset so it stays visible */}
-          <div className="flex items-center bg-white p-5  rounded-2xl text-emerald-800 justify-between mb-6 sticky  z-20 shadow">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center bg-white p-3 sm:p-4 md:p-5 rounded-2xl text-emerald-800 justify-between mb-4 sm:mb-6 sticky z-20 shadow gap-3 sm:gap-0">
             <div>
-              <div className="text-lg font-medium">Create your plan</div>
-              <div className="text-xl font-bold">
+              <div className="text-xl font-medium">Create your plan</div>
+              <div className="text-xl sm:text-2xl font-bold">
                 Friendly questions, instant plan
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="text-lg mr-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+              <div className="text-xl">
                 Step {step + 1} / {STEPS.length}
               </div>
-              <div className="w-48 hidden md:block">
+              <div className="w-full sm:w-48">
                 <div className="bg-white/20 h-2 rounded overflow-hidden">
                   <motion.div
                     className="bg-white h-2 rounded"
@@ -317,7 +317,7 @@ export default function CreateOwnChart() {
               </div>
               <button
                 onClick={() => setStep(0)}
-                className="px-3 py-2 rounded bg-white/20 text-lg hidden sm:inline"
+                className="px-3 py-2 rounded bg-white/20 text-xl flex-1 sm:flex-none"
               >
                 Restart
               </button>
@@ -332,28 +332,28 @@ export default function CreateOwnChart() {
                 animate="center"
                 exit="exit"
                 variants={pageVariants}
-                className="min-h-[68vh] bg-white/90 rounded-3xl p-8 md:p-12 shadow-2xl"
+                className="min-h-[120vh] bg-white/90 rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12 shadow-2xl"
                 transition={{ layout: { duration: 0.32 } }}
               >
                 {/* header / illustration */}
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-6">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
                   <div>
-                    <h2 className="text-3xl md:text-4xl font-extrabold text-emerald-900">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-emerald-900">
                       {STEPS[step].title}
                     </h2>
-                    <p className="text-lg text-gray-700 mt-2 max-w-xl">
+                    <p className="text-xl text-gray-700 mt-2 max-w-xl">
                       {STEPS[step].subtitle}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                     <div className="text-center">
-                      <div className="text-lg text-gray-600">Quick tip</div>
+                      <div className="text-xl text-gray-600">Quick tip</div>
                       <div className="text-xl font-semibold text-emerald-800">
                         Keep answers short — it's fast
                       </div>
                     </div>
-                    <div className="hidden md:block w-[120px] h-[120px] rounded-full bg-gradient-to-tr from-emerald-200 to-emerald-50 flex items-center justify-center text-3xl font-bold text-emerald-800">
+                    <div className="hidden sm:flex w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] md:w-[120px] md:h-[120px] rounded-full bg-gradient-to-tr from-emerald-200 to-emerald-50 items-center justify-center text-xl sm:text-2xl md:text-3xl font-bold text-emerald-800">
                       🍽️
                     </div>
                   </div>
@@ -367,17 +367,17 @@ export default function CreateOwnChart() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.35 }}
                     >
-                      <div className="text-lg text-gray-700">
+                      <div className="text-xl text-gray-700">
                         Welcome — in a few screens we'll recommend a plan
                         tailored to your goal and habits. Click continue to
                         begin the story.
                       </div>
-                      <div className="mt-6 flex gap-3">
+                      <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
                         <button
                           onClick={() =>
                             setStep((s) => Math.min(STEPS.length - 1, s + 1))
                           }
-                          className="px-6 py-3 rounded-full bg-emerald-600 text-white text-lg shadow-lg"
+                          className="px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-emerald-600 text-white text-xl shadow-lg flex-1 sm:flex-none"
                         >
                           Start
                         </button>
@@ -396,7 +396,7 @@ export default function CreateOwnChart() {
                             });
                             setStep(1);
                           }}
-                          className="px-6 py-3 rounded-full bg-white border text-emerald-700 text-lg"
+                          className="px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-white border text-emerald-700 text-xl flex-1 sm:flex-none"
                         >
                           Quick start
                         </button>
@@ -409,10 +409,10 @@ export default function CreateOwnChart() {
                       initial={{ opacity: 0, x: 12 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.32 }}
-                      className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4"
                     >
                       <div>
-                        <label className="block text-lg text-gray-700">
+                        <label className="block text-xl text-gray-700">
                           Full Name
                         </label>
                         <input
@@ -420,12 +420,12 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("basic", "name", e.target.value)
                           }
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                           placeholder="Your name"
                         />
                       </div>
                       <div>
-                        <label className="block text-lg text-gray-700">
+                        <label className="block text-xl text-gray-700">
                           Age
                         </label>
                         <input
@@ -434,12 +434,12 @@ export default function CreateOwnChart() {
                             update("basic", "age", e.target.value)
                           }
                           type="number"
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                           placeholder="Years"
                         />
                       </div>
-                      <div>
-                        <label className="block text-lg text-gray-700">
+                      <div className="sm:col-span-2 md:col-span-1">
+                        <label className="block text-xl text-gray-700">
                           Gender
                         </label>
                         <select
@@ -447,7 +447,7 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("basic", "gender", e.target.value)
                           }
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                         >
                           <option value="">Select</option>
                           <option value="female">Female</option>
@@ -463,10 +463,10 @@ export default function CreateOwnChart() {
                       initial={{ opacity: 0, x: 12 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.32 }}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
                     >
                       <div>
-                        <label className="block text-lg text-gray-700">
+                        <label className="block text-xl text-gray-700">
                           Height (cm)
                         </label>
                         <input
@@ -474,12 +474,12 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("anthro", "height", e.target.value)
                           }
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                           placeholder="e.g. 165"
                         />
                       </div>
                       <div>
-                        <label className="block text-lg text-gray-700">
+                        <label className="block text-xl text-gray-700">
                           Weight (kg)
                         </label>
                         <input
@@ -487,11 +487,11 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("anthro", "weight", e.target.value)
                           }
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                           placeholder="e.g. 60"
                         />
                       </div>
-                      <div className="md:col-span-2 text-lg text-gray-600 mt-3">
+                      <div className="sm:col-span-2 text-xl text-gray-600 mt-3">
                         Tip: BMI will be used to tailor calorie suggestions in
                         the plan.
                       </div>
@@ -503,12 +503,12 @@ export default function CreateOwnChart() {
                       initial={{ opacity: 0, x: 12 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.32 }}
-                      className="space-y-4"
+                      className="space-y-3 sm:space-y-4"
                     >
-                      <label className="block text-lg text-gray-700">
+                      <label className="block text-xl text-gray-700">
                         Primary Goal
                       </label>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
                         {[
                           "Maintain weight",
                           "Lose weight",
@@ -519,7 +519,7 @@ export default function CreateOwnChart() {
                           <button
                             key={g}
                             onClick={() => update("goals", "goal", g)}
-                            className={`p-4 rounded-lg text-lg ${
+                            className={`p-3 sm:p-4 rounded-lg text-xl ${
                               answers.goals.goal === g
                                 ? "bg-emerald-600 text-white"
                                 : "bg-white border text-emerald-900"
@@ -531,7 +531,7 @@ export default function CreateOwnChart() {
                       </div>
 
                       <div>
-                        <label className="block text-lg text-gray-700">
+                        <label className="block text-xl text-gray-700">
                           Note (optional)
                         </label>
                         <input
@@ -539,7 +539,7 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("goals", "note", e.target.value)
                           }
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                           placeholder="e.g., vegetarian, prefer warm breakfasts"
                         />
                       </div>
@@ -551,10 +551,10 @@ export default function CreateOwnChart() {
                       initial={{ opacity: 0, x: 12 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.32 }}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
                     >
                       <div>
-                        <label className="block text-lg text-gray-700">
+                        <label className="block text-xl text-gray-700">
                           Dietary Habit
                         </label>
                         <select
@@ -562,7 +562,7 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("lifestyle", "dietaryHabits", e.target.value)
                           }
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                         >
                           <option value="omnivore">Omnivore</option>
                           <option value="vegetarian">Vegetarian</option>
@@ -572,7 +572,7 @@ export default function CreateOwnChart() {
                       </div>
 
                       <div>
-                        <label className="block text-lg text-gray-700">
+                        <label className="block text-xl text-gray-700">
                           Activity Level
                         </label>
                         <select
@@ -580,7 +580,7 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("lifestyle", "activity", e.target.value)
                           }
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                         >
                           <option value="sedentary">Sedentary</option>
                           <option value="light">Light</option>
@@ -589,8 +589,8 @@ export default function CreateOwnChart() {
                         </select>
                       </div>
 
-                      <div className="md:col-span-2">
-                        <label className="block text-lg text-gray-700">
+                      <div className="sm:col-span-2">
+                        <label className="block text-xl text-gray-700">
                           Cuisine preference
                         </label>
                         <input
@@ -602,7 +602,7 @@ export default function CreateOwnChart() {
                               e.target.value
                             )
                           }
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                           placeholder="e.g., Indian, Mediterranean"
                         />
                       </div>
@@ -614,10 +614,10 @@ export default function CreateOwnChart() {
                       initial={{ opacity: 0, x: 12 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.32 }}
-                      className="space-y-4"
+                      className="space-y-3 sm:space-y-4"
                     >
                       <div>
-                        <label className="block text-lg text-gray-700">
+                        <label className="block text-xl text-gray-700">
                           Allergies / Intolerances
                         </label>
                         <input
@@ -631,21 +631,21 @@ export default function CreateOwnChart() {
                               },
                             }))
                           }
-                          className="mt-1 p-4 border rounded-lg text-lg w-full"
+                          className="mt-1 p-3 sm:p-4 border rounded-lg text-xl w-full"
                           placeholder="e.g., nuts, shellfish"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-lg text-gray-700">
+                        <label className="block text-xl text-gray-700">
                           Foods you dislike
                         </label>
-                        <div className="flex flex-wrap gap-3 mt-2">
+                        <div className="flex flex-wrap gap-2 sm:gap-3 mt-2">
                           {quickFoods.map((f) => (
                             <button
                               key={f}
                               onClick={() => toggleDislike(f)}
-                              className={`px-4 py-2 rounded-lg text-lg ${
+                              className={`px-3 sm:px-4 py-2 rounded-lg text-xl ${
                                 answers.intolerances.dislikes.includes(f)
                                   ? "bg-emerald-600 text-white"
                                   : "bg-white border text-emerald-900"
@@ -664,26 +664,26 @@ export default function CreateOwnChart() {
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.35 }}
-                      className="space-y-4"
+                      className="space-y-3 sm:space-y-4"
                     >
                       {/* fixed header part (always visible) */}
-                      <div className="flex items-start justify-between">
+                      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-0">
                         <div>
-                          <div className="text-lg font-medium text-emerald-900">
+                          <div className="text-xl font-medium text-emerald-900">
                             Suggested Plan
                           </div>
-                          <div className="text-xl font-semibold text-emerald-900 mt-1">
+                          <div className="text-xl sm:text-2xl font-semibold text-emerald-900 mt-1">
                             {generatedPlan.name}
                           </div>
-                          <div className="text-lg text-gray-700 mt-1">
+                          <div className="text-xl text-gray-700 mt-1">
                             {generatedPlan.description}
                           </div>
                         </div>
-                        <div className="hidden md:flex flex-col items-end gap-2">
-                          <div className="text-sm text-gray-600">
+                        <div className="flex flex-col items-start sm:items-end gap-2">
+                          <div className="text-xl text-gray-600">
                             Estimated total
                           </div>
-                          <div className="text-lg font-semibold text-emerald-800">
+                          <div className="text-xl font-semibold text-emerald-800">
                             {Object.values(
                               (
                                 PLANS.find((x) => x.id === selectedPlanId) ||
@@ -698,12 +698,12 @@ export default function CreateOwnChart() {
                       </div>
 
                       {/* scrollable content area */}
-                      <div className="max-h-[44vh] md:max-h-[52vh] overflow-auto pr-2 space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="max-h-[44vh] md:max-h-[52vh] overflow-auto pr-2 space-y-3 sm:space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                           {PLANS.map((p) => (
                             <div
                               key={p.id}
-                              className={`p-4 rounded-lg text-lg ${
+                              className={`p-3 sm:p-4 rounded-lg text-xl ${
                                 p.id === selectedPlanId
                                   ? "ring-2 ring-emerald-200 bg-[#f6f3e8]"
                                   : "bg-white"
@@ -715,21 +715,21 @@ export default function CreateOwnChart() {
                               <div className="text-gray-700 mt-1">
                                 {p.description}
                               </div>
-                              <div className="mt-3 flex gap-2">
+                              <div className="mt-3 flex flex-col sm:flex-row gap-2">
                                 <button
                                   onClick={() => setSelectedPlanId(p.id)}
-                                  className="px-3 py-2 rounded bg-emerald-600 text-white text-lg"
+                                  className="px-3 py-2 rounded bg-emerald-600 text-white text-xl flex-1 sm:flex-none"
                                 >
                                   Choose
                                 </button>
                                 <button
                                   onClick={() => setSelectedPlanId(p.id)}
-                                  className="px-3 py-2 rounded bg-white border text-emerald-700 text-lg"
+                                  className="px-3 py-2 rounded bg-white border text-emerald-700 text-xl flex-1 sm:flex-none"
                                 >
                                   Preview
                                 </button>
                               </div>
-                              <div className="text-gray-600 mt-2 text-lg">
+                              <div className="text-gray-600 mt-2 text-xl">
                                 Est kcal:{" "}
                                 {Object.values(p.meals)
                                   .flat()
@@ -743,11 +743,11 @@ export default function CreateOwnChart() {
                           ))}
                         </div>
 
-                        <div className="mt-2 bg-white p-4 rounded-lg border">
-                          <div className="font-medium text-emerald-900">
+                        <div className="mt-2 bg-white p-3 sm:p-4 rounded-lg border">
+                          <div className="font-medium text-emerald-900 text-xl">
                             Selected plan preview
                           </div>
-                          <div className="mt-2 text-lg text-gray-700 space-y-3">
+                          <div className="mt-2 text-xl text-gray-700 space-y-2 sm:space-y-3">
                             {(
                               PLANS.find((x) => x.id === selectedPlanId) ||
                               generatedPlan
@@ -767,7 +767,7 @@ export default function CreateOwnChart() {
                                     )}{" "}
                                     kcal
                                   </div>
-                                  <div className="text-lg text-gray-700 mt-1">
+                                  <div className="text-xl text-gray-700 mt-1">
                                     {items.map((it) => it.name).join(", ")}
                                   </div>
                                 </div>
@@ -776,16 +776,16 @@ export default function CreateOwnChart() {
                         </div>
 
                         {/* optional footer controls inside scroll area (keeps everything reachable on small screens) */}
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                           <button
                             onClick={() => setSelectedPlanId((s) => s)}
-                            className="px-4 py-2 rounded bg-emerald-600 text-white text-lg"
+                            className="px-3 sm:px-4 py-2 rounded bg-emerald-600 text-white text-xl flex-1 sm:flex-none"
                           >
                             Confirm Selection
                           </button>
                           <button
                             onClick={() => setStep((s) => Math.max(0, s - 1))}
-                            className="px-4 py-2 rounded bg-white border text-emerald-700 text-lg"
+                            className="px-3 sm:px-4 py-2 rounded bg-white border text-emerald-700 text-xl flex-1 sm:flex-none"
                           >
                             Review answers
                           </button>
@@ -796,29 +796,29 @@ export default function CreateOwnChart() {
                 </div>
 
                 {/* footer actions */}
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="text-lg text-gray-600">
+                <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+                  <div className="text-xl text-gray-600">
                     Privacy: quiz runs locally only.
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                     <button
                       onClick={prev}
                       disabled={step === 0}
-                      className="px-4 py-3 rounded-full bg-white border text-emerald-700 text-lg disabled:opacity-50"
+                      className="px-3 sm:px-4 py-2 sm:py-3 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 flex-1 sm:flex-none"
                     >
                       ← Back
                     </button>
                     {step < STEPS.length - 1 ? (
                       <button
                         onClick={next}
-                        className="px-6 py-3 rounded-full bg-emerald-600 text-white text-lg shadow-lg"
+                        className="px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-emerald-600 text-white text-xl shadow-lg flex-1 sm:flex-none"
                       >
                         Continue →
                       </button>
                     ) : (
                       <button
                         onClick={finish}
-                        className="px-6 py-3 rounded-full bg-emerald-800 text-white text-lg shadow-lg"
+                        className="px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-emerald-800 text-white text-xl shadow-lg flex-1 sm:flex-none"
                       >
                         Use this plan
                       </button>
@@ -830,13 +830,13 @@ export default function CreateOwnChart() {
           </div>
 
           {/* bottom progress / dots */}
-          <div className="mt-6 flex items-center justify-center gap-3 mb-10">
+          <div className="mt-4 sm:mt-6 flex items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-10">
             {STEPS.map((s, i) => (
               <motion.button
                 key={s.id}
                 onClick={() => setStep(i)}
                 whileHover={{ scale: 1.08 }}
-                className={`w-3 h-3 rounded-full ${
+                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${
                   i === step ? "bg-white" : "bg-white/50"
                 }`}
               />

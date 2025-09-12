@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 /*
   Simplified hard-coded personalized Diet Chart
   - Single dosha (Pitta) with a few rasa (tastes)
@@ -309,53 +309,53 @@ export default function MyDietChart() {
   const setToday = (id) => setTodayPlanId(id === todayPlanId ? null : id);
 
   return (
-    <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8] p-6">
+    <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8] p-2 sm:p-4 md:p-6">
       <Link to="/uhome">
-        <button className="px-4 py-3 mt-5 ml-5 rounded-full bg-white border text-emerald-700 text-lg disabled:opacity-50">
+        <button className="px-3 sm:px-4 py-2 sm:py-3 mt-20 mb-4 sm:mt-4 md:mt-5 ml-2 sm:ml-3 md:ml-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
           ← Back to Home
         </button>
       </Link>
-      <div className="max-w-[1600px] mx-auto  space-y-6">
+      <div className="max-w-[1600px] mx-auto space-y-4 sm:space-y-6">
         <motion.header
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
         >
-          <h1 className="text-4xl font-extrabold text-emerald-900">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-emerald-900">
             Personalized Pitta Diet
           </h1>
-          <p className="text-lg text-emerald-800/90 mt-2">
+          <p className="text-xl text-emerald-800/90 mt-2">
             Dosha : Pitta with selectable rasas. Pick a plan and mark it as
             today's plan.
           </p>
         </motion.header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           <motion.aside
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="lg:col-span-1 bg-white rounded-xl p-4 shadow"
+            className="lg:col-span-1 bg-white rounded-xl p-3 sm:p-4 shadow"
           >
-            <div className="text-lg font-semibold text-emerald-900 mb-3">
+            <div className="text-xl font-semibold text-emerald-900 mb-3">
               Dosha • {DOSHA.type}
             </div>
 
-            <div className="text-lg text-emerald-900 font-medium mb-2">
+            <div className="text-xl text-emerald-900 font-medium mb-2">
               Rule
             </div>
-            <div className="text-lg text-gray-700 mb-3">{DOSHA.rule}</div>
+            <div className="text-xl text-gray-700 mb-3">{DOSHA.rule}</div>
 
-            <div className="text-lg font-medium text-emerald-900 mb-2">
+            <div className="text-xl font-medium text-emerald-900 mb-2">
               Recommended Foods
             </div>
-            <ul className="list-disc pl-5 space-y-2 text-lg text-gray-800">
+            <ul className="list-disc pl-5 space-y-2 text-xl text-gray-800">
               {DOSHA.foods.map((f, i) => (
                 <li key={i}>{f}</li>
               ))}
             </ul>
 
             <div className="mt-4">
-              <div className="text-lg font-medium text-emerald-900 mb-2">
+              <div className="text-xl font-medium text-emerald-900 mb-2">
                 Rasa (tastes)
               </div>
               <div className="flex flex-wrap gap-2">
@@ -364,7 +364,7 @@ export default function MyDietChart() {
                     key={t.name}
                     onClick={() => setSelectedTaste(t.name)}
                     whileHover={{ scale: 1.03 }}
-                    className={`text-lg px-3 py-2 rounded ${
+                    className={`text-xl px-3 py-2 rounded ${
                       selectedTaste === t.name
                         ? "bg-emerald-600 text-white"
                         : "bg-white border text-emerald-900"
@@ -377,7 +377,7 @@ export default function MyDietChart() {
             </div>
 
             <div className="mt-4">
-              <div className="text-lg font-medium text-emerald-900 mb-2">
+              <div className="text-xl font-medium text-emerald-900 mb-2">
                 Taste Palette
               </div>
               <div className="bg-[#f6f3e8] rounded-lg p-3">

@@ -121,7 +121,7 @@ const SlideCard = ({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 1, y: -30, scale: 0.98 }}
         transition={{ duration: D.enter, ease: "easeInOut" }}
-        className="w-full max-w-[1600px] bg-white/90 rounded-2xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center h-[72vh] md:h-[78vh]"
+        className="w-full max-w-[1600px] bg-white/90 rounded-2xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center h-[85vh] sm:h-[80vh] md:h-[78vh]"
       >
         {/* Image */}
         <motion.div
@@ -133,16 +133,16 @@ const SlideCard = ({
           <motion.img
             src={data.img}
             alt={data.title}
-            className=" shadow-2xl rounded-full shadow-black h-[60vh] w-[60vh] object-cover"
+            className="shadow-2xl rounded-full shadow-black h-[40vh] w-[40vh] sm:h-[50vh] sm:w-[50vh] md:h-[60vh] md:w-[60vh] object-cover"
             whileHover={{ scale: 1.08 }}
             transition={{ duration: D.imgScale }}
           />
         </motion.div>
 
         {/* Text area */}
-        <div className="p-8 md:p-10 flex flex-col justify-center">
+        <div className="p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-center">
           <motion.h2
-            className="text-3xl md:text-4xl font-extrabold text-emerald-900 mb-3"
+            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-emerald-900 mb-2 sm:mb-3"
             initial={{ x: -30, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: D.textDelay, duration: D.textDur }}
@@ -150,7 +150,7 @@ const SlideCard = ({
             {data.title}
           </motion.h2>
           <motion.p
-            className="text-emerald-800 text-xl mb-4"
+            className="text-emerald-800 text-xl mb-3 sm:mb-4"
             initial={{ x: -30, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: D.textDelay + 0.12, duration: D.textDur }}
@@ -158,11 +158,11 @@ const SlideCard = ({
             {data.subtitle}
           </motion.p>
 
-          <div className="space-y-3 mb-4">
+          <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
             {data.bullets.map((b, i) => (
               <motion.div
                 key={i}
-                className="flex items-start gap-3"
+                className="flex items-start gap-2 sm:gap-3"
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{
@@ -171,7 +171,7 @@ const SlideCard = ({
                 }}
               >
                 <span
-                  className="w-3 h-3 rounded-full mt-1"
+                  className="w-2 h-2 sm:w-3 sm:h-3 rounded-full mt-1 sm:mt-2"
                   style={{ background: data.accent }}
                 />
                 <p className="text-xl text-emerald-900">{b}</p>
@@ -180,8 +180,8 @@ const SlideCard = ({
           </div>
 
           {/* Navigation Dots */}
-          <div className="flex items-center justify-between mt-6">
-            <div className="flex gap-2">
+          <div className="flex items-center justify-between mt-4 sm:mt-6">
+            <div className="flex gap-1 sm:gap-2">
               {Array.isArray(carouselItems) &&
                 carouselItems.map((_, i) => (
                   <motion.button
@@ -190,7 +190,7 @@ const SlideCard = ({
                       setIsPlaying && setIsPlaying(false);
                       // parent controls index; this only pauses playback
                     }}
-                    className={`w-2.5 h-2.5 rounded-full transition ${
+                    className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition ${
                       i === index
                         ? "bg-emerald-700 scale-110 shadow-md"
                         : "bg-gray-300 opacity-80"
@@ -204,35 +204,25 @@ const SlideCard = ({
           </div>
 
           {/* Prev / Play / Next */}
-          <div className="flex gap-2 mt-20">
+          <div className="flex gap-1 sm:gap-2 mt-4 sm:mt-6 md:mt-20">
             <motion.button
               onClick={onPrev}
               whileTap={{ scale: 0.92 }}
               whileHover={{ y: -3 }}
               transition={{ duration: D.controlTap }}
-              className="bg-white p-2 rounded-lg shadow hover:shadow-md"
+              className="bg-white p-1.5 sm:p-2 rounded-lg shadow hover:shadow-md text-sm sm:text-base"
               aria-label="Previous"
             >
               ◀
             </motion.button>
 
-            <motion.button
-              onClick={() => setIsPlaying && setIsPlaying(!isPlaying)}
-              whileTap={{ scale: 0.92 }}
-              whileHover={{ y: -3 }}
-              transition={{ duration: D.controlTap }}
-              className="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md font-semibold"
-              aria-label="Play Pause"
-            >
-              {isPlaying ? "Pause" : "Play"}
-            </motion.button>
 
             <motion.button
               onClick={onNext}
               whileTap={{ scale: 0.92 }}
               whileHover={{ y: -3 }}
               transition={{ duration: D.controlTap }}
-              className="bg-white p-2 rounded-lg shadow hover:shadow-md"
+              className="bg-white p-1.5 sm:p-2 rounded-lg shadow hover:shadow-md text-sm sm:text-base"
               aria-label="Next"
             >
               ▶
@@ -245,9 +235,8 @@ const SlideCard = ({
 };
 
 export default function HomeU() {
-  // consolidated state: index + direction + playback (isPlaying)
+  // consolidated state: index + playback (isPlaying)
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState("next");
   const [isPlaying, setIsPlaying] = useState(true);
 
   // reveal on scroll (Tailwind classes toggled)
@@ -279,16 +268,14 @@ export default function HomeU() {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !animated) {
             animated = true;
-            let start = 1000;
-            const goal = 5200;
+            // Counter animation placeholder - would implement actual counter here
             const dur = 1100;
             const step = 40;
             const steps = Math.ceil(dur / step);
             let i = 0;
             const t = setInterval(() => {
               i++;
-              const val = Math.round(start + ((goal - start) * i) / steps);
-              setUsersCount(val);
+              // Counter animation placeholder - would update a state variable here
               if (i >= steps) clearInterval(t);
             }, step);
           }
@@ -304,7 +291,6 @@ export default function HomeU() {
   useEffect(() => {
     if (!isPlaying) return;
     const iv = setInterval(() => {
-      setDirection("next");
       setIndex((i) => (i + 1) % STORY_CARDS.length);
     }, 4200);
     return () => clearInterval(iv);
@@ -314,11 +300,9 @@ export default function HomeU() {
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "ArrowRight") {
-        setDirection("next");
         setIndex((i) => (i + 1) % STORY_CARDS.length);
         setIsPlaying(false);
       } else if (e.key === "ArrowLeft") {
-        setDirection("prev");
         setIndex((i) => (i - 1 + STORY_CARDS.length) % STORY_CARDS.length);
         setIsPlaying(false);
       } else if (e.key === " ") {
@@ -331,35 +315,29 @@ export default function HomeU() {
 
   // navigation helpers used by SlideCard
   const onNext = () => {
-    setDirection("next");
     setIndex((prev) => (prev + 1) % STORY_CARDS.length);
   };
   const onPrev = () => {
-    setDirection("prev");
     setIndex((prev) => (prev - 1 + STORY_CARDS.length) % STORY_CARDS.length);
   };
   const jumpTo = (i) => {
-    setDirection(i > index ? "next" : "prev");
     setIndex(i);
     setIsPlaying(false);
   };
 
-  const current = STORY_CARDS[index];
-
   return (
     <div className="min-h-screen text-gray-800">
-      
       {/* Slider at start - centered */}
-      <section className="w-full h-screen relative overflow-hidden">
+      <section className="w-full h-screen relative mt-8 overflow-hidden">
         {/* Profile icon fixed to top-right of the viewport */}
         <a
           href="/uprofile"
           aria-label="View your profile"
-          className="fixed top-5 right-10 z-50 h-14 w-14 bg-amber-950 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-200 hover:opacity-90"
+          className="fixed top-3 right-3 sm:top-5 sm:right-10 z-50 h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 bg-amber-950 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-200 hover:opacity-90"
         >
           <svg
-            width="18"
-            height="18"
+            width="14"
+            height="14"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -368,6 +346,7 @@ export default function HomeU() {
             strokeLinejoin="round"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
+            className="sm:w-[18px] sm:h-[18px]"
           >
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
@@ -392,12 +371,12 @@ export default function HomeU() {
         </AnimatePresence>
 
         {/* Dots centered bottom */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex gap-3">
+        <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex gap-2 sm:gap-3">
           {STORY_CARDS.map((_, i) => (
             <motion.button
               key={i}
               onClick={() => jumpTo(i)}
-              className={`w-3 h-3 rounded-full transition ${
+              className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition ${
                 i === index
                   ? "bg-emerald-700 scale-110 shadow-lg"
                   : "bg-gray-300 opacity-80"
@@ -413,27 +392,27 @@ export default function HomeU() {
       <div className="bg-gradient-to-l from-white to-[#f1eacf]">
         {/* HERO */}
         <header
-          className="reveal-on-scroll translate-y-6 transition-all duration-700 ease-[cubic-bezier(.2,.9,.2,1)] py-12"
+          className="reveal-on-scroll translate-y-6 transition-all duration-700 ease-[cubic-bezier(.2,.9,.2,1)] py-8 sm:py-10 md:py-12"
           aria-hidden={true}
         >
-          <div className="max-w-8xl mx-auto px-6 flex flex-col lg:flex-row justify-evenly items-center gap-8">
+          <div className="max-w-8xl mx-auto px-4 sm:px-6 flex flex-col lg:flex-row justify-evenly items-center gap-6 sm:gap-8">
             <div className="flex-1 max-w-2xl">
-              <div className="text-2xl font-extrabold text-emerald-800">
+              <div className="text-xl sm:text-2xl font-extrabold text-emerald-800">
                 AharaSutra
               </div>
-              <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight text-emerald-900">
+              <h1 className="mt-3 sm:mt-4 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-tight text-emerald-900">
                 Learn how a personalised diet chart improves digestion, energy
                 &amp; wellbeing
               </h1>
-              <p className="mt-4 text-xl text-emerald-800/90">
+              <p className="mt-3 sm:mt-4 text-xl text-emerald-800/90">
                 Interactive, animated guidance for new users. Swipe or use the
                 controls to step through short story cards that explain the diet
                 chart, benefits and how to use it.
               </p>
 
-              <div className="mt-6 flex items-center gap-4">
+              <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 <button
-                  className="px-5 text-2xl py-5 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg transform transition hover:-translate-y-1"
+                  className="px-4 sm:px-5 text-xl sm:text-2xl py-3 sm:py-4 md:py-5 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg transform transition hover:-translate-y-1"
                   onClick={() => {
                     setIndex(0);
                     setIsPlaying(true);
@@ -444,12 +423,12 @@ export default function HomeU() {
                 </button>
 
                 <Link to="/create-own-chart">
-                  <button className="px-4 text-2xl py-5 rounded-xl bg-white shadow-md text-emerald-600 font-semibold">
+                  <button className="px-3 sm:px-4 text-xl sm:text-2xl py-3 sm:py-4 md:py-5 rounded-xl bg-white shadow-md text-emerald-600 font-semibold w-full sm:w-auto">
                     Create Your Own Chart
                   </button>
                 </Link>
                 <button
-                  className="px-4 text-2xl py-5 cursor-not-allowed rounded-xl bg-white shadow-md text-emerald-600 font-semibold"
+                  className="px-3 sm:px-4 text-xl sm:text-2xl py-3 sm:py-4 md:py-5 cursor-not-allowed rounded-xl bg-white shadow-md text-emerald-600 font-semibold w-full sm:w-auto"
                   onClick={() => window.alert("Create Chart placeholder")}
                 >
                   Go to Dietitian
@@ -457,12 +436,12 @@ export default function HomeU() {
               </div>
             </div>
 
-            <div className="w-full sm:w-[500px]">
+            <div className="w-full sm:w-[400px] md:w-[500px]">
               <div className="rounded-full overflow-visible shadow-2xl">
                 <img
                   src={HERO_IMG}
                   alt="hero"
-                  className="w-full h-64 object-contain"
+                  className="w-full h-48 sm:h-56 md:h-64 object-contain"
                 />
               </div>
             </div>
@@ -470,10 +449,10 @@ export default function HomeU() {
         </header>
 
         {/* INFO STRIP */}
-        <div className="reveal-on-scroll bg-gradient-to-b  from-white to-[#f7f6f2] opacity-0 translate-y-6 transition-all duration-700 ease-[cubic-bezier(.2,.9,.2,1)] max-w-7xl mx-auto mt-8 px-6">
-          <div className="bg-gradient-to-r from-white to-emerald-50 rounded-xl shadow-lg p-5 flex flex-col sm:flex-row gap-4">
-            <div className="flex text-xl items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+        <div className="reveal-on-scroll bg-gradient-to-b  from-white to-[#f7f6f2] opacity-0 translate-y-6 transition-all duration-700 ease-[cubic-bezier(.2,.9,.2,1)] max-w-7xl mx-auto mt-6 sm:mt-8 px-4 sm:px-6">
+          <div className="bg-gradient-to-r from-white to-emerald-50 rounded-xl shadow-lg p-4 sm:p-5 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="flex text-xl items-start gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg sm:text-xl">
                 1
               </div>
               <div>
@@ -487,8 +466,8 @@ export default function HomeU() {
               </div>
             </div>
 
-            <div className="flex text-xl  items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
+            <div className="flex text-xl items-start gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-lg sm:text-xl">
                 2
               </div>
               <div>
@@ -501,8 +480,8 @@ export default function HomeU() {
               </div>
             </div>
 
-            <div className="flex  text-xl items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-yellow-100 text-yellow-700 flex items-center justify-center font-bold">
+            <div className="flex text-xl items-start gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-yellow-100 text-yellow-700 flex items-center justify-center font-bold text-lg sm:text-xl">
                 3
               </div>
               <div>
@@ -518,8 +497,8 @@ export default function HomeU() {
         </div>
 
         {/* Feature grid */}
-        <section className="max-w-7xl mx-auto text-xl px-6 mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white  rounded-xl p-5 shadow-lg transform hover:-translate-y-2 transition">
+        <section className="max-w-7xl mx-auto text-xl px-4 sm:px-6 mt-8 sm:mt-10 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          <div className="bg-white rounded-xl p-4 sm:p-5 shadow-lg transform hover:-translate-y-2 transition">
             <h3 className="font-bold text-emerald-900">
               Personalised Portions
             </h3>
@@ -529,14 +508,14 @@ export default function HomeU() {
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-5 shadow-lg transform hover:-translate-y-2 transition">
+          <div className="bg-white rounded-xl p-4 sm:p-5 shadow-lg transform hover:-translate-y-2 transition">
             <h3 className="font-bold text-emerald-900">Seasonal Wisdom</h3>
             <p className="mt-2 text-emerald-800">
               Simple swaps depending on season and your constitution.
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-5 shadow-lg transform hover:-translate-y-2 transition">
+          <div className="bg-white rounded-xl p-4 sm:p-5 shadow-lg transform hover:-translate-y-2 transition">
             <h3 className="font-bold text-emerald-900">Herbs & Allies</h3>
             <p className="mt-2 text-emerald-800">
               Recommendations for gentle herb support like Triphala, Turmeric
@@ -546,15 +525,15 @@ export default function HomeU() {
         </section>
 
         {/* FAQ and Testimonials */}
-        <section className="max-w-7xl text-xl mx-auto px-6 mt-12 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6">
+        <section className="max-w-7xl text-xl mx-auto px-4 sm:px-6 mt-8 sm:mt-10 md:mt-12 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 sm:gap-6">
           <div>
-            <h3 className="text-emerald-900 font-bold mb-4">
+            <h3 className="text-emerald-900 font-bold mb-3 sm:mb-4">
               Frequently asked
             </h3>
             {FAQ.map((f, i) => (
               <details
                 key={i}
-                className="mb-3 bg-white p-4 rounded-lg shadow"
+                className="mb-2 sm:mb-3 bg-white p-3 sm:p-4 rounded-lg shadow"
                 open={i === 0}
               >
                 <summary className="font-semibold text-emerald-900 cursor-pointer">
@@ -566,11 +545,13 @@ export default function HomeU() {
           </div>
 
           <aside>
-            <h3 className="text-emerald-900 font-bold mb-4">What users say</h3>
+            <h3 className="text-emerald-900 font-bold mb-3 sm:mb-4">
+              What users say
+            </h3>
             {TESTIMONIALS.map((t, i) => (
               <div
                 key={i}
-                className="bg-white p-4 rounded-lg shadow mb-3 transform hover:-translate-y-1 transition"
+                className="bg-white p-3 sm:p-4 rounded-lg shadow mb-2 sm:mb-3 transform hover:-translate-y-1 transition"
               >
                 <div className="font-semibold text-emerald-900">{t.name}</div>
                 <div className="text-emerald-800 mt-2">{t.text}</div>
@@ -580,8 +561,8 @@ export default function HomeU() {
         </section>
 
         {/* CTA strip */}
-        <section className="max-w-7xl text-xl mx-auto px-6 mt-12">
-          <div className="bg-gradient-to-r from-emerald-50 to-white rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between shadow-lg">
+        <section className="max-w-7xl text-xl mx-auto px-4 sm:px-6 mt-8 sm:mt-10 md:mt-12">
+          <div className="bg-gradient-to-r from-emerald-50 to-white rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between shadow-lg gap-3 sm:gap-0">
             <div>
               <div className="font-bold text-emerald-900">
                 New user? Start the guided tour
@@ -592,9 +573,9 @@ export default function HomeU() {
               </div>
             </div>
 
-            <div className="mt-4 sm:mt-0 flex gap-3">
+            <div className="mt-3 sm:mt-0 flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
               <button
-                className="px-4 py-2 rounded-xl bg-emerald-600 text-white shadow hover:-translate-y-1 transition"
+                className="px-3 sm:px-4 py-2 rounded-xl bg-emerald-600 text-white shadow hover:-translate-y-1 transition text-xl"
                 onClick={() => {
                   setIndex(0);
                   setIsPlaying(true);
@@ -604,7 +585,7 @@ export default function HomeU() {
                 Start Guide
               </button>
               <button
-                className="px-4 py-2 rounded-xl bg-white shadow text-emerald-600"
+                className="px-3 sm:px-4 py-2 rounded-xl bg-white shadow text-emerald-600 text-xl"
                 onClick={() => window.alert("Create Chart placeholder")}
               >
                 Create Chart
@@ -614,7 +595,7 @@ export default function HomeU() {
         </section>
 
         {/* Footer */}
-        <footer className="max-w-8xl mx-auto px-6 mt-10 pb-12 text-gray-500">
+        <footer className="max-w-8xl mx-auto px-4 sm:px-6 mt-8 sm:mt-10 pb-8 sm:pb-12 text-gray-500 text-xl">
           AharaSutra — quick, animated diet guidance. Designed for new users to
           access core information easily.
         </footer>

@@ -67,7 +67,6 @@ export default function AddPatient() {
       day: "2-digit",
     });
     update("basic", "date", today);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Auto-calc BMI
@@ -138,16 +137,18 @@ export default function AddPatient() {
   };
 
   return (
-    <div className=" bg-gradient-to-l  from-white to-emerald-200  rounded-2xl h-[800px] w-[1800px] mx-auto">
-      <div className="max-w-8xl mx-auto px-20 py-8 mt-24">
+    <div className="min-h-screen bg-gradient-to-l from-white to-emerald-200">
+      <div className="max-w-8xl mx-auto px-4 sm:px-8 md:px-12 lg:px-20 py-4 sm:py-6 md:py-8 mt-16 sm:mt-20 md:mt-24">
         <Link to="/dhome">
-          <button className="px-4 py-3 mb-5 rounded-full bg-white border text-emerald-700 text-lg disabled:opacity-50">
+          <button className="px-4 py-3 mb-4 sm:mb-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
             ← Back to Home
           </button>
         </Link>
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">Add Patient</h1>
-          <div className="w-64">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4 sm:gap-0">
+          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
+            Add Patient
+          </h1>
+          <div className="w-full sm:w-64">
             <div className="bg-gray-200 h-2 rounded overflow-hidden">
               <div
                 className="bg-emerald-500 h-2 rounded transition-all"
@@ -155,26 +156,26 @@ export default function AddPatient() {
                 aria-hidden
               />
             </div>
-            <div className="text-xl text-gray-900 mt-1 text-right">
+            <div className="text-xl text-gray-900 mt-1 text-left sm:text-right">
               {progress}% complete
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
           {/* Step navigation (left) */}
-          <nav className="lg:col-span-1 sticky top-24 self-start space-y-3">
+          <nav className="lg:col-span-1 sticky top-20 sm:top-24 self-start space-y-2 sm:space-y-3">
             {SECTIONS.map((s, i) => (
               <button
                 key={s.key}
                 onClick={() => go(i)}
-                className={`w-full text-left px-4 py-3 rounded-lg shadow-sm flex items-center gap-3 transition transform ${
+                className={`w-full text-left px-3 sm:px-4 py-2 sm:py-3 rounded-lg shadow-sm flex items-center gap-2 sm:gap-3 transition transform ${
                   i === step
                     ? "bg-emerald-600 text-white -translate-x-1"
                     : "bg-white text-gray-700 hover:-translate-y-0.5"
                 }`}
               >
-                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white text-emerald-600 font-semibold">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-white text-emerald-600 font-semibold text-sm sm:text-base">
                   {s.id}
                 </div>
                 <div className="flex-1">
@@ -191,7 +192,7 @@ export default function AddPatient() {
           {/* Full page step panels (right) */}
           <main
             className="lg:col-span-4 relative bg-white rounded-lg shadow overflow-hidden"
-            style={{ minHeight: 520 }}
+            style={{ minHeight: "400px" }}
           >
             <form onSubmit={handleSubmit} className="h-full relative">
               <div ref={containerRef} className="h-full relative">
@@ -203,8 +204,8 @@ export default function AddPatient() {
                     aria-hidden={i !== step}
                     style={{ position: "absolute" }}
                   >
-                    <div className="p-8 h-full overflow-auto">
-                      <header className="flex items-center justify-between mb-6">
+                    <div className="p-4 sm:p-6 md:p-8 h-full overflow-auto">
+                      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-2 sm:gap-0">
                         <div>
                           <h2 className="text-xl font-semibold text-gray-800">
                             {s.title}
@@ -219,9 +220,9 @@ export default function AddPatient() {
                       </header>
 
                       {/* Section content */}
-                      <div className="space-y-6">
+                      <div className="space-y-4 sm:space-y-6">
                         {s.key === "basic" && (
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                             <div>
                               <label className="block text-xl text-gray-600">
                                 Patient Name
@@ -231,7 +232,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("basic", "patientName", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 placeholder="Full name"
                                 required
                               />
@@ -246,11 +247,11 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("basic", "age", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 placeholder="Age in years"
                               />
                             </div>
-                            <div>
+                            <div className="sm:col-span-2 md:col-span-1">
                               <label className="block text-xl text-gray-600">
                                 Gender
                               </label>
@@ -259,7 +260,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("basic", "gender", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                               >
                                 <option value="">Select Gender</option>
                                 <option value="male">Male</option>
@@ -271,7 +272,7 @@ export default function AddPatient() {
                         )}
 
                         {s.key === "anthro" && (
-                          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                             <div>
                               <label className="block text-xl text-gray-600">
                                 Height (cm)
@@ -281,7 +282,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("anthro", "height", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 placeholder="e.g., 173"
                               />
                             </div>
@@ -295,7 +296,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("anthro", "weight", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 placeholder="kg"
                               />
                             </div>
@@ -308,7 +309,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("anthro", "bmi", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg bg-gray-50"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg bg-gray-50 text-xl"
                                 placeholder="Auto-calculated or override"
                               />
                             </div>
@@ -321,7 +322,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("anthro", "waist", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 placeholder="cm"
                               />
                             </div>
@@ -329,7 +330,7 @@ export default function AddPatient() {
                         )}
 
                         {s.key === "vitals" && (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
                               <label className="block text-xl text-gray-600">
                                 Pulse Rate (BPM)
@@ -340,7 +341,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("vitals", "pulseRate", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 placeholder="e.g., 72"
                               />
                             </div>
@@ -357,7 +358,7 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 placeholder="e.g., 120/80"
                               />
                             </div>
@@ -374,7 +375,7 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                               >
                                 <option value="">Select</option>
                                 <option value="<1">&lt; 1 L</option>
@@ -397,7 +398,7 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                               >
                                 <option value="">Select meals/day</option>
                                 <option value="1">1 meal/day</option>
@@ -411,7 +412,7 @@ export default function AddPatient() {
                         )}
 
                         {s.key === "lifestyle" && (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
                               <label className="block text-xl text-gray-600">
                                 Cuisine Preference
@@ -425,7 +426,7 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 placeholder="e.g., Indian"
                               />
                             </div>
@@ -442,7 +443,7 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 placeholder="Vegetarian, Vegan, etc."
                               />
                             </div>
@@ -459,7 +460,7 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                               >
                                 <option value="">Select</option>
                                 <option value="none">None</option>
@@ -473,54 +474,34 @@ export default function AddPatient() {
                                 Addiction Habits
                               </label>
                               <div className="mt-2 flex gap-2 flex-wrap">
-                                {{
-                                  Tea: "Tea",
-                                  Coffee: "Coffee",
-                                  Alcohol: "Alcohol",
-                                  Smoking: "Smoking",
-                                  Tobacco: "Tobacco",
-                                }[
-                                  Object.keys({
-                                    Tea: "Tea",
-                                    Coffee: "Coffee",
-                                    Alcohol: "Alcohol",
-                                    Smoking: "Smoking",
-                                    Tobacco: "Tobacco",
-                                  }).find((key) =>
-                                    patient.lifestyle.addictionHabits.includes(
-                                      key
-                                    )
-                                  )
-                                ]
-                                  ? Object.keys({
-                                      Tea: "Tea",
-                                      Coffee: "Coffee",
-                                      Alcohol: "Alcohol",
-                                      Smoking: "Smoking",
-                                      Tobacco: "Tobacco",
-                                    }).map((a) => (
-                                      <button
-                                        key={a}
-                                        type="button"
-                                        onClick={() =>
-                                          toggleArrayField(
-                                            "lifestyle",
-                                            "addictionHabits",
-                                            a
-                                          )
-                                        }
-                                        className={`px-3 py-2 rounded-lg border ${
-                                          patient.lifestyle.addictionHabits.includes(
-                                            a
-                                          )
-                                            ? "bg-emerald-100 border-emerald-300"
-                                            : "bg-white"
-                                        }`}
-                                      >
-                                        <span className="text-xl">{a}</span>
-                                      </button>
-                                    ))
-                                  : null}
+                                {[
+                                  "Tea",
+                                  "Coffee",
+                                  "Alcohol",
+                                  "Smoking",
+                                  "Tobacco",
+                                ].map((a) => (
+                                  <button
+                                    key={a}
+                                    type="button"
+                                    onClick={() =>
+                                      toggleArrayField(
+                                        "lifestyle",
+                                        "addictionHabits",
+                                        a
+                                      )
+                                    }
+                                    className={`px-3 py-2 rounded-lg border text-xl ${
+                                      patient.lifestyle.addictionHabits.includes(
+                                        a
+                                      )
+                                        ? "bg-emerald-100 border-emerald-300"
+                                        : "bg-white"
+                                    }`}
+                                  >
+                                    {a}
+                                  </button>
+                                ))}
                               </div>
 
                               {patient.lifestyle.addictionHabits.includes(
@@ -539,7 +520,7 @@ export default function AddPatient() {
                                         e.target.value
                                       )
                                     }
-                                    className="mt-1 w-full p-3 border rounded-lg"
+                                    className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                     placeholder="e.g., 5/day"
                                   />
                                 </div>
@@ -554,7 +535,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("lifestyle", "dosha", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                               >
                                 <option value="">Select Dosha</option>
                                 <option value="Vata">Vata</option>
@@ -571,7 +552,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("lifestyle", "rasa", e.target.value)
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                               >
                                 <option value="">Select</option>
                                 <option value="sweet">Sweet</option>
@@ -583,7 +564,7 @@ export default function AddPatient() {
                         )}
 
                         {s.key === "medical" && (
-                          <div className="space-y-4">
+                          <div className="space-y-3 sm:space-y-4">
                             <div>
                               <label className="block text-xl text-gray-600">
                                 Medical History
@@ -597,12 +578,12 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-3 border rounded-lg"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 rows="4"
                                 placeholder="Past and present diseases"
                               />
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                               <div>
                                 <label className="block text-xl text-gray-600">
                                   Bowel Movements
@@ -616,7 +597,7 @@ export default function AddPatient() {
                                       e.target.value
                                     )
                                   }
-                                  className="mt-1 w-full p-3 border rounded-lg"
+                                  className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                 >
                                   <option value="">Select</option>
                                   <option value="regular">Regular</option>
@@ -639,7 +620,7 @@ export default function AddPatient() {
                                       e.target.value
                                     )
                                   }
-                                  className="mt-1 w-full p-3 border rounded-lg"
+                                  className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
                                   placeholder="Any known allergies"
                                 />
                               </div>
@@ -649,37 +630,37 @@ export default function AddPatient() {
                       </div>
 
                       {/* footer controls inside panel */}
-                      <div className="mt-8 flex items-center justify-between">
+                      <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
                         <div className="text-xl text-gray-500">
                           Section:{" "}
                           <span className="font-medium text-gray-700">
                             {s.title}
                           </span>
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
                           <button
                             type="button"
                             onClick={() => go(step - 1)}
                             disabled={step === 0}
-                            className="px-4 py-2 rounded border bg-white disabled:opacity-50"
+                            className="px-3 sm:px-4 py-2 rounded border bg-white disabled:opacity-50 text-xl flex-1 sm:flex-none"
                           >
-                            <span className="text-xl">Previous</span>
+                            Previous
                           </button>
                           {i < SECTIONS.length - 1 ? (
                             <button
                               type="button"
                               onClick={() => go(step + 1)}
-                              className="px-4 py-2 rounded bg-emerald-600 text-white"
+                              className="px-3 sm:px-4 py-2 rounded bg-emerald-600 text-white text-xl flex-1 sm:flex-none"
                             >
-                              <span className="text-xl">Next</span>
+                              Next
                             </button>
                           ) : (
                             <button
                               onClick={() => navigate("/diet-chart")}
                               type="submit"
-                              className="px-4 py-2 rounded bg-emerald-700 text-white"
+                              className="px-3 sm:px-4 py-2 rounded bg-emerald-700 text-white text-xl flex-1 sm:flex-none"
                             >
-                              <span className="text-xl">Save / Submit</span>
+                              Save / Submit
                             </button>
                           )}
                         </div>

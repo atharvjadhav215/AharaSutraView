@@ -225,23 +225,6 @@ export default function Dashboard() {
     patients[0]?.id || null
   );
   const [selectedRecordIdx, setSelectedRecordIdx] = useState(0);
-  const [highlighted, setHighlighted] = useState(null); // hover highlight
-
-  // small animated counters
-  const totalPatients = patients.length;
-  const [activeCount, setActiveCount] = useState(0);
-  useEffect(() => {
-    let r = 0;
-    const t = setInterval(() => {
-      r += 5;
-      setActiveCount((s) => {
-        const next = Math.min(totalPatients, s + 1);
-        if (next === totalPatients) clearInterval(t);
-        return next;
-      });
-    }, 60);
-    return () => clearInterval(t);
-  }, [totalPatients]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -271,45 +254,45 @@ export default function Dashboard() {
   }, [selectedPlan]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8] p-6">
+    <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8] p-2 sm:p-3 md:p-4 lg:p-6">
       <Link to="/dhome">
-        <button className="px-4 py-3 mt-5 ml-5 mb-5 rounded-full bg-white border text-emerald-700 text-lg disabled:opacity-50">
+        <button className="px-3 sm:px-4 py-2 sm:py-3 mt-20 sm:mt-3 md:mt-5 ml-2 sm:ml-3 md:ml-5 mb-3 sm:mb-4 md:mb-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
           ← Back to Home
         </button>
       </Link>
-      <div className="max-w-8xl mx-auto ">
-        <header className="flex items-center justify-between mb-6">
+      <div className="max-w-8xl mx-auto">
+        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 md:mb-6 gap-2 sm:gap-3 md:gap-0">
           <div>
-            <h1 className="text-3xl font-extrabold text-emerald-900">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-emerald-900">
               Dietitian Dashboard
             </h1>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <button
               onClick={() => navigate("/add-patient")}
-              className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold text-lg shadow"
+              className="px-3 sm:px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold text-xl shadow hover:shadow-md transition-shadow w-full sm:w-auto"
             >
               Add Patient
             </button>
             <button
               onClick={() => navigate("/dashboard")}
-              className="px-4 py-2 rounded-xl bg-white text-emerald-600 font-semibold text-lg shadow"
+              className="px-3 sm:px-4 py-2 rounded-xl bg-white text-emerald-600 font-semibold text-xl shadow hover:shadow-md transition-shadow w-full sm:w-auto"
             >
               View Your Dashboard
             </button>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
           {/* Left column: patient list */}
-          <aside className="lg:col-span-1 bg-white rounded-xl p-4 shadow">
-            <div className="flex items-center gap-3 mb-4">
+          <aside className="lg:col-span-1 bg-white rounded-xl p-2 sm:p-3 md:p-4 shadow">
+            <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 md:mb-4">
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search patients or goals..."
-                className="w-full p-3 border rounded-lg text-lg"
+                className="w-full p-2 sm:p-3 border rounded-lg text-xl"
               />
             </div>
 
@@ -317,10 +300,10 @@ export default function Dashboard() {
               initial="hidden"
               animate="visible"
               variants={listVariants}
-              className="space-y-3 overflow-y-auto max-h-[90vh]"
+              className="space-y-1 sm:space-y-2 md:space-y-3 overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[90vh]"
             >
               {filtered.length === 0 && (
-                <div className="text-lg text-gray-600">No patients found.</div>
+                <div className="text-xl text-gray-600">No patients found.</div>
               )}
 
               {filtered.map((p) => (
@@ -331,49 +314,49 @@ export default function Dashboard() {
                     setSelectedPatientId(p.id);
                     setSelectedRecordIdx(0);
                   }}
-                  onMouseEnter={() => setHighlighted(p.id)}
-                  onMouseLeave={() => setHighlighted(null)}
                   whileHover={{ scale: 1.02 }}
-                  className={`w-full text-left p-3 rounded-lg border transition-colors flex flex-col gap-2 ${
+                  className={`w-full text-left p-2 sm:p-3 rounded-lg border transition-colors flex flex-col gap-1 sm:gap-2 ${
                     selectedPatientId === p.id
                       ? "bg-emerald-50 border-emerald-200"
                       : "bg-white"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="rounded-full w-14 h-14 bg-emerald-100 flex items-center justify-center text-2xl font-bold text-emerald-700">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="rounded-full w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-emerald-100 flex items-center justify-center text-base sm:text-lg md:text-2xl font-bold text-emerald-700">
                         {p.name
                           .split(" ")
                           .map((n) => n[0])
                           .slice(0, 2)
                           .join("")}
                       </div>
-                      <div>
-                        <div className="font-semibold text-lg text-emerald-900">
+                      <div className="min-w-0 flex-1">
+                        <div className="font-semibold text-xl text-emerald-900 truncate">
                           {p.name}
                         </div>
-                        <div className="text-lg text-gray-700">
+                        <div className="text-xl text-gray-700">
                           {p.age} • {p.gender}
                         </div>
-                        <div className="text-lg text-gray-600 mt-1">
+                        <div className="text-xl text-gray-600 mt-1 line-clamp-1">
                           {p.goal}
                         </div>
                       </div>
                     </div>
-                    <div className="text-lg text-gray-600 text-right">
-                      <div>Last: {p.lastVisit}</div>
-                      <div className="mt-2">
-                        <div className="text-sm text-emerald-700 font-medium">
+                    <div className="text-xl text-gray-600 text-right flex-shrink-0">
+                      <div className="text-sm sm:text-base">
+                        Last: {p.lastVisit}
+                      </div>
+                      <div className="mt-1 sm:mt-2">
+                        <div className="text-xs sm:text-sm text-emerald-700 font-medium">
                           Adherence
                         </div>
-                        <div className="w-28 bg-gray-200 h-3 rounded overflow-hidden mt-1">
+                        <div className="w-16 sm:w-20 md:w-28 bg-gray-200 h-2 sm:h-3 rounded overflow-hidden mt-1">
                           <div
                             style={{
                               width: `${p.adherence}%`,
                               transition: "width 600ms ease",
                             }}
-                            className={`h-3 ${
+                            className={`h-2 sm:h-3 ${
                               p.adherence > 75
                                 ? "bg-emerald-600"
                                 : p.adherence > 45
@@ -382,14 +365,14 @@ export default function Dashboard() {
                             }`}
                           />
                         </div>
-                        <div className="text-lg text-gray-600 mt-1">
+                        <div className="text-sm sm:text-xl text-gray-600 mt-1">
                           {p.adherence}%
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="text-lg text-gray-600 line-clamp-2">
+                  <div className="text-xl text-gray-600 line-clamp-2">
                     {p.notes}
                   </div>
                 </motion.button>
@@ -398,9 +381,9 @@ export default function Dashboard() {
           </aside>
 
           {/* Right: patient detail and history (span 3 columns) */}
-          <main className="lg:col-span-3 space-y-6">
+          <main className="lg:col-span-3 space-y-2 sm:space-y-3 md:space-y-4 lg:space-y-6">
             {!selectedPatient ? (
-              <div className="bg-white rounded-xl p-6 shadow text-lg text-gray-700">
+              <div className="bg-white rounded-xl p-3 sm:p-4 md:p-6 shadow text-xl text-gray-700">
                 Select a patient to view details.
               </div>
             ) : (
@@ -410,48 +393,48 @@ export default function Dashboard() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
-                  className="bg-white rounded-2xl p-6 shadow"
+                  className="bg-white rounded-2xl p-3 sm:p-4 md:p-6 shadow"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="flex items-center gap-4">
-                        <div className="rounded-full w-20 h-20 bg-emerald-100 flex items-center justify-center text-3xl font-bold text-emerald-700">
+                  <div className="flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-3 md:gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                        <div className="rounded-full w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-emerald-100 flex items-center justify-center text-lg sm:text-xl md:text-3xl font-bold text-emerald-700">
                           {selectedPatient.name
                             .split(" ")
                             .map((s) => s[0])
                             .slice(0, 2)
                             .join("")}
                         </div>
-                        <div>
-                          <h2 className="text-2xl font-semibold text-emerald-900">
+                        <div className="min-w-0 flex-1">
+                          <h2 className="text-xl sm:text-2xl font-semibold text-emerald-900">
                             {selectedPatient.name}
                           </h2>
-                          <div className="text-lg text-gray-700">
+                          <div className="text-xl text-gray-700">
                             {selectedPatient.age} • {selectedPatient.gender} •
                             BMI:{" "}
                             <span className="font-medium">
                               {selectedPatient.bmi}
                             </span>
                           </div>
-                          <div className="text-lg text-gray-600 mt-1">
+                          <div className="text-xl text-gray-600 mt-1">
                             Contact: {selectedPatient.contact}
                           </div>
-                          <div className="text-lg text-gray-600 mt-1">
+                          <div className="text-xl text-gray-600 mt-1">
                             Last visit: {selectedPatient.lastVisit}
                           </div>
                         </div>
                       </div>
 
-                      <div className="mt-4 text-lg text-gray-700">
-                        <div className="font-medium text-lg text-emerald-900">
+                      <div className="mt-2 sm:mt-3 md:mt-4 text-xl text-gray-700">
+                        <div className="font-medium text-xl text-emerald-900">
                           Notes
                         </div>
                         <div className="mt-1">{selectedPatient.notes}</div>
-                        <div className="mt-3 flex gap-3">
+                        <div className="mt-2 sm:mt-3 flex flex-wrap gap-1 sm:gap-2 md:gap-3">
                           {selectedPatient.flags.map((f) => (
                             <span
                               key={f}
-                              className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-lg border"
+                              className="px-2 sm:px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xl border"
                             >
                               {f}
                             </span>
@@ -460,12 +443,12 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-end gap-3">
+                    <div className="flex flex-row sm:flex-col items-stretch sm:items-end gap-2 sm:gap-3 w-full sm:w-auto">
                       <button
                         onClick={() =>
                           navigate(`/add-patient?edit=${selectedPatient.id}`)
                         }
-                        className="px-4 py-2 rounded-lg bg-white text-emerald-600 border font-medium text-lg"
+                        className="px-3 sm:px-4 py-2 rounded-lg bg-white text-emerald-600 border font-medium text-xl flex-1 sm:flex-none"
                       >
                         Edit Patient
                       </button>
@@ -473,7 +456,7 @@ export default function Dashboard() {
                         onClick={() =>
                           alert("Export patient summary (placeholder)")
                         }
-                        className="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold text-lg"
+                        className="px-3 sm:px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold text-xl flex-1 sm:flex-none"
                       >
                         Export Summary
                       </button>
@@ -481,12 +464,12 @@ export default function Dashboard() {
                   </div>
 
                   {/* History + preview */}
-                  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="md:col-span-1 bg-[#f6f3e8] rounded-lg p-4">
-                      <div className="font-semibold text-lg text-emerald-900 mb-2">
+                  <div className="mt-3 sm:mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
+                    <div className="md:col-span-1 bg-[#f6f3e8] rounded-lg p-2 sm:p-3 md:p-4">
+                      <div className="font-semibold text-xl text-emerald-900 mb-2">
                         Chart History
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1 sm:space-y-2">
                         <AnimatePresence>
                           {selectedPatient.history.map((rec, idx) => {
                             const plan = findPlan(rec.planId);
@@ -501,26 +484,26 @@ export default function Dashboard() {
                                   delay: idx * 0.03,
                                 }}
                                 onClick={() => setSelectedRecordIdx(idx)}
-                                className={`w-full text-left p-3 rounded-lg ${
+                                className={`w-full text-left p-2 sm:p-3 rounded-lg ${
                                   selectedRecordIdx === idx
                                     ? "bg-white border ring-2 ring-emerald-200"
                                     : "bg-white/90"
                                 } shadow`}
                               >
                                 <div className="flex items-center justify-between">
-                                  <div>
-                                    <div className="font-medium text-lg text-emerald-900">
+                                  <div className="min-w-0 flex-1">
+                                    <div className="font-medium text-xl text-emerald-900 truncate">
                                       {plan.name}
                                     </div>
-                                    <div className="text-lg text-gray-700">
+                                    <div className="text-xl text-gray-700">
                                       {rec.note}
                                     </div>
                                   </div>
-                                  <div className="text-lg text-gray-600">
+                                  <div className="text-xl text-gray-600 flex-shrink-0 ml-2">
                                     {rec.date}
                                   </div>
                                 </div>
-                                <div className="text-lg text-gray-600 mt-2">
+                                <div className="text-xl text-gray-600 mt-2 line-clamp-2">
                                   {plan.summary}
                                 </div>
                               </motion.button>
@@ -530,15 +513,15 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="md:col-span-2 bg-white rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <div className="text-2xl font-semibold text-emerald-900">
+                    <div className="md:col-span-2 bg-white rounded-lg p-2 sm:p-3 md:p-4">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 sm:mb-3 gap-2 sm:gap-0">
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xl sm:text-2xl font-semibold text-emerald-900">
                             {selectedRecord
                               ? findPlan(selectedRecord.planId).name
                               : "No plan selected"}
                           </div>
-                          <div className="text-lg text-gray-700 mt-1">
+                          <div className="text-xl text-gray-700 mt-1">
                             {selectedRecord
                               ? selectedRecord.date +
                                 " — " +
@@ -547,7 +530,7 @@ export default function Dashboard() {
                           </div>
                         </div>
 
-                        <div className="flex gap-2 items-center">
+                        <div className="flex gap-1 sm:gap-2 items-center w-full sm:w-auto">
                           <button
                             onClick={() => {
                               navigator.clipboard?.writeText(
@@ -561,13 +544,13 @@ export default function Dashboard() {
                               );
                               alert("Copied summary to clipboard");
                             }}
-                            className="px-3 py-2 bg-white text-emerald-600 rounded-lg text-lg border"
+                            className="px-2 sm:px-3 py-2 bg-white text-emerald-600 rounded-lg text-xl border flex-1 sm:flex-none"
                           >
                             Copy
                           </button>
                           <button
                             onClick={() => alert("Share placeholder")}
-                            className="px-3 py-2 bg-emerald-600 text-white rounded-lg text-lg"
+                            className="px-2 sm:px-3 py-2 bg-emerald-600 text-white rounded-lg text-xl flex-1 sm:flex-none"
                           >
                             Share
                           </button>
@@ -575,38 +558,38 @@ export default function Dashboard() {
                       </div>
 
                       {!selectedPlan ? (
-                        <div className="text-lg text-gray-600">
+                        <div className="text-xl text-gray-600">
                           Select a record to preview the diet chart.
                         </div>
                       ) : (
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="bg-[#f6f3e8] rounded-lg p-4">
-                              <div className="text-lg font-medium text-emerald-900">
+                        <div className="space-y-2 sm:space-y-3 md:space-y-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
+                            <div className="bg-[#f6f3e8] rounded-lg p-2 sm:p-3 md:p-4">
+                              <div className="text-xl font-medium text-emerald-900">
                                 Estimated Calories
                               </div>
                               <motion.div
                                 initial={{ scale: 0.98, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 transition={{ duration: 0.35 }}
-                                className="text-2xl font-extrabold text-emerald-900 mt-2"
+                                className="text-xl sm:text-2xl font-extrabold text-emerald-900 mt-2"
                               >
                                 {totals.calories} kcal
                               </motion.div>
-                              <div className="text-lg text-gray-700 mt-1">
+                              <div className="text-xl text-gray-700 mt-1">
                                 From selected plan
                               </div>
                             </div>
 
-                            <div className="bg-[#f6f3e8] rounded-lg p-4">
-                              <div className="text-lg font-medium text-emerald-900">
+                            <div className="bg-[#f6f3e8] rounded-lg p-2 sm:p-3 md:p-4">
+                              <div className="text-xl font-medium text-emerald-900">
                                 Macros (est.)
                               </div>
                               <motion.div
                                 initial={{ x: -6 }}
                                 animate={{ x: 0 }}
                                 transition={{ duration: 0.35 }}
-                                className="mt-2 space-y-2 text-lg text-gray-800"
+                                className="mt-2 space-y-1 sm:space-y-2 text-xl text-gray-800"
                               >
                                 <div>Carbs: {totals.carbs_g} g</div>
                                 <div>Protein: {totals.protein_g} g</div>
@@ -614,13 +597,13 @@ export default function Dashboard() {
                               </motion.div>
                             </div>
 
-                            <div className="bg-[#f6f3e8] rounded-lg p-4">
-                              <div className="text-lg font-medium text-emerald-900">
+                            <div className="bg-[#f6f3e8] rounded-lg p-2 sm:p-3 md:p-4 sm:col-span-2 md:col-span-1">
+                              <div className="text-xl font-medium text-emerald-900">
                                 Quick Actions
                               </div>
-                              <div className="mt-2 flex flex-col gap-2">
+                              <div className="mt-2 flex flex-col gap-1 sm:gap-2">
                                 <button
-                                  className="px-3 py-2 bg-white rounded-lg text-emerald-600 text-lg border"
+                                  className="px-2 sm:px-3 py-2 bg-white rounded-lg text-emerald-600 text-xl border"
                                   onClick={() =>
                                     alert("Assign to patient (placeholder)")
                                   }
@@ -628,7 +611,7 @@ export default function Dashboard() {
                                   Assign plan
                                 </button>
                                 <button
-                                  className="px-3 py-2 bg-white rounded-lg text-emerald-600 text-lg border"
+                                  className="px-2 sm:px-3 py-2 bg-white rounded-lg text-emerald-600 text-xl border"
                                   onClick={() =>
                                     alert("Edit plan (placeholder)")
                                   }
@@ -636,7 +619,7 @@ export default function Dashboard() {
                                   Edit plan
                                 </button>
                                 <button
-                                  className="px-3 py-2 bg-emerald-600 rounded-lg text-white text-lg"
+                                  className="px-2 sm:px-3 py-2 bg-emerald-600 rounded-lg text-white text-xl"
                                   onClick={() =>
                                     alert("Export plan PDF (placeholder)")
                                   }
@@ -647,11 +630,11 @@ export default function Dashboard() {
                             </div>
                           </div>
 
-                          <div className="bg-white rounded-lg p-4 border border-gray-100">
-                            <div className="text-lg font-semibold text-emerald-900 mb-2">
+                          <div className="bg-white rounded-lg p-2 sm:p-3 md:p-4 border border-gray-100">
+                            <div className="text-xl font-semibold text-emerald-900 mb-2">
                               Meals
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                               {Object.entries(selectedPlan.meals).map(
                                 ([mealKey, items]) => (
                                   <motion.div
@@ -659,9 +642,9 @@ export default function Dashboard() {
                                     initial={{ opacity: 0, y: 6 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.25 }}
-                                    className="bg-[#fffaf3] p-3 rounded-lg"
+                                    className="bg-[#fffaf3] p-2 sm:p-3 rounded-lg"
                                   >
-                                    <div className="font-medium text-lg text-emerald-900 capitalize">
+                                    <div className="font-medium text-xl text-emerald-900 capitalize">
                                       {mealKey} •{" "}
                                       {items.reduce(
                                         (s, i) => s + (i.calories || 0),
@@ -669,7 +652,7 @@ export default function Dashboard() {
                                       )}{" "}
                                       kcal
                                     </div>
-                                    <ul className="mt-2 list-disc pl-5 text-lg text-gray-700">
+                                    <ul className="mt-1 sm:mt-2 list-disc pl-4 sm:pl-5 text-xl text-gray-700">
                                       {items.map((it, idx) => (
                                         <li key={idx}>
                                           {it.name} ({it.calories || "—"} kcal)
@@ -681,7 +664,7 @@ export default function Dashboard() {
                               )}
                             </div>
 
-                            <div className="mt-3 text-lg text-gray-600">
+                            <div className="mt-2 sm:mt-3 text-xl text-gray-600">
                               Note: these estimates use default macro splits.
                               For clinical tracking, attach exact recipe macros.
                             </div>

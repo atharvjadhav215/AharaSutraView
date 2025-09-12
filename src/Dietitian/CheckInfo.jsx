@@ -63,7 +63,7 @@ export default function CheckInfo() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-3xl bg-white backdrop-blur-md rounded-2xl shadow-lg overflow-hidden">
+      <div className="w-full max-w-3xl bg-white mt-10 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden">
         <div className="p-8">
           <h2 className="text-2xl font-semibold text-[#3e2a1f] mb-2">
             Dietitian Verification

@@ -14,36 +14,39 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-4xl bg-white backdrop-blur-md rounded-3xl shadow-xl overflow-hidden">
-        <div className="p-8 md:p-12">
-          <header className="mb-8 text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#3e2a1f]">
-              Welcome to AharaSutra
-            </h1>
-            <p className="mt-2 text-xl md:text-base text-[#5a3f2e]">
-              Choose your role to get a tailored experience — Ayurvedic themed
-              care for users and practitioners.
-            </p>
-          </header>
+    <div className="min-h-screen bg-gradient-to-br from-[#f9f4ec] to-[#f5e6da] flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl mt-20">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#4d3b2f] to-[#8b5e3c] bg-clip-text text-transparent mb-2">
+            Welcome to AharaSutra
+          </h1>
+          <p className="text-[#6f4e37] text-sm md:text-base max-w-2xl mx-auto">
+            Choose your role to get a tailored experience — Ayurvedic themed
+            care for users and practitioners.
+          </p>
+        </div>
 
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Main Container */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8">
+          {/* Role Selection */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <button
               type="button"
               onClick={() => choose("doctor")}
-              aria-pressed={role === "doctor"}
-              className={`flex flex-col border-2 border-[#8b5e3c] items-center justify-center gap-4 p-6 rounded-2xl transition-transform transform hover:-translate-y-2 focus:outline-none
-                ${
-                  role === "doctor"
-                    ? "ring-4 ring-[#7a5a3f]/30 bg-gradient-to-tr from-[#f7eee3]/50 to-[#efe0d0]/30"
-                    : "bg-white/6"
-                }`}
+              className={`flex flex-col items-center justify-center gap-4 p-6 md:p-8 rounded-xl border-2 transition-all duration-200 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#4d3b2f]/20 ${
+                role === "doctor"
+                  ? "border-[#4d3b2f] bg-gradient-to-br from-[#f9f4ec] to-[#f5e6da] shadow-lg"
+                  : "border-[#d4c4a8] bg-white/50 hover:border-[#4d3b2f]/50 hover:bg-[#f9f4ec]/30"
+              }`}
             >
-              <div className="w-20 h-20 rounded-full bg-[#dbead6] flex items-center justify-center text-3xl">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-[#4d3b2f] to-[#8b5e3c] flex items-center justify-center text-2xl md:text-3xl text-white shadow-lg">
                 🩺
               </div>
-              <h3 className="text-xl font-semibold text-[#3e2a1f]">Dietitian</h3>
-              <p className="text-xl text-[#6b4d3b] text-center max-w-xs">
+              <h3 className="text-lg md:text-xl font-semibold text-[#3e2a1f]">
+                Dietitian
+              </h3>
+              <p className="text-sm md:text-base text-[#6b4d3b] text-center leading-relaxed">
                 Ayurvedic practitioner dashboard — patient management, notes and
                 recommendations.
               </p>
@@ -52,36 +55,35 @@ export default function Onboarding() {
             <button
               type="button"
               onClick={() => choose("user")}
-              aria-pressed={role === "user"}
-              className={`flex flex-col items-center border-2 border-[#8b5e3c]  justify-center gap-4 p-6 rounded-2xl transition-transform transform hover:-translate-y-2 focus:outline-none
-                ${
-                  role === "user"
-                    ? "ring-4 ring-[#7a5a3f]/30 bg-gradient-to-tr from-[#f7eee3]/50 to-[#efe0d0]/30"
-                    : "bg-white/6"
-                }`}
+              className={`flex flex-col items-center justify-center gap-4 p-6 md:p-8 rounded-xl border-2 transition-all duration-200 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#4d3b2f]/20 ${
+                role === "user"
+                  ? "border-[#4d3b2f] bg-gradient-to-br from-[#f9f4ec] to-[#f5e6da] shadow-lg"
+                  : "border-[#d4c4a8] bg-white/50 hover:border-[#4d3b2f]/50 hover:bg-[#f9f4ec]/30"
+              }`}
             >
-              <div className="w-20 h-20 rounded-full bg-[#dbead6] flex items-center justify-center text-3xl">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-[#4d3b2f] to-[#8b5e3c] flex items-center justify-center text-2xl md:text-3xl text-white shadow-lg">
                 🧑‍⚕️
               </div>
-              <h3 className="text-xl font-semibold text-[#3e2a1f]">User</h3>
-              <p className="text-xl text-[#6b4d3b] text-center max-w-xs">
+              <h3 className="text-lg md:text-xl font-semibold text-[#3e2a1f]">
+                User
+              </h3>
+              <p className="text-sm md:text-base text-[#6b4d3b] text-center leading-relaxed">
                 Personalised Ayurvedic guidance, diet plans and tracking for
                 your wellbeing.
               </p>
             </button>
-          </section>
+          </div>
 
-          <footer className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="px-4 py-2 rounded-full bg-transparent text-[#5a3f2e] border border-white/10 hover:bg-white/5 transition"
-              >
-                Back
-              </button>
-            </div>
-          </footer>
+          {/* Footer */}
+          <div className="mt-8 flex justify-center">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="px-6 py-2 rounded-lg bg-transparent text-[#6f4e37] border border-[#d4c4a8] hover:bg-[#f9f4ec] hover:border-[#4d3b2f] transition-all duration-200"
+            >
+              ← Back to Login
+            </button>
+          </div>
         </div>
       </div>
     </div>
