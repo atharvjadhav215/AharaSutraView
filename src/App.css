@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* use Epunda Slab everywhere */
+:root {
+  --epunda: "Epunda Slab", serif;
+}
+
+html, body, #root {
+  font-family: var(--epunda), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-optical-sizing: auto;
+}
+
+/* example named classes — use .epunda-slab-<uniquifier> in JSX */
+.epunda-slab-regular { font-family: var(--epunda); font-weight: 400; }
+.epunda-slab-medium  { font-family: var(--epunda); font-weight: 500; }
+.epunda-slab-semibold{ font-family: var(--epunda); font-weight: 600; }
+.epunda-slab-bold    { font-family: var(--epunda); font-weight: 700; }
+
+/* example: .epunda-slab-hero { font-weight: 800; font-size: 2rem; } */
