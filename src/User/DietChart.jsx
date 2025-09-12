@@ -655,7 +655,7 @@ export default function DietChart() {
 
   return (
     <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8]  p-6">
-      <Link to="/uhome">
+      <Link to="/dhome">
         <button className="px-4 py-3 mt-5 ml-5 rounded-full bg-white border text-emerald-700 text-lg disabled:opacity-50">
           ← Back to Home
         </button>
