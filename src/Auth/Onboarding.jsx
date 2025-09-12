@@ -21,7 +21,7 @@ export default function Onboarding() {
             <h1 className="text-3xl md:text-4xl font-bold text-[#3e2a1f]">
               Welcome to AharaSutra
             </h1>
-            <p className="mt-2 text-sm md:text-base text-[#5a3f2e]">
+            <p className="mt-2 text-xl md:text-base text-[#5a3f2e]">
               Choose your role to get a tailored experience — Ayurvedic themed
               care for users and practitioners.
             </p>
@@ -43,7 +43,7 @@ export default function Onboarding() {
                 🩺
               </div>
               <h3 className="text-xl font-semibold text-[#3e2a1f]">Dietitian</h3>
-              <p className="text-sm text-[#6b4d3b] text-center max-w-xs">
+              <p className="text-xl text-[#6b4d3b] text-center max-w-xs">
                 Ayurvedic practitioner dashboard — patient management, notes and
                 recommendations.
               </p>
@@ -64,7 +64,7 @@ export default function Onboarding() {
                 🧑‍⚕️
               </div>
               <h3 className="text-xl font-semibold text-[#3e2a1f]">User</h3>
-              <p className="text-sm text-[#6b4d3b] text-center max-w-xs">
+              <p className="text-xl text-[#6b4d3b] text-center max-w-xs">
                 Personalised Ayurvedic guidance, diet plans and tracking for
                 your wellbeing.
               </p>

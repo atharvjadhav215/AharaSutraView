@@ -68,7 +68,7 @@ export default function CheckInfo() {
           <h2 className="text-2xl font-semibold text-[#3e2a1f] mb-2">
             Dietitian Verification
           </h2>
-          <p className="text-sm text-[#6b4d3b] mb-6">
+          <p className="text-xl text-[#6b4d3b] mb-6">
             Provide hospital details and upload required documents. Background
             leaves are handled globally.
           </p>
@@ -109,7 +109,7 @@ export default function CheckInfo() {
                   type="file"
                   accept="image/*,application/pdf"
                   onChange={(e) => handleFileChange(e, setLicenseData)}
-                  className="text-sm w-full border-black  border p-2 rounded-xl"
+                  className="text-xl w-full border-black  border p-2 rounded-xl"
                 />
                 {licenseData && (
                   <img
@@ -128,7 +128,7 @@ export default function CheckInfo() {
                   type="file"
                   accept="image/*,application/pdf"
                   onChange={(e) => handleFileChange(e, setPancardData)}
-                  className="text-sm w-full border-black  border p-2 rounded-xl"
+                  className="text-xl w-full border-black  border p-2 rounded-xl"
                 />
                 {pancardData && (
                   <img
@@ -147,7 +147,7 @@ export default function CheckInfo() {
                   type="file"
                   accept="image/*"
                   onChange={(e) => handleFileChange(e, setIdPhotoData)}
-                  className="text-sm w-full border-black  border p-2 rounded-xl"
+                  className="text-xl w-full border-black  border p-2 rounded-xl"
                 />
                 {idPhotoData && (
                   <img
@@ -159,7 +159,7 @@ export default function CheckInfo() {
               </div>
             </div>
 
-            {error && <div className="text-sm text-red-600">{error}</div>}
+            {error && <div className="text-xl text-red-600">{error}</div>}
 
             <div className="flex items-center justify-between mt-6">
               <button

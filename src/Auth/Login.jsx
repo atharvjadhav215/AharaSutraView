@@ -177,7 +177,7 @@ const Page = () => {
                   <button
                     type="button"
                     onClick={() => setSignUpMethod("email")}
-                    className={`px-4 py-1 w-1/2 rounded-full text-sm font-semibold transition
+                    className={`px-4 py-1 w-1/2 rounded-full text-xl font-semibold transition
                       ${
                         signUpMethod === "email"
                           ? "bg-gradient-to-r from-[#4d3b2f] to-[#8b5e3c] text-white shadow-lg"
@@ -191,7 +191,7 @@ const Page = () => {
                   <button
                     type="button"
                     onClick={() => setSignUpMethod("mobile")}
-                    className={`px-4 py-1 w-1/2 rounded-full text-sm font-semibold transition
+                    className={`px-4 py-1 w-1/2 rounded-full text-xl font-semibold transition
                       ${
                         signUpMethod === "mobile"
                           ? "bg-gradient-to-r from-[#4d3b2f] to-[#8b5e3c] text-white shadow-lg"
@@ -210,7 +210,7 @@ const Page = () => {
                   value={signUp.name}
                   onChange={handleSignUpChange}
                   placeholder="Name"
-                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-sm"
+                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-xl"
                 />
 
                 {signUpMethod === "email" ? (
@@ -220,7 +220,7 @@ const Page = () => {
                     value={signUp.email}
                     onChange={handleSignUpChange}
                     placeholder="Email"
-                    className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-sm"
+                    className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-xl"
                   />
                 ) : (
                   <input
@@ -229,7 +229,7 @@ const Page = () => {
                     value={signUp.phone}
                     onChange={handleSignUpChange}
                     placeholder="Mobile number"
-                    className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-sm"
+                    className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-xl"
                   />
                 )}
 
@@ -239,7 +239,7 @@ const Page = () => {
                   value={signUp.password}
                   onChange={handleSignUpChange}
                   placeholder="Password"
-                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-sm"
+                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-xl"
                   required
                 />
                 <input
@@ -248,7 +248,7 @@ const Page = () => {
                   value={signUp.password}
                   onChange={handleSignUpChange}
                   placeholder="Confirm Password"
-                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-sm"
+                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-xl"
                   required
                 />
               </div>
@@ -296,7 +296,7 @@ const Page = () => {
                   <button
                     type="button"
                     onClick={() => setSignInMethod("email")}
-                    className={`px-4 py-1 w-1/2 rounded-full text-sm font-semibold transition
+                    className={`px-4 py-1 w-1/2 rounded-full text-xl font-semibold transition
                       ${
                         signInMethod === "email"
                           ? "bg-gradient-to-r from-[#4d3b2f] to-[#8b5e3c] text-white shadow-lg"
@@ -310,7 +310,7 @@ const Page = () => {
                   <button
                     type="button"
                     onClick={() => setSignInMethod("mobile")}
-                    className={`px-4 py-1 w-1/2 rounded-full text-sm font-semibold transition
+                    className={`px-4 py-1 w-1/2 rounded-full text-xl font-semibold transition
                       ${
                         signInMethod === "mobile"
                           ? "bg-gradient-to-r from-[#4d3b2f] to-[#8b5e3c] text-white shadow-lg"
@@ -329,7 +329,7 @@ const Page = () => {
                   value={signIn.username}
                   onChange={handleSignInChange}
                   placeholder="Email"
-                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-sm"
+                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-xl"
                   required
                 />
               ) : (
@@ -339,7 +339,7 @@ const Page = () => {
                   value={signIn.username}
                   onChange={handleSignInChange}
                   placeholder="Mobile number"
-                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-sm"
+                  className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-xl"
                   required
                 />
               )}
@@ -350,7 +350,7 @@ const Page = () => {
                 value={signIn.password}
                 onChange={handleSignInChange}
                 placeholder="Password"
-                className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-sm"
+                className="bg-gradient-to-r from-[#f9f4ec] to-[#f5e6da] text-[#3e2a1f] border border-[#6f4e37] w-full my-2 p-2 rounded-md outline-none text-xl"
                 required
               />
               <a
@@ -395,7 +395,7 @@ const Page = () => {
                 }`}
               >
                 <h1 className="text-2xl font-bold">Hello, Friend!</h1>
-                <p className="text-sm my-4 text-[#fdf6f0]">
+                <p className="text-xl my-4 text-[#fdf6f0]">
                   Register with your personal details to use all site features
                 </p>
                 <button
@@ -413,7 +413,7 @@ const Page = () => {
                 }`}
               >
                 <h1 className="text-2xl font-bold">Welcome Back!</h1>
-                <p className="text-sm my-4 text-[#fdf6f0]">
+                <p className="text-xl my-4 text-[#fdf6f0]">
                   Enter your personal details to use all site features
                 </p>
                 <button
