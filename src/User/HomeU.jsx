@@ -113,7 +113,7 @@ const SlideCard = ({
   };
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-auto">
+    <div className="absolute inset-0 bg-gradient-to-l from-white to-[#f1eacf] flex items-center justify-center pointer-events-auto">
       {/* Card container */}
       <motion.div
         key={data.id}
@@ -121,7 +121,7 @@ const SlideCard = ({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 1, y: -30, scale: 0.98 }}
         transition={{ duration: D.enter, ease: "easeInOut" }}
-        className="w-full max-w-[1600px] bg-white/90 rounded-2xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center h-[85vh] sm:h-[80vh] md:h-[78vh]"
+        className="w-full max-w-[1600px]  rounded-2xl  overflow-hidden grid grid-cols-1 md:grid-cols-2 items-center h-[85vh] sm:h-[80vh] md:h-[78vh]"
       >
         {/* Image */}
         <motion.div
@@ -215,7 +215,6 @@ const SlideCard = ({
             >
               ◀
             </motion.button>
-
 
             <motion.button
               onClick={onNext}
@@ -328,7 +327,7 @@ export default function HomeU() {
   return (
     <div className="min-h-screen text-gray-800">
       {/* Slider at start - centered */}
-      <section className="w-full h-screen relative mt-8 overflow-hidden">
+      <section className="w-full h-screen relative  overflow-hidden">
         {/* Profile icon fixed to top-right of the viewport */}
         <a
           href="/uprofile"

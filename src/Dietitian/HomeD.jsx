@@ -114,7 +114,7 @@ const SlideCard = ({
   };
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-auto">
+    <div className="absolute inset-0 flex bg-white items-center justify-center pointer-events-auto">
       {/* Card container */}
       <motion.div
         key={data.id}
