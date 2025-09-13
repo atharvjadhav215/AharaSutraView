@@ -114,7 +114,7 @@ const SlideCard = ({
   };
 
   return (
-    <div className="absolute inset-0 flex bg-white items-center justify-center pointer-events-auto">
+    <div className="absolute inset-0 flex bg-gradient-to-l from-white to-[#f1eacf] items-center justify-center pointer-events-auto">
       {/* Card container */}
       <motion.div
         key={data.id}
@@ -122,7 +122,7 @@ const SlideCard = ({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 1, y: -30, scale: 0.98 }}
         transition={{ duration: D.enter, ease: "easeInOut" }}
-        className="w-full max-w-[1600px] bg-white/90 rounded-2xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-center h-[85vh] sm:h-[80vh] md:h-[78vh] lg:h-[75vh]"
+        className="w-full max-w-[1600px]  rounded-2xl  overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-center h-[85vh] sm:h-[80vh] md:h-[78vh] lg:h-[75vh]"
       >
         {/* Image */}
         <motion.div
@@ -134,7 +134,7 @@ const SlideCard = ({
           <motion.img
             src={data.img}
             alt={data.title}
-            className=" shadow-2xl rounded-full shadow-black h-[30vh] w-[30vh] sm:h-[40vh] sm:w-[40vh] md:h-[45vh] md:w-[45vh] lg:h-[55vh] lg:w-[55vh] object-cover"
+            className=" shadow-2xl rounded-full bg-white shadow-black h-[30vh] w-[30vh] sm:h-[40vh] sm:w-[40vh] md:h-[45vh] md:w-[45vh] lg:h-[55vh] lg:w-[55vh] object-cover"
             whileHover={{ scale: 1.08 }}
             transition={{ duration: D.imgScale }}
           />
@@ -216,7 +216,6 @@ const SlideCard = ({
             >
               ◀
             </motion.button>
-
 
             <motion.button
               onClick={onNext}
@@ -329,7 +328,7 @@ export default function HomeD() {
   return (
     <div className="min-h-screen text-gray-800">
       {/* Slider at start - centered */}
-      <section className="w-full h-screen mt-8 relative overflow-hidden">
+      <section className="w-full h-screen  relative overflow-hidden">
         <AnimatePresence initial={false} mode="wait">
           {STORY_CARDS.map((item, i) =>
             i === index ? (

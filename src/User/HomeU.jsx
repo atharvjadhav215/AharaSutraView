@@ -133,7 +133,7 @@ const SlideCard = ({
           <motion.img
             src={data.img}
             alt={data.title}
-            className="shadow-2xl rounded-full shadow-black h-[40vh] w-[40vh] sm:h-[50vh] sm:w-[50vh] md:h-[60vh] md:w-[60vh] object-cover"
+            className="shadow-2xl rounded-full bg-white shadow-black h-[40vh] w-[40vh] sm:h-[50vh] sm:w-[50vh] md:h-[60vh] md:w-[60vh] object-cover"
             whileHover={{ scale: 1.08 }}
             transition={{ duration: D.imgScale }}
           />
