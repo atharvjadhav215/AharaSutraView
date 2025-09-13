@@ -384,12 +384,12 @@ export default function ProfileU() {
                                       (s, i) => s + (i.calories || 0),
                                       0
                                     )}{" "}
-                                    kcal
+                                    cal
                                   </div>
                                   <ul className="list-disc pl-4 sm:pl-5 mt-1">
                                     {items.map((it, i) => (
                                       <li key={i}>
-                                        {it.name} ({it.calories} kcal)
+                                        {it.name} ({it.calories} cal)
                                       </li>
                                     ))}
                                   </ul>

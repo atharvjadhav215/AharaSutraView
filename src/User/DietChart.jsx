@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { Link } from "react-router-dom";
+import { getTranslation } from "./dietChartTranslations";
+import LanguageSelector from "./LanguageSelector";
 const DOSHAS = [
   {
     type: "Vata",
@@ -297,7 +299,7 @@ const Stat = ({ label, value }) => (
 );
 
 // DayChart: renders a single plan's daily meals with animations and recipe toggle
-const DayChart = ({ plan }) => {
+const DayChart = ({ plan, language = "en" }) => {
   const [openMeal, setOpenMeal] = useState(null); // 'breakfast'|'lunch'|'snack'|'dinner'
 
   // compute totals (calories + estimated macros) from plan
@@ -307,19 +309,19 @@ const DayChart = ({ plan }) => {
 
     // Use a reasonable default macro split per meal if not provided:
     // carbs 50%, protein 20%, fat 30% of calories
-    const carbsKcal = meals.reduce((s, m) => s + (m.calories || 0) * 0.5, 0);
-    const proteinKcal = meals.reduce((s, m) => s + (m.calories || 0) * 0.2, 0);
-    const fatKcal = meals.reduce((s, m) => s + (m.calories || 0) * 0.3, 0);
+    const carbscal = meals.reduce((s, m) => s + (m.calories || 0) * 0.5, 0);
+    const proteincal = meals.reduce((s, m) => s + (m.calories || 0) * 0.2, 0);
+    const fatcal = meals.reduce((s, m) => s + (m.calories || 0) * 0.3, 0);
 
-    const carbs_g = Math.round(carbsKcal / 4);
-    const protein_g = Math.round(proteinKcal / 4);
-    const fat_g = Math.round(fatKcal / 9);
+    const carbs_g = Math.round(carbscal / 4);
+    const protein_g = Math.round(proteincal / 4);
+    const fat_g = Math.round(fatcal / 9);
 
-    // crude sugar / fiber estimates (placeholders: sugar 8% kcal, fiber 3% kcal)
-    const sugarKcal = meals.reduce((s, m) => s + (m.calories || 0) * 0.08, 0);
-    const fiberKcal = meals.reduce((s, m) => s + (m.calories || 0) * 0.03, 0);
-    const sugar_g = Math.round(sugarKcal / 4);
-    const fiber_g = Math.round(fiberKcal / 4);
+    // crude sugar / fiber estimates (placeholders: sugar 8% cal, fiber 3% cal)
+    const sugarcal = meals.reduce((s, m) => s + (m.calories || 0) * 0.08, 0);
+    const fibercal = meals.reduce((s, m) => s + (m.calories || 0) * 0.03, 0);
+    const sugar_g = Math.round(sugarcal / 4);
+    const fiber_g = Math.round(fibercal / 4);
 
     // simple micronutrient hints based on items (presence checks)
     const itemSet = new Set(meals.flatMap((m) => m.items || []));
@@ -328,19 +330,19 @@ const DayChart = ({ plan }) => {
         itemSet.has("lentils") ||
         itemSet.has("toor dal") ||
         itemSet.has("mung dal")
-          ? "Good"
-          : "Moderate",
+          ? getTranslation("good", language)
+          : getTranslation("moderate", language),
       calcium:
         itemSet.has("milk") ||
         itemSet.has("ghee") ||
         itemSet.has("cottage cheese")
-          ? "Good"
-          : "Low",
+          ? getTranslation("good", language)
+          : getTranslation("low", language),
       vitaminC: Array.from(itemSet).some((it) =>
         ["lemon", "orange", "apple", "tomato", "pepper"].includes(it)
       )
-        ? "Good"
-        : "Moderate",
+        ? getTranslation("good", language)
+        : getTranslation("moderate", language),
     };
 
     return {
@@ -407,7 +409,7 @@ const DayChart = ({ plan }) => {
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
                 <div>
                   <div className="font-semibold text-emerald-900 capitalize text-xl">
-                    {mealKey} • {calories} kcal
+                    {getTranslation(mealKey, language)} • {calories} cal
                   </div>
                   <div className="text-xl text-emerald-800/90">
                     {items
@@ -422,7 +424,9 @@ const DayChart = ({ plan }) => {
                   }
                   className="text-xl text-emerald-700 font-medium"
                 >
-                  {openMeal === mealKey ? "Hide" : "View"}
+                  {openMeal === mealKey
+                    ? getTranslation("hide", language)
+                    : getTranslation("view", language)}
                 </button>
               </div>
 
@@ -504,7 +508,7 @@ const DayChart = ({ plan }) => {
               Calories
             </div>
             <div className="text-xl sm:text-2xl font-extrabold text-emerald-900">
-              {totals.calories} kcal
+              {totals.calories} cal
             </div>
             <div className="text-xl text-gray-600 mt-1">
               Daily energy from all meals
@@ -517,19 +521,19 @@ const DayChart = ({ plan }) => {
             </div>
             <div className="mt-2 space-y-2">
               <NutrientBar
-                label="Carbs"
+                label={getTranslation("carbs", language)}
                 value={totals.carbs_g}
                 unit=" g"
                 target={300}
               />
               <NutrientBar
-                label="Protein"
+                label={getTranslation("protein", language)}
                 value={totals.protein_g}
                 unit=" g"
                 target={70}
               />
               <NutrientBar
-                label="Fat"
+                label={getTranslation("fat", language)}
                 value={totals.fat_g}
                 unit=" g"
                 target={80}
@@ -543,13 +547,13 @@ const DayChart = ({ plan }) => {
             </div>
             <div className="mt-2 space-y-2">
               <NutrientBar
-                label="Sugar"
+                label={getTranslation("sugar", language)}
                 value={totals.sugar_g}
                 unit=" g"
                 target={40}
               />
               <NutrientBar
-                label="Fiber"
+                label={getTranslation("fiber", language)}
                 value={totals.fiber_g}
                 unit=" g"
                 target={30}
@@ -613,7 +617,31 @@ const itineraryCopy = (plan) =>
 
 export default function DietChart() {
   const [selected, setSelected] = useState(0);
-  const active = DOSHAS[selected];
+  const [language, setLanguage] = useState("en");
+
+  // Get translated DOSHAS based on current language
+  const getTranslatedDoshas = () =>
+    DOSHAS.map((dosha) => ({
+      ...dosha,
+      type: getTranslation(dosha.type.toLowerCase(), language),
+      description: getTranslation(dosha.type.toLowerCase() + "Desc", language),
+      rule: getTranslation(dosha.type.toLowerCase() + "Rule", language),
+      plate: dosha.plate.map((item) => ({
+        ...item,
+        name: getTranslation(item.name.toLowerCase(), language),
+      })),
+      taste: dosha.taste.map((item) => ({
+        ...item,
+        name: getTranslation(item.name.toLowerCase(), language),
+      })),
+      foods: dosha.foods.map((food, index) => {
+        const foodKey = dosha.type.toLowerCase() + "food" + (index + 1);
+        return getTranslation(foodKey, language) || food;
+      }),
+    }));
+
+  const translatedDoshas = getTranslatedDoshas();
+  const active = translatedDoshas[selected];
 
   useEffect(() => {
     // no-op: placeholder in case animation hook needed later
@@ -639,15 +667,16 @@ export default function DietChart() {
       );
       return ingredientFilter.every((ing) => items.has(ing));
     });
-  }, [ingredientFilter, showOnlyMatching]);
+  }, [ingredientFilter, showOnlyMatching, language]);
 
   const selectedPlan = PLANS.find((p) => p.id === selectedPlanId) || PLANS[0];
 
   return (
     <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8] p-2 sm:p-4 md:p-6">
+      <LanguageSelector language={language} onLanguageChange={setLanguage} />
       <Link to="/dhome">
         <button className="px-3 sm:px-4 py-2 mt-20 sm:py-3 mb-3 sm:mt-4 md:mt-5 ml-2 sm:ml-3 md:ml-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
-          ← Back to Home
+          ← {getTranslation("backToHome", language)}
         </button>
       </Link>
       <div className="max-w-8xl mx-auto">
@@ -658,11 +687,10 @@ export default function DietChart() {
           className="text-center mb-6 sm:mb-8"
         >
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-emerald-900">
-            Ayurvedic Dosha Diet & Daily Plans
+            {getTranslation("selectDosha", language)}
           </h1>
           <p className="mt-2 text-xl text-emerald-800/90">
-            Select dosha charts above and below pick a daily meal plan. Filter
-            plans by ingredients and preview recipes.
+            {getTranslation("mealPlan", language)}
           </p>
         </motion.header>
 
@@ -675,7 +703,7 @@ export default function DietChart() {
               className="flex flex-col gap-3 sm:gap-4"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-3 gap-3">
-                {DOSHAS.map((d, i) => (
+                {translatedDoshas.map((d, i) => (
                   <motion.button
                     key={d.type}
                     onClick={() => setSelected(i)}
@@ -726,20 +754,20 @@ export default function DietChart() {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2 sm:gap-0">
                     <div>
                       <h3 className="text-xl sm:text-2xl font-semibold text-emerald-900">
-                        Foods to Eat — {DOSHAS[selected].type}
+                        {getTranslation("recommendedFoods", language)} —{" "}
+                        {active.type}
                       </h3>
                       <div className="text-xl text-emerald-800/90 mt-1">
-                        Simple recommendations that work well for{" "}
-                        {DOSHAS[selected].type} dosha.
+                        {active.description}
                       </div>
                     </div>
                     <div className="text-xl text-gray-600">
-                      {DOSHAS[selected].foods.length} items
+                      {active.foods.length} {getTranslation("items", language)}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {DOSHAS[selected].foods.map((food, idx) => (
+                    {active.foods.map((food, idx) => (
                       <motion.div
                         key={idx}
                         initial={{ opacity: 0, x: -6 }}
@@ -814,13 +842,15 @@ export default function DietChart() {
                         )
                       }
                     >
-                      Copy day
+                      {getTranslation("copyDay", language)}
                     </button>
                     <button
                       className="px-3 py-1 bg-white rounded shadow text-xl flex-1 sm:flex-none"
-                      onClick={() => alert("Export placeholder")}
+                      onClick={() =>
+                        alert(getTranslation("exportPlaceholder", language))
+                      }
                     >
-                      Export PDF
+                      {getTranslation("exportPdf", language)}
                     </button>
                   </div>
                 </div>
@@ -834,10 +864,10 @@ export default function DietChart() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
                 <div>
                   <div className="font-semibold text-xl sm:text-2xl text-emerald-900">
-                    Daily Meal Plans
+                    {getTranslation("mealPlan", language)}
                   </div>
                   <div className="text-xl text-emerald-800/90">
-                    Choose a plan or filter by ingredients to find a match.
+                    {getTranslation("mealPlan", language)}
                   </div>
                 </div>
 
@@ -882,7 +912,7 @@ export default function DietChart() {
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.45 }}
                   >
-                    <DayChart plan={selectedPlan} />
+                    <DayChart plan={selectedPlan} language={language} />
                   </motion.div>
                 </AnimatePresence>
               </div>

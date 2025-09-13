@@ -574,7 +574,7 @@ export default function Dashboard() {
                                 transition={{ duration: 0.35 }}
                                 className="text-xl sm:text-2xl font-extrabold text-emerald-900 mt-2"
                               >
-                                {totals.calories} kcal
+                                {totals.calories} cal
                               </motion.div>
                               <div className="text-xl text-gray-700 mt-1">
                                 From selected plan
@@ -650,12 +650,12 @@ export default function Dashboard() {
                                         (s, i) => s + (i.calories || 0),
                                         0
                                       )}{" "}
-                                      kcal
+                                      cal
                                     </div>
                                     <ul className="mt-1 sm:mt-2 list-disc pl-4 sm:pl-5 text-xl text-gray-700">
                                       {items.map((it, idx) => (
                                         <li key={idx}>
-                                          {it.name} ({it.calories || "—"} kcal)
+                                          {it.name} ({it.calories || "—"} cal)
                                         </li>
                                       ))}
                                     </ul>

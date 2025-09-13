@@ -203,7 +203,7 @@ const DayChart = ({ plan, expanded, onToggleRecipe }) => {
 
         <div className="text-right">
           <div className="text-xl text-emerald-900 font-medium">
-            {totals.calories} kcal
+            {totals.calories} cal
           </div>
           <div className="text-lg text-gray-600">Est. energy</div>
         </div>
@@ -219,7 +219,7 @@ const DayChart = ({ plan, expanded, onToggleRecipe }) => {
             <div className="flex items-center justify-between mb-2">
               <div className="font-medium text-lg text-emerald-900 capitalize">
                 {mealKey} • {items.reduce((s, i) => s + (i.calories || 0), 0)}{" "}
-                kcal
+                cal
               </div>
               <button
                 className="text-lg text-emerald-700"
@@ -458,7 +458,7 @@ export default function MyDietChart() {
                         {Object.values(p.meals)
                           .flat()
                           .reduce((s, m) => s + (m.calories || 0), 0)}{" "}
-                        kcal
+                        cal
                       </div>
                     </motion.div>
                   ))}
