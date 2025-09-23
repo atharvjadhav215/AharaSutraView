@@ -412,7 +412,7 @@ export default function AddPatient() {
       <div className="max-w-8xl mx-auto px-4 sm:px-8 md:px-12 mt-20 lg:px-20 py-4 sm:py-6 md:py-8 pt-20">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
           {/* Step navigation (left) */}
-          <nav className="lg:col-span-1 sticky top-20 sm:top-24 self-start space-y-3">
+          <nav className="lg:col-span-1 sticky top-20 sm:top-24 self-start space-y-8">
             {SECTIONS.map((s, i) => (
               <motion.button
                 key={s.key}
@@ -472,32 +472,34 @@ export default function AddPatient() {
                     aria-hidden={i !== step}
                     style={{ position: "absolute" }}
                   >
-                    <div className="p-6 md:p-8 h-full overflow-auto">
+                    <div className="p-6 md:p-6 h-full overflow-auto">
                       <motion.header
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="text-center mb-8"
+                        className="text-center mb-4"
                       >
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.4, delay: 0.2 }}
-                          className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 mb-4 shadow-lg"
-                        >
-                          <s.icon
-                            className="text-xl"
-                            style={{ color: s.color }}
-                          />
-                        </motion.div>
-                        <motion.h2
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, delay: 0.3 }}
-                          className="text-2xl md:text-3xl font-bold text-teal-900 mb-2"
-                        >
-                          {s.title}
-                        </motion.h2>
+                        <div className="flex flex-row items-center gap-4 justify-center">
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.4, delay: 0.2 }}
+                            className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 mb-4 shadow-lg"
+                          >
+                            <s.icon
+                              className="text-xl"
+                              style={{ color: s.color }}
+                            />
+                          </motion.div>
+                          <motion.h2
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.3 }}
+                            className="text-2xl md:text-3xl font-bold text-teal-900 mb-4 "
+                          >
+                            {s.title}
+                          </motion.h2>
+                        </div>
                         <motion.p
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}

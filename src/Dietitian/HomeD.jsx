@@ -922,8 +922,7 @@ export default function HomePage() {
             backgroundImage: `url('https://kamleshyadav.com/html/pure-ayurveda/html/ayurveda-html/assets/images/banner.jpg')`,
           }}
         >
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
+        
         </div>
 
         {/* Content Container */}

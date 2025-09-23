@@ -1,15 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "../EnhancedEffects.css";
+import {
+  FaLeaf,
+  FaUser,
+  FaLock,
+  FaEnvelope,
+  FaEye,
+  FaEyeSlash,
+  FaHeart,
+  FaStar,
+  FaMagic,
+} from "react-icons/fa";
+import Background from "../assets/background.png";
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
 
 const initialSignUp = {
   name: "",
   email: "",
+  mobile: "",
   password: "",
   confirmPassword: "",
 };
 
 const initialSignIn = {
   email: "",
+  mobile: "",
   password: "",
 };
 
@@ -19,6 +39,11 @@ const Login = () => {
   const [signIn, setSignIn] = useState(initialSignIn);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loginMethod, setLoginMethod] = useState("email"); // "email" or "mobile"
+  const [signupMethod, setSignupMethod] = useState("email"); // "email" or "mobile"
+  const containerRef = useRef(null);
 
   // Handle input changes
   const handleSignUpChange = (e) => {
@@ -44,10 +69,20 @@ const Login = () => {
       setError("Name is required.");
       return;
     }
-    if (!signUp.email.trim()) {
-      setError("Email is required.");
-      return;
+
+    // Check if email or mobile is provided based on signup method
+    if (signupMethod === "email") {
+      if (!signUp.email.trim()) {
+        setError("Email is required.");
+        return;
+      }
+    } else {
+      if (!signUp.mobile.trim()) {
+        setError("Mobile number is required.");
+        return;
+      }
     }
+
     if (!signUp.password) {
       setError("Password is required.");
       return;
@@ -64,15 +99,23 @@ const Login = () => {
     const usersJson = localStorage.getItem("users");
     const users = usersJson ? JSON.parse(usersJson) : [];
 
-    // Check if email already exists
-    if (users.some((u) => u.email === signUp.email)) {
-      setError("Email already registered.");
-      return;
+    // Check if email or mobile already exists
+    if (signupMethod === "email") {
+      if (users.some((u) => u.email === signUp.email)) {
+        setError("Email already registered.");
+        return;
+      }
+    } else {
+      if (users.some((u) => u.mobile === signUp.mobile)) {
+        setError("Mobile number already registered.");
+        return;
+      }
     }
 
     const newUser = {
       name: signUp.name,
       email: signUp.email,
+      mobile: signUp.mobile,
       password: signUp.password,
     };
 
@@ -96,10 +139,19 @@ const Login = () => {
     setError("");
     setSuccess("");
 
-    if (!signIn.email.trim()) {
-      setError("Email is required.");
-      return;
+    // Check if email or mobile is provided based on login method
+    if (loginMethod === "email") {
+      if (!signIn.email.trim()) {
+        setError("Email is required.");
+        return;
+      }
+    } else {
+      if (!signIn.mobile.trim()) {
+        setError("Mobile number is required.");
+        return;
+      }
     }
+
     if (!signIn.password) {
       setError("Password is required.");
       return;
@@ -108,11 +160,14 @@ const Login = () => {
     const usersJson = localStorage.getItem("users");
     const users = usersJson ? JSON.parse(usersJson) : [];
 
-    // Find user by email
-    const user = users.find((u) => u.email === signIn.email);
+    // Find user by email or mobile
+    const user =
+      loginMethod === "email"
+        ? users.find((u) => u.email === signIn.email)
+        : users.find((u) => u.mobile === signIn.mobile);
 
     if (!user || user.password !== signIn.password) {
-      setError("Invalid email or password.");
+      setError(`Invalid ${loginMethod} or password.`);
       return;
     }
 
@@ -126,187 +181,655 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f9f4ec] to-[#f5e6da] flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#4d3b2f] to-[#8b5e3c] bg-clip-text text-transparent mb-2">
-            AharaSutra
-          </h1>
-          <p className="text-[#6f4e37] text-sm md:text-base">
-            {isSignUp ? "Create your account" : "Welcome back"}
-          </p>
-        </div>
+    <div
+      className="min-h-screen relative overflow-hidden"
+      style={{
+        backgroundImage: `url(${Background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Background Overlay */}
+      <div className="absolute inset-0 "></div>
 
-        {/* Form Container */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8">
-          {/* Toggle Buttons */}
-          <div className="flex mb-6 bg-[#f5e6da] rounded-lg p-1">
-            <button
-              type="button"
-              onClick={() => setIsSignUp(false)}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
-                !isSignUp
-                  ? "bg-white text-[#4d3b2f] shadow-sm"
-                  : "text-[#6f4e37] hover:text-[#4d3b2f]"
-              }`}
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Animated Gradient Orbs */}
+        <motion.div
+          animate={{
+            x: [0, 100, 0],
+            y: [0, -100, 0],
+            rotate: [0, 180, 360],
+            opacity: [0.3, 0.6, 0.3],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-20 left-20 w-32 h-32 rounded-full bg-gradient-to-br from-teal-500/30 to-cyan-500/30 blur-2xl"
+        />
+        <motion.div
+          animate={{
+            x: [0, -150, 0],
+            y: [0, 100, 0],
+            rotate: [360, 180, 0],
+            opacity: [0.4, 0.7, 0.4],
+            scale: [1, 0.8, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute bottom-20 right-20 w-40 h-40 rounded-full bg-gradient-to-br from-cyan-500/30 to-blue-500/30 blur-3xl"
+        />
+        <motion.div
+          animate={{
+            x: [0, 80, 0],
+            y: [0, -80, 0],
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.5, 0.2],
+            rotate: [0, 360, 0],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 blur-3xl"
+        />
+
+        {/* Floating Icons */}
+        <motion.div
+          animate={{
+            y: [0, -20, 0],
+            rotate: [0, 10, 0],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-32 right-32 text-teal-500/20"
+        >
+          <FaHeart className="text-2xl" />
+        </motion.div>
+
+        <motion.div
+          animate={{
+            y: [0, 15, 0],
+            rotate: [0, -15, 0],
+            opacity: [0.2, 0.5, 0.2],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute bottom-32 left-32 text-cyan-500/20"
+        >
+          <FaStar className="text-3xl" />
+        </motion.div>
+
+        <motion.div
+          animate={{
+            y: [0, -25, 0],
+            rotate: [0, 20, 0],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-1/3 right-1/4 text-blue-500/20"
+        >
+          <FaMagic className="text-xl" />
+        </motion.div>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <motion.div
+          ref={containerRef}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="w-full max-w-md"
+        >
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-center my-4 mt-10"
+          >
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="text-gray-600 font-bold tracking-widest text-sm md:text-2xl"
             >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsSignUp(true)}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
-                isSignUp
-                  ? "bg-white text-[#4d3b2f] shadow-sm"
-                  : "text-[#6f4e37] hover:text-[#4d3b2f]"
-              }`}
+              {isSignUp ? "Create your account" : "Welcome back"}
+            </motion.p>
+          </motion.div>
+
+          {/* Form Container */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8"
+          >
+            {/* Main Toggle - Sign In/Sign Up */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+              className="relative "
             >
-              Sign Up
-            </button>
-          </div>
+              {/* Background Slider */}
+              <motion.div
+                animate={{
+                  x: isSignUp ? "100%" : "0%",
+                }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl shadow-lg"
+              />
 
-          {/* Sign Up Form */}
-          {isSignUp ? (
-            <form onSubmit={handleSignUp} className="space-y-4">
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  value={signUp.name}
-                  onChange={handleSignUpChange}
-                  placeholder="Full Name"
-                  className="w-full px-4 py-3 bg-[#f9f4ec] border border-[#d4c4a8] rounded-lg text-[#3e2a1f] placeholder-[#8b7355] focus:outline-none focus:ring-2 focus:ring-[#4d3b2f]/20 focus:border-[#4d3b2f] transition-all"
-                  required
-                />
-              </div>
-
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  value={signUp.email}
-                  onChange={handleSignUpChange}
-                  placeholder="Email Address"
-                  className="w-full px-4 py-3 bg-[#f9f4ec] border border-[#d4c4a8] rounded-lg text-[#3e2a1f] placeholder-[#8b7355] focus:outline-none focus:ring-2 focus:ring-[#4d3b2f]/20 focus:border-[#4d3b2f] transition-all"
-                  required
-                />
-              </div>
-
-              <div>
-                <input
-                  type="password"
-                  name="password"
-                  value={signUp.password}
-                  onChange={handleSignUpChange}
-                  placeholder="Password"
-                  className="w-full px-4 py-3 bg-[#f9f4ec] border border-[#d4c4a8] rounded-lg text-[#3e2a1f] placeholder-[#8b7355] focus:outline-none focus:ring-2 focus:ring-[#4d3b2f]/20 focus:border-[#4d3b2f] transition-all"
-                  required
-                />
-              </div>
-
-              <div>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={signUp.confirmPassword}
-                  onChange={handleSignUpChange}
-                  placeholder="Confirm Password"
-                  className="w-full px-4 py-3 bg-[#f9f4ec] border border-[#d4c4a8] rounded-lg text-[#3e2a1f] placeholder-[#8b7355] focus:outline-none focus:ring-2 focus:ring-[#4d3b2f]/20 focus:border-[#4d3b2f] transition-all"
-                  required
-                />
-              </div>
-
-              {error && (
-                <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-200">
-                  {error}
-                </div>
-              )}
-
-              {success && (
-                <div className="text-green-700 text-sm bg-green-50 p-3 rounded-lg border border-green-200">
-                  {success}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-[#6B8E23] to-[#8B4513] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
-              >
-                Create Account
-              </button>
-            </form>
-          ) : (
-            /* Sign In Form */
-            <form onSubmit={handleSignIn} className="space-y-4">
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  value={signIn.email}
-                  onChange={handleSignInChange}
-                  placeholder="Email Address"
-                  className="w-full px-4 py-3 bg-[#f9f4ec] border border-[#d4c4a8] rounded-lg text-[#3e2a1f] placeholder-[#8b7355] focus:outline-none focus:ring-2 focus:ring-[#4d3b2f]/20 focus:border-[#4d3b2f] transition-all"
-                  required
-                />
-              </div>
-
-              <div>
-                <input
-                  type="password"
-                  name="password"
-                  value={signIn.password}
-                  onChange={handleSignInChange}
-                  placeholder="Password"
-                  className="w-full px-4 py-3 bg-[#f9f4ec] border border-[#d4c4a8] rounded-lg text-[#3e2a1f] placeholder-[#8b7355] focus:outline-none focus:ring-2 focus:ring-[#4d3b2f]/20 focus:border-[#4d3b2f] transition-all"
-                  required
-                />
-              </div>
-
-              <div className="flex justify-end">
-                <a
-                  href="/forgot-password"
-                  className="text-[#6B8E23] text-sm hover:text-[#556B2F] hover:underline transition-colors"
+              <div className="relative flex bg-teal-50 rounded-xl p-1">
+                <motion.button
+                  type="button"
+                  onClick={() => setIsSignUp(false)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`flex-1 py-3 px-6 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 relative z-10 ${
+                    !isSignUp
+                      ? "text-white bg-gradient-to-br from-teal-500 to-cyan-500"
+                      : "text-teal-700 hover:text-teal-600"
+                  }`}
                 >
-                  Forgot Password?
-                </a>
+                  <FaUser className="text-sm" />
+                  Sign In
+                </motion.button>
+                <motion.button
+                  type="button"
+                  onClick={() => setIsSignUp(true)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`flex-1 py-3 px-6 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 relative z-10 ${
+                    isSignUp
+                      ? "text-white bg-gradient-to-br from-teal-500 to-cyan-500"
+                      : "text-teal-700 hover:text-teal-600"
+                  }`}
+                >
+                  <FaUser className="text-sm" />
+                  Sign Up
+                </motion.button>
+              </div>
+            </motion.div>
+
+            {/* Method Selection - Toggle Switch Design */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              className="my-4"
+            >
+              <div className="relative">
+                {/* Toggle Background */}
+                <motion.div
+                  animate={{
+                    backgroundColor:
+                      (isSignUp ? signupMethod : loginMethod) === "email"
+                        ? "rgb(20 184 166)"
+                        : "rgb(6 182 212)",
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="w-32 h-12 bg-teal-500 rounded-full mx-auto shadow-lg border-2 border-teal-600"
+                >
+                  {/* Toggle Slider */}
+                  <motion.div
+                    animate={{
+                      x:
+                        (isSignUp ? signupMethod : loginMethod) === "email"
+                          ? 0
+                          : 64,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 30,
+                    }}
+                    className="absolute top-1 left-[143px] w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-teal-400"
+                  >
+                    <motion.div
+                      animate={{
+                        rotate:
+                          (isSignUp ? signupMethod : loginMethod) === "email"
+                            ? 0
+                            : 180,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {(isSignUp ? signupMethod : loginMethod) === "email" ? (
+                        <FaEnvelope className="text-teal-800 text-sm" />
+                      ) : (
+                        <FaUser className="text-cyan-800 text-sm" />
+                      )}
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+
+                {/* Clickable Areas */}
+                <div className="absolute inset-0 flex">
+                  {/* Email Area */}
+                  <motion.button
+                    type="button"
+                    onClick={() =>
+                      isSignUp
+                        ? setSignupMethod("email")
+                        : setLoginMethod("email")
+                    }
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-1/2 h-12 cursor-pointer relative"
+                  >
+                    <motion.div
+                      animate={{
+                        opacity:
+                          (isSignUp ? signupMethod : loginMethod) === "email"
+                            ? 1
+                            : 0.7,
+                        scale:
+                          (isSignUp ? signupMethod : loginMethod) === "email"
+                            ? 1.3
+                            : 1,
+                      }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-center justify-center h-full"
+                    >
+                      <span className="text-cyan-500 font-bold text-sm drop-shadow-md">
+                        Email
+                      </span>
+                    </motion.div>
+                    {/* Click Indicator */}
+                    <motion.div
+                      animate={{
+                        opacity:
+                          (isSignUp ? signupMethod : loginMethod) === "email"
+                            ? 0
+                            : 0.3,
+                        scale:
+                          (isSignUp ? signupMethod : loginMethod) === "email"
+                            ? 0.8
+                            : 1,
+                      }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full border border-teal-300"
+                    />
+                  </motion.button>
+
+                  {/* Mobile Area */}
+                  <motion.button
+                    type="button"
+                    onClick={() =>
+                      isSignUp
+                        ? setSignupMethod("mobile")
+                        : setLoginMethod("mobile")
+                    }
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-1/2 h-12 cursor-pointer relative"
+                  >
+                    <motion.div
+                      animate={{
+                        opacity:
+                          (isSignUp ? signupMethod : loginMethod) === "mobile"
+                            ? 1
+                            : 0.7,
+                        scale:
+                          (isSignUp ? signupMethod : loginMethod) === "mobile"
+                            ? 1.3
+                            : 1,
+                      }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-center justify-center h-full"
+                    >
+                      <span className="text-cyan-500 font-bold text-sm drop-shadow-md">
+                        Mobile
+                      </span>
+                    </motion.div>
+                    {/* Click Indicator */}
+                    <motion.div
+                      animate={{
+                        opacity:
+                          (isSignUp ? signupMethod : loginMethod) === "mobile"
+                            ? 0
+                            : 0.3,
+                        scale:
+                          (isSignUp ? signupMethod : loginMethod) === "mobile"
+                            ? 0.8
+                            : 1,
+                      }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-1 left-1 w-2 h-2 bg-white rounded-full border border-cyan-300"
+                    />
+                  </motion.button>
+                </div>
+
+                {/* Active Indicator */}
+                <motion.div
+                  animate={{
+                    x:
+                      (isSignUp ? signupMethod : loginMethod) === "email"
+                        ? 0
+                        : 64,
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    x: { type: "spring", stiffness: 500, damping: 30 },
+                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                  }}
+                  className="absolute -bottom-2 w-2 h-2 bg-white rounded-full shadow-lg border border-teal-400"
+                />
               </div>
 
-              {error && (
-                <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-200">
-                  {error}
-                </div>
-              )}
+           
+            </motion.div>
 
-              {success && (
-                <div className="text-green-700 text-sm bg-green-50 p-3 rounded-lg border border-green-200">
-                  {success}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-[#6B8E23] to-[#8B4513] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
+            {/* Sign Up Form */}
+            {isSignUp ? (
+              <motion.form
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
+                onSubmit={handleSignUp}
+                className="space-y-4"
               >
-                Sign In
-              </button>
-            </form>
-          )}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.6 }}
+                >
+                  <div className="relative">
+                    <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
+                    <input
+                      type="text"
+                      name="name"
+                      value={signUp.name}
+                      onChange={handleSignUpChange}
+                      placeholder="Full Name"
+                      className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                      required
+                    />
+                  </div>
+                </motion.div>
 
-          {/* Footer */}
-          <div className="mt-6 text-center">
-            <p className="text-[#8B4513] text-sm">
-              {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-              <button
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-[#6B8E23] font-medium hover:underline transition-colors"
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.7 }}
+                >
+                  <div className="relative">
+                    {signupMethod === "email" ? (
+                      <>
+                        <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
+                        <input
+                          type="email"
+                          name="email"
+                          value={signUp.email}
+                          onChange={handleSignUpChange}
+                          placeholder="Email Address"
+                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                          required
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
+                        <input
+                          type="tel"
+                          name="mobile"
+                          value={signUp.mobile}
+                          onChange={handleSignUpChange}
+                          placeholder="Mobile Number"
+                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                          required
+                        />
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+                <div className="flex flex-row gap-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.8 }}
+                  >
+                    <div className="relative">
+                      <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        value={signUp.password}
+                        onChange={handleSignUpChange}
+                        placeholder="Password"
+                        className="w-full pl-10 pr-12 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-teal-500 hover:text-teal-600"
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </button>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.9 }}
+                  >
+                    <div className="relative">
+                      <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        name="confirmPassword"
+                        value={signUp.confirmPassword}
+                        onChange={handleSignUpChange}
+                        placeholder="Confirm "
+                        className="w-full pl-10 pr-12 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-teal-500 hover:text-teal-600"
+                      >
+                        {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                      </button>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-200"
+                  >
+                    {error}
+                  </motion.div>
+                )}
+
+                {success && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-green-700 text-sm bg-green-50 p-3 rounded-lg border border-green-200"
+                  >
+                    {success}
+                  </motion.div>
+                )}
+
+                <motion.button
+                  type="submit"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-200"
+                >
+                  Create Account
+                </motion.button>
+              </motion.form>
+            ) : (
+              /* Sign In Form */
+              <motion.form
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
+                onSubmit={handleSignIn}
+                className="space-y-4"
               >
-                {isSignUp ? "Sign In" : "Sign Up"}
-              </button>
-            </p>
-          </div>
-        </div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.6 }}
+                >
+                  <div className="relative">
+                    {loginMethod === "email" ? (
+                      <>
+                        <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
+                        <input
+                          type="email"
+                          name="email"
+                          value={signIn.email}
+                          onChange={handleSignInChange}
+                          placeholder="Email Address"
+                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                          required
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
+                        <input
+                          type="tel"
+                          name="mobile"
+                          value={signIn.mobile}
+                          onChange={handleSignInChange}
+                          placeholder="Mobile Number"
+                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                          required
+                        />
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.7 }}
+                >
+                  <div className="relative">
+                    <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={signIn.password}
+                      onChange={handleSignInChange}
+                      placeholder="Password"
+                      className="w-full pl-10 pr-12 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-teal-500 hover:text-teal-600"
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.8 }}
+                  className="flex justify-end"
+                >
+                  <a
+                    href="/forgot-password"
+                    className="text-teal-600 text-sm hover:text-teal-700 hover:underline transition-colors"
+                  >
+                    Forgot Password?
+                  </a>
+                </motion.div>
+
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-200"
+                  >
+                    {error}
+                  </motion.div>
+                )}
+
+                {success && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-green-700 text-sm bg-green-50 p-3 rounded-lg border border-green-200"
+                  >
+                    {success}
+                  </motion.div>
+                )}
+
+                <motion.button
+                  type="submit"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-200"
+                >
+                  Sign In
+                </motion.button>
+              </motion.form>
+            )}
+
+            {/* Footer */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.6 }}
+              className="mt-6 text-center"
+            >
+              <p className="text-gray-600 text-sm">
+                {isSignUp
+                  ? "Already have an account?"
+                  : "Don't have an account?"}{" "}
+                <motion.button
+                  type="button"
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-teal-600 font-medium hover:underline transition-colors"
+                >
+                  {isSignUp ? "Sign In" : "Sign Up"}
+                </motion.button>
+              </p>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

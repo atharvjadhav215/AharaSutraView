@@ -78,7 +78,7 @@ export default function Onboarding() {
           <div className="mt-8 flex justify-center">
             <button
               type="button"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/login")}
               className="px-6 py-2 rounded-lg bg-transparent text-gray-600 border border-teal-200 hover:bg-teal-50 hover:border-teal-400 transition-all duration-200"
             >
               ← Back to Login

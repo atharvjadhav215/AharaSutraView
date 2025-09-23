@@ -923,7 +923,7 @@ export default function HomePage() {
           }}
         >
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
+          <div className="absolute inset-0"></div>
         </div>
 
         {/* Content Container */}

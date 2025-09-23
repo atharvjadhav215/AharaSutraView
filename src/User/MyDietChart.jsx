@@ -724,7 +724,7 @@ export default function MyDietChart() {
                 onClick={() => setSelectedDay(day.day)}
                 className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
                   selectedDay === day.day
-                    ? "bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-cyan-500 via-teal-500 to-cyan-500 text-white shadow-lg"
                     : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
                 }`}
               >
@@ -847,7 +847,7 @@ export default function MyDietChart() {
                     key={category.id}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30 p-6 rounded-2xl border-2 border-amber-200/50 shadow-lg"
+                    className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-amber-200/50 shadow-lg"
                   >
                     <div className="flex items-center gap-2 mb-3">
                       <category.icon
@@ -867,7 +867,7 @@ export default function MyDietChart() {
                         return (
                           <div
                             key={foodKey}
-                            className="flex items-center justify-between py-3 px-4 bg-gradient-to-r from-white/80 via-amber-50/60 to-orange-50/40 rounded-xl border-2 border-amber-200/40 shadow-sm"
+                            className="flex items-center justify-between py-3 px-4 bg-gradient-to-r from-white/80 via-teal-50/60 to-cyan-50/40 rounded-xl border-2 border-amber-200/40 shadow-sm"
                           >
                             <span className="text-gray-800 font-medium">
                               {itemName}
@@ -916,7 +916,7 @@ export default function MyDietChart() {
             </span>
             <div className="w-64 bg-white/20 h-3 rounded-full overflow-hidden">
               <motion.div
-                className="bg-gradient-to-r from-amber-500 to-orange-600 h-3 rounded shadow-sm"
+                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-3 rounded shadow-sm"
                 style={{ width: `${progress}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 initial={{ width: 0 }}
@@ -973,7 +973,7 @@ export default function MyDietChart() {
             scale: { repeat: Infinity, duration: 8, ease: "easeInOut" },
             opacity: { repeat: Infinity, duration: 5, ease: "easeInOut" },
           }}
-          className="absolute -right-32 bottom-[-60px] w-[360px] h-[360px] rounded-full bg-gradient-to-bl from-orange-200 to-red-100 blur-3xl pointer-events-none"
+          className="absolute -right-32 bottom-[-60px] w-[360px] h-[360px] rounded-full bg-gradient-to-bl from-cyan-200 to-teal-100 blur-3xl pointer-events-none"
         />
       </div>
 
@@ -1067,7 +1067,7 @@ export default function MyDietChart() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.1 }}
-                            className="bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30 px-4 py-2 rounded-2xl border-2 border-amber-200/50 shadow-lg min-w-[200px] max-w-[250px]"
+                            className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 px-4 py-2 rounded-2xl border-2 border-amber-200/50 shadow-lg min-w-[200px] max-w-[250px]"
                           >
                             <div className="flex items-center gap-2 mb-1">
                               <category.icon
@@ -1086,7 +1086,7 @@ export default function MyDietChart() {
                                   animate={{ opacity: 1, y: 0 }}
                                   className={`rounded-2xl border-2 transition-all duration-300 ${
                                     isFoodSelected(category.id, item.name)
-                                      ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white border-amber-500"
+                                      ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white border-teal-500"
                                       : "bg-white/60 hover:bg-teal-50 text-gray-800 border-gray-200"
                                   }`}
                                 >
@@ -1200,7 +1200,7 @@ export default function MyDietChart() {
                   whileTap={{ scale: 0.95 }}
                   onClick={prev}
                   disabled={step === 0}
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-white/95 via-amber-50/80 to-orange-50/60 backdrop-blur-sm border-2 border-amber-200/60 text-teal-700 text-sm disabled:opacity-50 transition-all duration-200 flex items-center gap-2 shadow-md"
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-white/95 via-teal-50/80 to-cyan-50/60 backdrop-blur-sm border-2 border-amber-200/60 text-teal-700 text-sm disabled:opacity-50 transition-all duration-200 flex items-center gap-2 shadow-md"
                 >
                   <FaChevronLeft />
                   Previous
@@ -1218,7 +1218,7 @@ export default function MyDietChart() {
                       onClick={() => setStep(i)}
                       className={`w-4 h-4 rounded-full transition-all duration-300 flex items-center justify-center border-2 ${
                         i === step
-                          ? "bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 border-amber-400 shadow-lg shadow-amber-200 scale-125"
+                          ? "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 border-amber-400 shadow-lg shadow-amber-200 scale-125"
                           : "bg-white/60 border-amber-200/60"
                       }`}
                     >
@@ -1238,7 +1238,7 @@ export default function MyDietChart() {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={next}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-amber-400"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-teal-400"
                   >
                     Next
                     <FaChevronRight />
