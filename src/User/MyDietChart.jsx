@@ -1,571 +1,1266 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { Link } from "react-router-dom";
-/*
-  Simplified hard-coded personalized Diet Chart
-  - Single dosha (Pitta) with a few rasa (tastes)
-  - Multiple hard-coded daily plans; user picks which plan is "Today's plan"
-  - Full UI is client-side only (no backend / no localStorage)
-  - All font sizes use >= text-lg / text-xl
-  - Animated and dynamic transitions using framer-motion + simple pie charts
-*/
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "../EnhancedEffects.css";
+import {
+  FaArrowLeft,
+  FaUser,
+  FaWeight,
+  FaRulerVertical,
+  FaBullseye,
+  FaUtensils,
+  FaHeart,
+  FaCheckCircle,
+  FaPlay,
+  FaRocket,
+  FaLeaf,
+  FaAppleAlt,
+  FaDumbbell,
+  FaHeartbeat,
+  FaSeedling,
+  FaChevronRight,
+  FaChevronLeft,
+  FaHome,
+  FaLanguage,
+  FaRedo,
+  FaEye,
+  FaCheck,
+  FaCalendarAlt,
+  FaChartPie,
+  FaList,
+  FaClock,
+  FaFire,
+  FaCarrot,
+  FaFish,
+  FaBreadSlice,
+  FaCoffee,
+  FaPlus,
+  FaMinus,
+  FaStar,
+  FaShare,
+  FaDownload,
+} from "react-icons/fa";
 
-/* single dosha (hard-coded) */
-const DOSHA = {
-  type: "Pitta",
-  color: "#F97316",
-  description:
-    "Cooling, calming and moderate foods. Avoid excessive heat, spice and sour stimulants.",
-  rule: "Avoid hot spices, fried foods and alcohol. Favor cooling herbs & light meals.",
-  foods: [
-    "Basmati rice",
-    "Leafy greens",
-    "Coconut water",
-    "Sweet fruits",
-    "Milk & ghee (moderately)",
-    "Coriander, fennel, mint",
-  ],
-  taste: [
-    { name: "Sweet", value: 30, color: "#22C55E" },
-    { name: "Bitter", value: 25, color: "#64748B" },
-    { name: "Astringent", value: 20, color: "#8B5CF6" },
-    { name: "Sour", value: 15, color: "#F97316" },
-    { name: "Salty", value: 10, color: "#3B82F6" },
-  ],
-  plate: [
-    { name: "Carbs", value: 30, color: "#F97316" },
-    { name: "Veggies", value: 30, color: "#10B981" },
-    { name: "Protein", value: 30, color: "#EAB308" },
-    { name: "Fruits", value: 10, color: "#EF4444" },
-  ],
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
+const ayurvedicColors = [
+  "#A0D9D9",
+  "#7BC4C4",
+  "#5BAFAF",
+  "#4A9B9B",
+  "#3A8787",
+  "#2A7373",
+  "#1A5F5F",
+  "#0A4B4B",
+];
+
+// Enhanced Ayurvedic Particle System
+const AyurvedicParticleSystem = ({ count = 80 }) => {
+  const particlesRef = useRef([]);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const particles = particlesRef.current;
+    const container = containerRef.current;
+
+    if (!container) return;
+
+    // Create enhanced Ayurvedic particles
+    particles.forEach((particle, index) => {
+      if (particle) {
+        const isSymbol = index % 4 === 0; // Every 4th particle is a symbol
+
+        const color =
+          ayurvedicColors[Math.floor(Math.random() * ayurvedicColors.length)];
+
+        gsap.set(particle, {
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          scale: isSymbol
+            ? Math.random() * 1.2 + 1.0
+            : Math.random() * 0.8 + 0.6,
+          opacity: Math.random() * 0.9 + 0.4,
+          rotation: Math.random() * 360,
+        });
+
+        // Enhanced floating animation
+        gsap.to(particle, {
+          x: `+=${(Math.random() - 0.5) * 200}`,
+          y: `+=${(Math.random() - 0.5) * 200}`,
+          duration: Math.random() * 12 + 12,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+
+        // Rotation animation
+        gsap.to(particle, {
+          rotation: "+=360",
+          duration: Math.random() * 20 + 15,
+          ease: "none",
+          repeat: -1,
+        });
+
+        // Scale pulsing for symbols
+        if (isSymbol) {
+          gsap.to(particle, {
+            scale: "+=0.3",
+            duration: Math.random() * 2 + 1.5,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+          });
+        }
+
+        particle.className = "absolute w-2 h-2 rounded-full ayurvedic-dot";
+        particle.style.backgroundColor = color;
+      }
+    });
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="fixed inset-0 pointer-events-none overflow-hidden"
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          ref={(el) => (particlesRef.current[i] = el)}
+          className="absolute"
+          style={{
+            filter: "blur(0.3px)",
+            willChange: "transform",
+          }}
+        />
+      ))}
+    </div>
+  );
 };
 
-/* multiple hard-coded daily plans (user chooses) */
-const PLANS = [
+// Food Categories for Selection
+const FOOD_CATEGORIES = [
   {
-    id: "pitta-easy",
-    name: "Cooling & Gentle",
-    description:
-      "Basmati rice porridge, steamed veg, coconut water and mellow spices.",
+    id: "grains",
+    name: "Grains & Cereals",
+    icon: FaBreadSlice,
+    color: "#F59E0B",
+    items: [
+      {
+        name: "Basmati Rice",
+        calories: 130,
+        selected: false,
+        recipe: "Cook 1 cup rice with 2 cups water, add ghee and salt",
+      },
+      {
+        name: "Quinoa",
+        calories: 120,
+        selected: false,
+        recipe: "Rinse quinoa, cook 1:2 ratio with water, fluff with fork",
+      },
+      {
+        name: "Oats",
+        calories: 150,
+        selected: false,
+        recipe: "Cook oats with milk, add honey and nuts for flavor",
+      },
+      {
+        name: "Barley",
+        calories: 110,
+        selected: false,
+        recipe: "Soak barley overnight, cook until tender with vegetables",
+      },
+      {
+        name: "Brown Rice",
+        calories: 125,
+        selected: false,
+        recipe:
+          "Cook brown rice 1:2.5 ratio, longer cooking time than white rice",
+      },
+    ],
+  },
+  {
+    id: "proteins",
+    name: "Proteins",
+    icon: FaFish,
+    color: "#10B981",
+    items: [
+      {
+        name: "Paneer",
+        calories: 200,
+        selected: false,
+        recipe: "Cut paneer into cubes, marinate with spices, cook in ghee",
+      },
+      {
+        name: "Lentils",
+        calories: 180,
+        selected: false,
+        recipe: "Soak lentils, cook with turmeric, cumin, and salt",
+      },
+      {
+        name: "Chicken",
+        calories: 250,
+        selected: false,
+        recipe: "Marinate chicken with yogurt and spices, grill or bake",
+      },
+      {
+        name: "Fish",
+        calories: 220,
+        selected: false,
+        recipe: "Season fish with lemon and herbs, pan-fry or bake",
+      },
+      {
+        name: "Eggs",
+        calories: 150,
+        selected: false,
+        recipe: "Boil eggs 6-8 minutes, or scramble with minimal oil",
+      },
+    ],
+  },
+  {
+    id: "vegetables",
+    name: "Vegetables",
+    icon: FaCarrot,
+    color: "#22C55E",
+    items: [
+      {
+        name: "Spinach",
+        calories: 20,
+        selected: false,
+        recipe: "Wash spinach, sauté with garlic and olive oil",
+      },
+      {
+        name: "Broccoli",
+        calories: 30,
+        selected: false,
+        recipe: "Steam broccoli 5-7 minutes, season with lemon and salt",
+      },
+      {
+        name: "Carrots",
+        calories: 25,
+        selected: false,
+        recipe: "Roast carrots with honey and herbs at 400°F for 20 minutes",
+      },
+      {
+        name: "Cucumber",
+        calories: 15,
+        selected: false,
+        recipe: "Slice cucumber, serve fresh with lemon and mint",
+      },
+      {
+        name: "Bell Peppers",
+        calories: 20,
+        selected: false,
+        recipe: "Roast peppers until charred, peel and slice",
+      },
+    ],
+  },
+  {
+    id: "fruits",
+    name: "Fruits",
+    icon: FaAppleAlt,
+    color: "#EF4444",
+    items: [
+      {
+        name: "Banana",
+        calories: 90,
+        selected: false,
+        recipe: "Peel and eat fresh, or blend into smoothies",
+      },
+      {
+        name: "Apple",
+        calories: 80,
+        selected: false,
+        recipe: "Wash and eat fresh, or bake with cinnamon",
+      },
+      {
+        name: "Orange",
+        calories: 60,
+        selected: false,
+        recipe: "Peel and eat segments, or juice fresh",
+      },
+      {
+        name: "Dates",
+        calories: 120,
+        selected: false,
+        recipe: "Soak dates in warm water, remove pits, eat or blend",
+      },
+      {
+        name: "Pear",
+        calories: 70,
+        selected: false,
+        recipe: "Wash and eat fresh, or poach in wine",
+      },
+    ],
+  },
+  {
+    id: "dairy",
+    name: "Dairy",
+    icon: FaCoffee,
+    color: "#3B82F6",
+    items: [
+      {
+        name: "Milk",
+        calories: 100,
+        selected: false,
+        recipe: "Heat milk gently, add turmeric and honey for golden milk",
+      },
+      {
+        name: "Yogurt",
+        calories: 80,
+        selected: false,
+        recipe: "Serve plain or with fruits and nuts, avoid added sugars",
+      },
+      {
+        name: "Ghee",
+        calories: 200,
+        selected: false,
+        recipe: "Use 1-2 tsp for cooking, adds flavor and healthy fats",
+      },
+      {
+        name: "Cheese",
+        calories: 150,
+        selected: false,
+        recipe: "Use in moderation, pair with fruits or vegetables",
+      },
+      {
+        name: "Buttermilk",
+        calories: 60,
+        selected: false,
+        recipe: "Drink plain or add cumin powder and salt",
+      },
+    ],
+  },
+];
+
+// Diet Plans
+const DIET_PLANS = [
+  {
+    id: "cooling-pitta",
+    name: "Cooling Pitta Plan",
+    description: "Cooling, light meals — basmati, coconut water, mild spices.",
+    icon: FaLeaf,
+    color: "#10B981",
     meals: {
       breakfast: [
         {
           name: "Rice Porridge",
           calories: 300,
-          items: ["rice", "milk", "ghee"],
+          recipe: "Cook rice with milk, add cardamom and jaggery",
         },
       ],
       lunch: [
         {
           name: "Steamed Veg + Rice",
-          calories: 550,
-          items: ["rice", "mixed veg", "ghee"],
+          calories: 520,
+          recipe: "Steam vegetables, serve with basmati rice and ghee",
         },
       ],
       snack: [
         {
           name: "Coconut Water + Dates",
-          calories: 150,
-          items: ["coconut water", "dates"],
+          calories: 140,
+          recipe: "Fresh coconut water with 2-3 dates",
         },
       ],
       dinner: [
         {
           name: "Paneer & Greens",
           calories: 400,
-          items: ["paneer", "spinach", "mild spices"],
+          recipe: "Sauté paneer with spinach, add mild spices",
         },
       ],
     },
   },
   {
-    id: "pitta-light",
-    name: "Light & Cooling",
-    description: "Barley salad, cucumber raita and fruit.",
-    meals: {
-      breakfast: [
-        {
-          name: "Soaked Oats with Milk",
-          calories: 320,
-          items: ["oats", "milk", "banana"],
-        },
-      ],
-      lunch: [
-        {
-          name: "Barley Salad",
-          calories: 480,
-          items: ["barley", "cucumber", "mint"],
-        },
-      ],
-      snack: [
-        {
-          name: "Fresh Pear",
-          calories: 80,
-          items: ["pear"],
-        },
-      ],
-      dinner: [
-        {
-          name: "Moong Dal & Greens",
-          calories: 360,
-          items: ["moong dal", "greens"],
-        },
-      ],
-    },
-  },
-  {
-    id: "pitta-rich",
-    name: "Nourishing + Iron",
-    description: "Increased iron focus: lentils, spinach, dates & nuts.",
+    id: "iron-rich",
+    name: "Iron-Focused Plan",
+    description:
+      "Lentils, greens and energy-dense snacks to support iron needs.",
+    icon: FaHeartbeat,
+    color: "#F59E0B",
     meals: {
       breakfast: [
         {
           name: "Ragi Porridge with Dates",
           calories: 340,
-          items: ["ragi", "dates", "milk"],
+          recipe: "Cook ragi flour with milk, add chopped dates and nuts",
         },
       ],
       lunch: [
         {
           name: "Spinach Dal + Rice",
           calories: 600,
-          items: ["lentils", "spinach", "rice"],
+          recipe: "Cook dal with spinach, serve with rice and ghee",
         },
       ],
       snack: [
         {
           name: "Almond-Date Smoothie",
           calories: 220,
-          items: ["almonds", "dates", "milk"],
+          recipe: "Blend almonds, dates, and milk until smooth",
         },
       ],
       dinner: [
         {
           name: "Lentil Stew with Veg",
           calories: 420,
-          items: ["toor dal", "veg", "ghee"],
+          recipe: "Cook lentils with vegetables and mild spices",
+        },
+      ],
+    },
+  },
+  {
+    id: "balanced-active",
+    name: "Balanced Active Plan",
+    description:
+      "Higher protein and balanced carbs for active users / muscle goals.",
+    icon: FaDumbbell,
+    color: "#6366F1",
+    meals: {
+      breakfast: [
+        {
+          name: "Oats + Milk + Banana",
+          calories: 360,
+          recipe: "Cook oats with milk, add sliced banana and honey",
+        },
+      ],
+      lunch: [
+        {
+          name: "Quinoa Salad + Chicken/Paneer",
+          calories: 600,
+          recipe: "Mix quinoa with vegetables, add grilled protein",
+        },
+      ],
+      snack: [
+        {
+          name: "Greek Yogurt + Nuts",
+          calories: 200,
+          recipe: "Top Greek yogurt with mixed nuts and berries",
+        },
+      ],
+      dinner: [
+        {
+          name: "Grilled Veg + Protein",
+          calories: 420,
+          recipe: "Grill vegetables and protein with herbs",
+        },
+      ],
+    },
+  },
+  {
+    id: "light-digestive",
+    name: "Light Digestive Plan",
+    description: "Easy-to-digest, warm meals for sensitive digestion.",
+    icon: FaSeedling,
+    color: "#06B6D4",
+    meals: {
+      breakfast: [
+        {
+          name: "Rice Porridge with Ghee",
+          calories: 320,
+          recipe: "Cook rice with water, add ghee and mild spices",
+        },
+      ],
+      lunch: [
+        {
+          name: "Kitchari / Moong Dal Stew",
+          calories: 480,
+          recipe: "Cook rice and moong dal together with turmeric",
+        },
+      ],
+      snack: [
+        {
+          name: "Warm Apple",
+          calories: 110,
+          recipe: "Bake apple with cinnamon until soft",
+        },
+      ],
+      dinner: [
+        {
+          name: "Light Kitchari",
+          calories: 380,
+          recipe: "Simple rice and dal with minimal spices",
         },
       ],
     },
   },
 ];
 
-/* small pie chart component */
-const Chart = ({ data, innerRadius = 40, outerRadius = 80 }) => (
-  <ResponsiveContainer width="100%" height={180}>
-    <PieChart>
-      <Pie
-        data={data}
-        dataKey="value"
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        isAnimationActive
-      >
-        {data.map((d, i) => (
-          <Cell key={i} fill={d.color} />
-        ))}
-      </Pie>
-      <Tooltip
-        wrapperStyle={{ fontSize: 14 }}
-        formatter={(v, name) => [`${v}%`, name]}
-      />
-    </PieChart>
-  </ResponsiveContainer>
-);
+// Steps Configuration
+const STEPS = [
+  {
+    id: 0,
+    title: "Welcome",
+    subtitle: "Let's personalize your diet chart",
+    kind: "intro",
+    icon: FaRocket,
+    color: "#A0D9D9",
+  },
+  {
+    id: 1,
+    title: "Select Foods",
+    subtitle: "Choose your preferred food items",
+    kind: "food-selection",
+    icon: FaUtensils,
+    color: "#7BC4C4",
+  },
+  {
+    id: 2,
+    title: "Diet Chart",
+    subtitle: "View your personalized diet plan",
+    kind: "diet-chart",
+    icon: FaChartPie,
+    color: "#6B8E23",
+  },
+];
 
-/* DayChart simplified (show plan details + totals) */
-const DayChart = ({ plan, expanded, onToggleRecipe }) => {
-  const meals = Object.values(plan.meals).flat();
-  const totals = useMemo(() => {
-    const calories = meals.reduce((s, m) => s + (m.calories || 0), 0);
-    const carbs_g = Math.round((calories * 0.5) / 4);
-    const protein_g = Math.round((calories * 0.2) / 4);
-    const fat_g = Math.round((calories * 0.3) / 9);
-    return { calories, carbs_g, protein_g, fat_g };
-  }, [plan]);
+// Background Layers
+const BG_LAYERS = [
+  {
+    id: 0,
+    gradient:
+      "radial-gradient( circle at 10% 20%, rgba(107,142,35,0.14), transparent 20% ), linear-gradient(45deg,#F0F9F0,#E8F5E8)",
+  },
+  {
+    id: 1,
+    gradient:
+      "radial-gradient( circle at 80% 10%, rgba(139,69,19,0.12), transparent 18% ), linear-gradient(135deg,#E8F5E8,#E0F2E0)",
+  },
+  {
+    id: 2,
+    gradient:
+      "radial-gradient( circle at 30% 80%, rgba(156,175,136,0.10), transparent 18% ), linear-gradient(90deg,#E0F2E0,#D8EFD8)",
+  },
+];
 
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      className="bg-white rounded-2xl p-6 shadow-lg"
-    >
-      <div className="flex items-start justify-between gap-4 mb-4">
-        <div>
-          <div className="text-2xl font-semibold text-emerald-900">
-            {plan.name}
-          </div>
-          <div className="text-lg text-emerald-800/90">{plan.description}</div>
-        </div>
+// Generate 7-day diet chart
+const generate7DayChart = (selectedPlan) => {
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
-        <div className="text-right">
-          <div className="text-xl text-emerald-900 font-medium">
-            {totals.calories} cal
-          </div>
-          <div className="text-lg text-gray-600">Est. energy</div>
-        </div>
-      </div>
+  // Enhanced meals with recipes
+  const enhancedMeals = {
+    breakfast: [
+      {
+        name: "Oatmeal with fruits",
+        calories: 300,
+        recipe:
+          "Cook 1/2 cup oats with 1 cup milk, add honey and fresh berries",
+      },
+      {
+        name: "Green tea",
+        calories: 5,
+        recipe: "Steep green tea leaves in hot water for 3-4 minutes",
+      },
+    ],
+    lunch: [
+      {
+        name: "Quinoa salad",
+        calories: 400,
+        recipe: "Cook quinoa, mix with cucumber, tomatoes, olive oil and lemon",
+      },
+      {
+        name: "Vegetable soup",
+        calories: 150,
+        recipe: "Simmer mixed vegetables in vegetable broth with herbs",
+      },
+    ],
+    dinner: [
+      {
+        name: "Grilled chicken",
+        calories: 350,
+        recipe: "Marinate chicken with herbs, grill for 6-8 minutes each side",
+      },
+      {
+        name: "Steamed vegetables",
+        calories: 100,
+        recipe: "Steam broccoli, carrots, and bell peppers for 5-7 minutes",
+      },
+    ],
+  };
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {Object.entries(plan.meals).map(([mealKey, items]) => (
-          <motion.div
-            key={mealKey}
-            layout
-            className="bg-[#f6f3e8] rounded-lg p-4"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="font-medium text-lg text-emerald-900 capitalize">
-                {mealKey} • {items.reduce((s, i) => s + (i.calories || 0), 0)}{" "}
-                cal
-              </div>
-              <button
-                className="text-lg text-emerald-700"
-                onClick={() => onToggleRecipe(mealKey)}
-              >
-                {expanded === mealKey ? "Hide" : "View"}
-              </button>
-            </div>
-
-            <div className="space-y-2 text-lg text-gray-800">
-              {items.map((it, idx) => (
-                <div key={idx} className="flex items-start gap-3">
-                  <div
-                    className="w-3 h-3 rounded-full mt-2"
-                    style={{ background: "#10B981" }}
-                  />
-                  <div>
-                    <div className="font-medium">
-                      {it.name}{" "}
-                      <span className="text-base text-gray-500">
-                        ({it.items.join(", ")})
-                      </span>
-                    </div>
-                    {expanded === mealKey && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.25 }}
-                        className="mt-2 p-3 bg-white rounded shadow-inner text-lg"
-                      >
-                        <div className="font-medium text-emerald-900">
-                          Recipe
-                        </div>
-                        <div className="text-lg text-gray-700 mt-1">
-                          {it.recept ||
-                            "Simple preparation as per Ayurveda: keep it warm, mild spices."}
-                        </div>
-                      </motion.div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div className="bg-white rounded-lg p-3 text-lg">
-          <div className="font-medium text-emerald-900">Carbs (est.)</div>
-          <div className="text-xl font-extrabold text-emerald-900">
-            {totals.carbs_g} g
-          </div>
-        </div>
-        <div className="bg-white rounded-lg p-3 text-lg">
-          <div className="font-medium text-emerald-900">Protein (est.)</div>
-          <div className="text-xl font-extrabold text-emerald-900">
-            {totals.protein_g} g
-          </div>
-        </div>
-        <div className="bg-white rounded-lg p-3 text-lg">
-          <div className="font-medium text-emerald-900">Fat (est.)</div>
-          <div className="text-xl font-extrabold text-emerald-900">
-            {totals.fat_g} g
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
+  return days.map((day) => ({
+    day,
+    plan: selectedPlan,
+    meals: enhancedMeals,
+    totalCalories: Object.values(enhancedMeals)
+      .flat()
+      .reduce((sum, meal) => sum + meal.calories, 0),
+  }));
 };
 
 export default function MyDietChart() {
-  const [selectedTaste, setSelectedTaste] = useState(DOSHA.taste[0].name);
-  const [selectedPlanId, setSelectedPlanId] = useState(PLANS[0].id);
-  const [expandedMeal, setExpandedMeal] = useState(null);
-  const [todayPlanId, setTodayPlanId] = useState(null);
+  const [step, setStep] = useState(0);
+  const [selectedFoods, setSelectedFoods] = useState([]);
+  const [selectedPlanId] = useState(DIET_PLANS[0].id);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [selectedDay, setSelectedDay] = useState("Monday");
 
-  useEffect(() => {
-    // small entrance animation placeholder if needed
-  }, []);
-
-  const selectedPlan = useMemo(
-    () => PLANS.find((p) => p.id === selectedPlanId) || PLANS[0],
-    [selectedPlanId]
+  // Define functions
+  const next = useCallback(
+    () => setStep((s) => Math.min(STEPS.length - 1, s + 1)),
+    []
   );
+  const prev = useCallback(() => setStep((s) => Math.max(0, s - 1)), []);
 
-  const setToday = (id) => setTodayPlanId(id === todayPlanId ? null : id);
+  // Toggle food selection
+  const toggleFoodSelection = (categoryId, itemName) => {
+    setSelectedFoods((prev) => {
+      const key = `${categoryId}-${itemName}`;
+      if (prev.includes(key)) {
+        return prev.filter((food) => food !== key);
+      } else {
+        return [...prev, key];
+      }
+    });
+  };
+
+  // Check if food is selected
+  const isFoodSelected = (categoryId, itemName) => {
+    return selectedFoods.includes(`${categoryId}-${itemName}`);
+  };
+
+  const progress = Math.round(((step + 1) / STEPS.length) * 100);
+
+  // Tab content components
+  const getTabContent = () => {
+    const currentPlan =
+      DIET_PLANS.find((p) => p.id === selectedPlanId) || DIET_PLANS[0];
+    const weeklyChart = generate7DayChart(currentPlan);
+
+    return {
+      overview: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-2"
+        >
+          <div className="text-center flex flex-row items-center justify-start gap-5">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100  shadow-lg mb-1">
+              <currentPlan.icon
+                className="text-xl"
+                style={{ color: currentPlan.color }}
+              />
+            </div>
+            <h3 className="text-xl md:text-2xl font-bold text-teal-900 ">
+              {currentPlan.name}
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Object.entries(currentPlan.meals).map(([mealType, items]) => (
+              <motion.div
+                key={mealType}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="bg-gradient-to-br from-white to-teal-50/30 p-3 rounded-xl border border-teal-200/30 shadow-sm"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-2xl font-semibold text-teal-900 capitalize">
+                    {mealType}
+                  </h4>
+                  <div className="flex items-center gap-1 text-teal-700">
+                    <FaFire className="text-sm" />
+                    <span className="font-medium">
+                      {items.reduce((s, i) => s + (i.calories || 0), 0)} cal
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  {items.map((item, index) => (
+                    <div
+                      key={index}
+                      className="bg-gradient-to-r from-white/90 via-amber-50/60 to-orange-50/40 rounded-2xl p-4 border-2 border-amber-200/50 shadow-md"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-gray-800 font-medium text-lg">
+                          {item.name}
+                        </span>
+                        <span className="text-teal-700 font-semibold text-lg">
+                          {item.calories} cal
+                        </span>
+                      </div>
+                      {item.recipe && (
+                        <div className="text-sm text-gray-700 bg-gradient-to-r from-amber-50/80 to-orange-50/60 p-3 rounded-xl border-l-4 border-amber-400 shadow-sm">
+                          <strong>Recipe:</strong> {item.recipe}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      ),
+      weekly: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          {/* Day Tabs */}
+          <div className="flex flex-wrap gap-2 justify-center ">
+            {weeklyChart.map((day, index) => (
+              <motion.button
+                key={day.day}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSelectedDay(day.day)}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                  selectedDay === day.day
+                    ? "bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white shadow-lg"
+                    : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
+                }`}
+              >
+                <FaCalendarAlt className="text-sm" />
+                {day.day}
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Selected Day Content */}
+          <motion.div
+            key={selectedDay}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30 p-2 px-6 rounded-2xl border-2 border-amber-200/50 shadow-lg"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-teal-900">
+                {selectedDay} Meal Plan
+              </h3>
+              <div className="flex items-center gap-2 text-teal-700">
+                <FaFire className="text-lg" />
+                <span className="text-lg font-semibold">
+                  {
+                    weeklyChart.find((day) => day.day === selectedDay)
+                      ?.totalCalories
+                  }{" "}
+                  cal
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {Object.entries(
+                weeklyChart.find((day) => day.day === selectedDay)?.meals || {}
+              ).map(([mealType, items]) => (
+                <motion.div
+                  key={mealType}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                  className="bg-gradient-to-r from-white/80 via-amber-50/60 to-orange-50/40 rounded-xl p-4 border-2 border-amber-200/40 shadow-sm"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">
+                        {mealType.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <h4 className="text-xl font-semibold text-gray-800 capitalize">
+                      {mealType}
+                    </h4>
+                    <div className="flex items-center gap-1 text-teal-700 ml-auto">
+                      <FaFire className="text-sm" />
+                      <span className="font-medium">
+                        {items.reduce((sum, item) => sum + item.calories, 0)}{" "}
+                        cal
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {items.map((item, idx) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.2 + idx * 0.1 }}
+                        className="bg-white/60 rounded-lg p-3 border border-amber-100/50 shadow-sm"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <h5 className="text-lg font-medium text-gray-700">
+                            {item.name}
+                          </h5>
+                          <span className="text-teal-700 font-semibold">
+                            {item.calories} cal
+                          </span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      ),
+      selected: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-4"
+        >
+          <div className="text-center mb-6">
+            <h3 className="text-2xl font-bold text-teal-900 mb-2">
+              Selected Foods
+            </h3>
+            <p className="text-lg text-gray-700">Your preferred food items</p>
+          </div>
+
+          {selectedFoods.length === 0 ? (
+            <div className="text-center py-8">
+              <FaUtensils className="text-4xl text-gray-400 mx-auto mb-4" />
+              <p className="text-lg text-gray-600">No foods selected yet</p>
+              <p className="text-sm text-gray-500">
+                Go back to step 1 to select your preferred foods
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {FOOD_CATEGORIES.map((category) => {
+                const categoryFoods = selectedFoods.filter((food) =>
+                  food.startsWith(`${category.id}-`)
+                );
+                if (categoryFoods.length === 0) return null;
+
+                return (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30 p-6 rounded-2xl border-2 border-amber-200/50 shadow-lg"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <category.icon
+                        className="text-xl"
+                        style={{ color: category.color }}
+                      />
+                      <h4 className="text-lg font-semibold text-teal-900">
+                        {category.name}
+                      </h4>
+                    </div>
+                    <div className="space-y-2">
+                      {categoryFoods.map((foodKey) => {
+                        const itemName = foodKey.split("-").slice(1).join("-");
+                        const item = category.items.find(
+                          (item) => item.name === itemName
+                        );
+                        return (
+                          <div
+                            key={foodKey}
+                            className="flex items-center justify-between py-3 px-4 bg-gradient-to-r from-white/80 via-amber-50/60 to-orange-50/40 rounded-xl border-2 border-amber-200/40 shadow-sm"
+                          >
+                            <span className="text-gray-800 font-medium">
+                              {itemName}
+                            </span>
+                            <span className="text-teal-700 font-semibold">
+                              {item?.calories} cal
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+        </motion.div>
+      ),
+    };
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8] p-2 sm:p-4 md:p-6">
-      <Link to="/uhome">
-        <button className="px-3 sm:px-4 py-2 sm:py-3 mt-20 mb-4 sm:mt-4 md:mt-5 ml-2 sm:ml-3 md:ml-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
-          ← Back to Home
-        </button>
-      </Link>
-      <div className="max-w-[1600px] mx-auto space-y-4 sm:space-y-6">
-        <motion.header
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center"
-        >
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-emerald-900">
-            Personalized Pitta Diet
-          </h1>
-          <p className="text-xl text-emerald-800/90 mt-2">
-            Dosha : Pitta with selectable rasas. Pick a plan and mark it as
-            today's plan.
-          </p>
-        </motion.header>
+    <div className="h-screen w-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
+      {/* Enhanced Ayurvedic Particle System */}
+      <AyurvedicParticleSystem count={1} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-          <motion.aside
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="lg:col-span-1 bg-white rounded-xl p-3 sm:p-4 shadow"
+      {/* Top Navigation Bar */}
+      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-white/95 backdrop-blur-md border-b border-amber-200/20">
+        {/* Back to Home Button */}
+        <Link to="/dhome">
+          <motion.button
+            whileHover={{ scale: 1.05, rotateY: 5 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
           >
-            <div className="text-xl font-semibold text-emerald-900 mb-3">
-              Dosha • {DOSHA.type}
-            </div>
+            <FaHome className="text-xl" />
+            Back to Home
+          </motion.button>
+        </Link>
 
-            <div className="text-xl text-emerald-900 font-medium mb-2">
-              Rule
-            </div>
-            <div className="text-xl text-gray-700 mb-3">{DOSHA.rule}</div>
-
-            <div className="text-xl font-medium text-emerald-900 mb-2">
-              Recommended Foods
-            </div>
-            <ul className="list-disc pl-5 space-y-2 text-xl text-gray-800">
-              {DOSHA.foods.map((f, i) => (
-                <li key={i}>{f}</li>
-              ))}
-            </ul>
-
-            <div className="mt-4">
-              <div className="text-xl font-medium text-emerald-900 mb-2">
-                Rasa (tastes)
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {DOSHA.taste.map((t) => (
-                  <motion.button
-                    key={t.name}
-                    onClick={() => setSelectedTaste(t.name)}
-                    whileHover={{ scale: 1.03 }}
-                    className={`text-xl px-3 py-2 rounded ${
-                      selectedTaste === t.name
-                        ? "bg-emerald-600 text-white"
-                        : "bg-white border text-emerald-900"
-                    } shadow`}
-                  >
-                    {t.name}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="text-xl font-medium text-emerald-900 mb-2">
-                Taste Palette
-              </div>
-              <div className="bg-[#f6f3e8] rounded-lg p-3">
-                <Chart data={DOSHA.taste} innerRadius={30} outerRadius={60} />
-              </div>
-            </div>
-          </motion.aside>
-
-          <motion.section
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="lg:col-span-2 space-y-4"
-          >
-            <div className="bg-white rounded-xl p-4 shadow">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="text-2xl font-semibold text-emerald-900">
-                    Available Plans
-                  </div>
-                  <div className="text-lg text-emerald-800/90 mt-1">
-                    Choose a plan to preview. Mark one as today's plan below.
-                  </div>
-                </div>
-
-                <div className="text-lg">
-                  <div className="text-lg font-medium">Selected taste:</div>
-                  <div className="text-xl font-semibold text-emerald-900">
-                    {selectedTaste}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
-                <AnimatePresence>
-                  {PLANS.map((p, idx) => (
-                    <motion.div
-                      key={p.id}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ delay: idx * 0.04 }}
-                      className={`p-3 rounded-lg ${
-                        p.id === selectedPlanId
-                          ? "ring-2 ring-emerald-200 bg-[#f6f3e8]"
-                          : "bg-white"
-                      } shadow`}
-                    >
-                      <div className="font-medium text-lg text-emerald-900">
-                        {p.name}
-                      </div>
-                      <div className="text-lg text-gray-700 mt-1">
-                        {p.description}
-                      </div>
-
-                      <div className="mt-3 flex items-center gap-2">
-                        <button
-                          onClick={() => setSelectedPlanId(p.id)}
-                          className="px-3 py-2 rounded bg-white text-emerald-700 border text-lg"
-                        >
-                          Preview
-                        </button>
-                        <button
-                          onClick={() => setToday(p.id)}
-                          className={`px-3 py-2 rounded text-lg ${
-                            todayPlanId === p.id
-                              ? "bg-emerald-600 text-white"
-                              : "bg-white text-emerald-600 border"
-                          }`}
-                        >
-                          {todayPlanId === p.id
-                            ? "Today's Plan"
-                            : "Set as Today"}
-                        </button>
-                      </div>
-
-                      <div className="mt-3 text-lg text-gray-600">
-                        Estimated calories:{" "}
-                        {Object.values(p.meals)
-                          .flat()
-                          .reduce((s, m) => s + (m.calories || 0), 0)}{" "}
-                        cal
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            </div>
-
-            <AnimatePresence mode="wait">
+        {/* Progress Bar */}
+        <div className="flex-1 mx-8">
+          <div className="flex items-center justify-center gap-4">
+            <span className="text-lg font-semibold text-teal-800">
+              Step {step + 1} of {STEPS.length}
+            </span>
+            <div className="w-64 bg-white/20 h-3 rounded-full overflow-hidden">
               <motion.div
-                key={selectedPlanId}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.35 }}
-              >
-                <DayChart
-                  plan={selectedPlan}
-                  expanded={expandedMeal}
-                  onToggleRecipe={(mealKey) =>
-                    setExpandedMeal((s) => (s === mealKey ? null : mealKey))
-                  }
-                />
-              </motion.div>
-            </AnimatePresence>
-
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl p-4 shadow"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-lg font-semibold text-emerald-900">
-                    Today's Plan
-                  </div>
-                  <div className="text-lg text-emerald-800/90 mt-1">
-                    Which plan is set for today
-                  </div>
-                </div>
-
-                <div className="text-lg">
-                  {todayPlanId ? (
-                    <div className="text-xl font-semibold text-emerald-900">
-                      {PLANS.find((x) => x.id === todayPlanId)?.name}
-                    </div>
-                  ) : (
-                    <div className="text-lg text-gray-600">
-                      No plan selected for today
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {PLANS.map((p) => (
-                    <motion.div
-                      key={p.id}
-                      whileHover={{ scale: 1.02 }}
-                      className={`p-3 rounded-lg ${
-                        todayPlanId === p.id
-                          ? "bg-emerald-50 ring-2 ring-emerald-200"
-                          : "bg-white"
-                      } shadow`}
-                    >
-                      <div className="font-medium text-lg text-emerald-900">
-                        {p.name}
-                      </div>
-                      <div className="text-lg text-gray-700 mt-1">
-                        {p.description}
-                      </div>
-                      <div className="mt-3 flex gap-2">
-                        <button
-                          onClick={() => setToday(p.id)}
-                          className={`px-3 py-2 rounded text-lg ${
-                            todayPlanId === p.id
-                              ? "bg-emerald-600 text-white"
-                              : "bg-white text-emerald-600 border"
-                          }`}
-                        >
-                          {todayPlanId === p.id
-                            ? "Selected"
-                            : "Select for Today"}
-                        </button>
-                        <button
-                          onClick={() => alert("Share placeholder")}
-                          className="px-3 py-2 rounded bg-white border text-emerald-600 text-lg"
-                        >
-                          Share
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </motion.section>
+                className="bg-gradient-to-r from-amber-500 to-orange-600 h-3 rounded shadow-sm"
+                style={{ width: `${progress}%` }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+              />
+            </div>
+            <span className="text-lg font-semibold text-teal-800">
+              {Math.round(progress)}%
+            </span>
+          </div>
         </div>
 
-        <motion.footer
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center text-lg text-gray-600"
-        >
-          Note: This page is fully hard-coded for demo. For clinical precision,
-          connect to a nutrient database or upload recipe macros.
-        </motion.footer>
+        {/* Language Selector Placeholder */}
+        <div className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold">
+          <FaLanguage className="text-xl" />
+        </div>
+      </div>
+
+      {/* Dynamic Background Layers */}
+      <div className="absolute inset-0 -z-10">
+        {BG_LAYERS.map((b, i) => (
+          <motion.div
+            key={b.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: i === step ? 1 : 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            style={{ backgroundImage: b.gradient }}
+            className="absolute inset-0"
+          />
+        ))}
+
+        {/* Enhanced Floating Blobs */}
+        <motion.div
+          animate={{
+            rotate: 360,
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            rotate: { repeat: Infinity, duration: 80, ease: "linear" },
+            scale: { repeat: Infinity, duration: 6, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+          }}
+          className="absolute -left-40 -top-40 w-[420px] h-[420px] rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 blur-3xl pointer-events-none"
+        />
+        <motion.div
+          animate={{
+            rotate: -360,
+            scale: [1, 0.9, 1],
+            opacity: [0.25, 0.4, 0.25],
+          }}
+          transition={{
+            rotate: { repeat: Infinity, duration: 100, ease: "linear" },
+            scale: { repeat: Infinity, duration: 8, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 5, ease: "easeInOut" },
+          }}
+          className="absolute -right-32 bottom-[-60px] w-[360px] h-[360px] rounded-full bg-gradient-to-bl from-orange-200 to-red-100 blur-3xl pointer-events-none"
+        />
+      </div>
+
+      {/* Full Screen Container */}
+      <div className="h-screen w-screen flex items-center justify-center pt-20 pb-4">
+        <div className="w-full max-w-6xl h-full flex flex-col">
+          <AnimatePresence mode="wait">
+            <motion.section
+              key={step}
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="flex-1 bg-white/95 backdrop-blur-sm rounded-3xl p-4 md:p-6 lg:p-8 shadow-2xl border border-teal-200/20 flex flex-col overflow-hidden"
+            >
+              {/* Header */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-center  flex-row flex items-center justify-between gap-5"
+              >
+                <div className="flex-row flex items-center justify-start gap-5">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.2 }}
+                    className=" items-center flex-row flex justify-center w-12 h-12 rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 mb-3 shadow-lg"
+                  >
+                    {React.createElement(STEPS[step].icon, {
+                      className: "text-lg",
+                      style: { color: STEPS[step].color },
+                    })}
+                  </motion.div>
+
+                  <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.3 }}
+                    className="text-xl md:text-3xl font-bold text-teal-900 mb-4"
+                  >
+                    {STEPS[step].title}
+                  </motion.h2>
+                </div>
+              </motion.div>
+
+              {/* Content */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="flex-1 overflow-y-auto min-h-0"
+              >
+                {step === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.35 }}
+                    className="text-center"
+                  >
+                    <div className="text-xl md:text-2xl text-gray-700 mb-8 flex items-center justify-center gap-3">
+                      <FaRocket className="text-teal-600 text-2xl" />
+                      Welcome to Your Personalized Diet Chart
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-2xl mx-auto">
+                      <motion.button
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={next}
+                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg md:text-xl shadow-lg hover:shadow-xl flex items-center gap-2 justify-center transition-all duration-300"
+                      >
+                        <FaPlay className="text-2xl" />
+                        Start Customizing
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.32 }}
+                    className="max-w-6xl mx-auto"
+                  >
+                    <div className="space-y-6">
+                      <div className="flex flex-wrap gap-3 justify-center">
+                        {FOOD_CATEGORIES.map((category, index) => (
+                          <motion.div
+                            key={category.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.1 }}
+                            className="bg-gradient-to-br from-white via-amber-50/40 to-orange-50/30 px-4 py-2 rounded-2xl border-2 border-amber-200/50 shadow-lg min-w-[200px] max-w-[250px]"
+                          >
+                            <div className="flex items-center gap-2 mb-1">
+                              <category.icon
+                                className="text-lg"
+                                style={{ color: category.color }}
+                              />
+                              <h3 className="text-sm font-semibold text-teal-900">
+                                {category.name}
+                              </h3>
+                            </div>
+                            <div className="space-y-2">
+                              {category.items.map((item) => (
+                                <motion.div
+                                  key={item.name}
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  className={`rounded-2xl border-2 transition-all duration-300 ${
+                                    isFoodSelected(category.id, item.name)
+                                      ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white border-amber-500"
+                                      : "bg-white/60 hover:bg-teal-50 text-gray-800 border-gray-200"
+                                  }`}
+                                >
+                                  <motion.button
+                                    whileHover={{ scale: 1.01 }}
+                                    whileTap={{ scale: 0.99 }}
+                                    onClick={() =>
+                                      toggleFoodSelection(
+                                        category.id,
+                                        item.name
+                                      )
+                                    }
+                                    className="w-full p-3 text-left flex items-center justify-between"
+                                  >
+                                    <div className="flex-1">
+                                      <div className="font-medium text-sm">
+                                        {item.name}
+                                      </div>
+                                      <div className="text-xs opacity-75">
+                                        {item.calories} cal
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      {isFoodSelected(
+                                        category.id,
+                                        item.name
+                                      ) ? (
+                                        <FaMinus className="text-sm" />
+                                      ) : (
+                                        <FaPlus className="text-sm" />
+                                      )}
+                                    </div>
+                                  </motion.button>
+                                </motion.div>
+                              ))}
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 2 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.35 }}
+                    className="flex flex-col h-full"
+                  >
+                    {/* Tab Navigation */}
+                    <div className="flex flex-wrap gap-2 mb-1 justify-center">
+                      {[
+                        { id: "overview", name: "Overview", icon: FaEye },
+                        {
+                          id: "weekly",
+                          name: "7-Day Chart",
+                          icon: FaCalendarAlt,
+                        },
+                        {
+                          id: "selected",
+                          name: "Selected Foods",
+                          icon: FaList,
+                        },
+                      ].map((tab, index) => (
+                        <motion.button
+                          key={tab.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.1 }}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => setActiveTab(tab.id)}
+                          className={`px-2 py-1 rounded-xl text-lg font-medium transition-all duration-300 flex items-center gap-2 ${
+                            activeTab === tab.id
+                              ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
+                              : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
+                          }`}
+                        >
+                          <tab.icon className="text-xl" />
+                          {tab.name}
+                        </motion.button>
+                      ))}
+                    </div>
+                    {/* Tab Content */}
+                    <motion.div
+                      key={activeTab}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="flex-1 bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-teal-200/20 overflow-y-auto min-h-0"
+                    >
+                      {getTabContent()[activeTab]}
+                    </motion.div>
+                  </motion.div>
+                )}
+              </motion.div>
+
+              {/* Navigation */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+                className="flex items-center justify-between mt-3 flex-shrink-0"
+              >
+                <motion.button
+                  whileHover={{
+                    scale: step === 0 ? 1 : 1.05,
+                    y: step === 0 ? 0 : -2,
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={prev}
+                  disabled={step === 0}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-white/95 via-amber-50/80 to-orange-50/60 backdrop-blur-sm border-2 border-amber-200/60 text-teal-700 text-sm disabled:opacity-50 transition-all duration-200 flex items-center gap-2 shadow-md"
+                >
+                  <FaChevronLeft />
+                  Previous
+                </motion.button>
+
+                <div className="flex items-center gap-2">
+                  {STEPS.map((s, i) => (
+                    <motion.button
+                      key={s.id}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3, delay: i * 0.1 }}
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setStep(i)}
+                      className={`w-4 h-4 rounded-full transition-all duration-300 flex items-center justify-center border-2 ${
+                        i === step
+                          ? "bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 border-amber-400 shadow-lg shadow-amber-200 scale-125"
+                          : "bg-white/60 border-amber-200/60"
+                      }`}
+                    >
+                      {i === step && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="w-1 h-1 bg-white rounded-full"
+                        />
+                      )}
+                    </motion.button>
+                  ))}
+                </div>
+
+                {step < STEPS.length - 1 ? (
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={next}
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-amber-400"
+                  >
+                    Next
+                    <FaChevronRight />
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      // Export or share functionality
+                      alert("Diet chart exported successfully!");
+                    }}
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-green-400"
+                  >
+                    <FaDownload />
+                    Download Report
+                  </motion.button>
+                )}
+              </motion.div>
+            </motion.section>
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

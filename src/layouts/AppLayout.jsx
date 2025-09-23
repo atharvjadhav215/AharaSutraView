@@ -1,9 +1,21 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import image3 from "../assets/image3.png"; // import leaf image
 
 export default function AppLayout() {
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+
+  if (isHomePage) {
+    // For home page, use minimal layout without background styling
+    return (
+      <div className="min-h-screen">
+        <Outlet />
+      </div>
+    );
+  }
+
   return (
     <div className="app-layout min-h-screen relative">
       <style>{`

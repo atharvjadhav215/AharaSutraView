@@ -12,6 +12,8 @@ import Dashboard from "./Dietitian/Dashboard";
 import ProfileU from "./User/ProfileU";
 import MyDietChart from "./User/MyDietChart";
 import CreateOwnChart from "./User/CreateOwnChart";
+import Documentation from "./components/Documentation";
+import Admin from "./Admin/Admin";
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
           <Route path="uprofile" element={<ProfileU />} />
           <Route path="my-diet-chart" element={<MyDietChart />} />
           <Route path="create-own-chart" element={<CreateOwnChart />} />
+          <Route path="documentation" element={<Documentation />} />
+          <Route path="admin" element={<Admin />} />
         </Route>
       </Routes>
     </BrowserRouter>

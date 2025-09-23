@@ -1,8 +1,26 @@
 @import "tailwindcss";
 
-/* use Epunda Slab everywhere */
+/* Theme Colors from Screenshot */
 :root {
   --epunda: "Epunda Slab", serif;
+  
+  /* Main Theme Colors */
+  --olive-green: #6B8E23;
+  --olive-green-light: #8FBC8F;
+  --olive-green-dark: #556B2F;
+  --dark-brown: #8B4513;
+  --dark-brown-light: #A0522D;
+  --dark-brown-dark: #654321;
+  --white: #FFFFFF;
+  --off-white: #F8F8F8;
+  
+  /* Extended Palette */
+  --sage-green: #9CAF88;
+  --forest-green: #228B22;
+  --warm-brown: #CD853F;
+  --light-brown: #DEB887;
+  --cream: #F5F5DC;
+  --soft-gray: #F5F5F5;
 }
 
 html, body, #root {

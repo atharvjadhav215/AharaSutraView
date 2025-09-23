@@ -1,14 +1,211 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useMemo, useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-/*
-  Dietitian Dashboard — updated
-  - more patients with richer info
-  - animated patient list (stagger) + animated detail panels
-  - progress / adherence bars animate on select
-  - all text sizes >= text-lg / text-xl where appropriate
-*/
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "../EnhancedEffects.css";
+import {
+  FaArrowLeft,
+  FaUser,
+  FaWeight,
+  FaRulerVertical,
+  FaHeartbeat,
+  FaUtensils,
+  FaHeart,
+  FaCheckCircle,
+  FaPlay,
+  FaRocket,
+  FaLeaf,
+  FaAppleAlt,
+  FaDumbbell,
+  FaSeedling,
+  FaChevronRight,
+  FaChevronLeft,
+  FaHome,
+  FaLanguage,
+  FaRedo,
+  FaEye,
+  FaCheck,
+  FaUserMd,
+  FaChartLine,
+  FaStethoscope,
+  FaRunning,
+  FaFileMedical,
+  FaUsers,
+  FaCalendarAlt,
+  FaChartPie,
+  FaList,
+  FaClock,
+  FaFire,
+  FaCarrot,
+  FaFish,
+  FaBreadSlice,
+  FaCoffee,
+  FaPlus,
+  FaMinus,
+  FaStar,
+  FaShare,
+  FaDownload,
+  FaEdit,
+  FaTrash,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaFlag,
+  FaHistory,
+  FaClipboardList,
+} from "react-icons/fa";
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
+const ayurvedicColors = [
+  "#A0D9D9",
+  "#7BC4C4",
+  "#5BAFAF",
+  "#4A9B9B",
+  "#3A8787",
+  "#2A7373",
+  "#1A5F5F",
+  "#0A4B4B",
+];
+
+// Enhanced Ayurvedic Particle System
+const AyurvedicParticleSystem = ({ count = 1 }) => {
+  const particlesRef = useRef([]);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const particles = particlesRef.current;
+    const container = containerRef.current;
+
+    if (!container) return;
+
+    // Create enhanced Ayurvedic particles
+    particles.forEach((particle, index) => {
+      if (particle) {
+        const isSymbol = index % 4 === 0; // Every 4th particle is a symbol
+
+        const color =
+          ayurvedicColors[Math.floor(Math.random() * ayurvedicColors.length)];
+
+        gsap.set(particle, {
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          scale: isSymbol
+            ? Math.random() * 1.2 + 1.0
+            : Math.random() * 0.8 + 0.6,
+          opacity: Math.random() * 0.9 + 0.4,
+          rotation: Math.random() * 360,
+        });
+
+        // Enhanced floating animation
+        gsap.to(particle, {
+          x: `+=${(Math.random() - 0.5) * 200}`,
+          y: `+=${(Math.random() - 0.5) * 200}`,
+          duration: Math.random() * 12 + 12,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+
+        // Rotation animation
+        gsap.to(particle, {
+          rotation: "+=360",
+          duration: Math.random() * 20 + 15,
+          ease: "none",
+          repeat: -1,
+        });
+
+        // Scale pulsing for symbols
+        if (isSymbol) {
+          gsap.to(particle, {
+            scale: "+=0.3",
+            duration: Math.random() * 2 + 1.5,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+          });
+        }
+
+        particle.className = "absolute w-2 h-2 rounded-full ayurvedic-dot";
+        particle.style.backgroundColor = color;
+      }
+    });
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="fixed inset-0 pointer-events-none overflow-hidden"
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          ref={(el) => (particlesRef.current[i] = el)}
+          className="absolute"
+          style={{
+            filter: "blur(0.3px)",
+            willChange: "transform",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Tab Configuration
+const TABS = [
+  {
+    id: "overview",
+    name: "Overview",
+    icon: FaChartPie,
+    color: "#A0D9D9",
+  },
+  {
+    id: "patients",
+    name: "Patients",
+    icon: FaUsers,
+    color: "#7BC4C4",
+  },
+  {
+    id: "plans",
+    name: "Diet Plans",
+    icon: FaClipboardList,
+    color: "#5BAFAF",
+  },
+  {
+    id: "analytics",
+    name: "Analytics",
+    icon: FaChartLine,
+    color: "#4A9B9B",
+  },
+];
+
+// Background Layers
+const BG_LAYERS = [
+  {
+    id: 0,
+    gradient:
+      "radial-gradient( circle at 10% 20%, rgba(160,217,217,0.14), transparent 20% ), linear-gradient(45deg,#F0F9F9,#E8F5F5)",
+  },
+  {
+    id: 1,
+    gradient:
+      "radial-gradient( circle at 80% 10%, rgba(123,196,196,0.12), transparent 18% ), linear-gradient(135deg,#E8F5F5,#E0F2F2)",
+  },
+  {
+    id: 2,
+    gradient:
+      "radial-gradient( circle at 30% 80%, rgba(91,175,175,0.10), transparent 18% ), linear-gradient(90deg,#E0F2F2,#D8EFEF)",
+  },
+  {
+    id: 3,
+    gradient:
+      "radial-gradient( circle at 60% 40%, rgba(74,155,155,0.10), transparent 18% ), linear-gradient(120deg,#E8F5F5,#E0F2F2)",
+  },
+];
 
 const SAMPLE_PLANS = [
   {
@@ -147,75 +344,21 @@ const FAKE_PATIENTS = [
   },
   {
     id: "p6",
-    name: "Arjun Sharma",
-    age: 30,
+    name: "Arjun Singh",
+    age: 38,
     gender: "male",
     contact: "95555XXXX",
-    bmi: 24.0,
-    adherence: 50,
-    lastVisit: "2025-08-22",
-    goal: "Muscle gain",
-    notes: "Gym 4x/wk, needs higher protein evenings.",
-    flags: ["active"],
+    bmi: 24.8,
+    adherence: 70,
+    lastVisit: "2025-08-25",
+    goal: "Muscle gain, protein focus",
+    notes: "Gym regular. Wants high-protein meals.",
+    flags: ["muscle-gain"],
     history: [
-      { date: "2025-08-22", planId: "balanced", note: "Muscle-gain variant" },
-    ],
-  },
-  {
-    id: "p7",
-    name: "Latha Nair",
-    age: 60,
-    gender: "female",
-    contact: "94444XXXX",
-    bmi: 27.5,
-    adherence: 66,
-    lastVisit: "2025-07-15",
-    goal: "Manage diabetes",
-    notes: "Type 2 diabetes – monitor carbs and glycemic load.",
-    flags: ["diabetes"],
-    history: [
-      {
-        date: "2025-07-15",
-        planId: "light-kapha",
-        note: "Glycemic control plan",
-      },
-      { date: "2025-05-30", planId: "balanced", note: "General plan" },
-    ],
-  },
-  {
-    id: "p8",
-    name: "Devika Rao",
-    age: 26,
-    gender: "female",
-    contact: "93333XXXX",
-    bmi: 22.0,
-    adherence: 98,
-    lastVisit: "2025-09-11",
-    goal: "Skin health",
-    notes: "Acne-prone, prefers plant-based recipes.",
-    flags: ["skin"],
-    history: [
-      { date: "2025-09-11", planId: "balanced", note: "Skin-support plan" },
+      { date: "2025-08-25", planId: "balanced", note: "Protein-focused plan" },
     ],
   },
 ];
-
-const findPlan = (id) =>
-  SAMPLE_PLANS.find((p) => p.id === id) || SAMPLE_PLANS[0];
-
-const listVariants = {
-  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.04 } },
-  hidden: {},
-};
-const itemVariants = {
-  hidden: { opacity: 0, y: 6, scale: 0.995 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 400, damping: 28 },
-  },
-};
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -224,7 +367,7 @@ export default function Dashboard() {
   const [selectedPatientId, setSelectedPatientId] = useState(
     patients[0]?.id || null
   );
-  const [selectedRecordIdx, setSelectedRecordIdx] = useState(0);
+  const [activeTab, setActiveTab] = useState("overview");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -238,445 +381,625 @@ export default function Dashboard() {
     );
   }, [patients, query]);
 
-  const selectedPatient =
-    patients.find((p) => p.id === selectedPatientId) || filtered[0] || null;
-  const selectedRecord = selectedPatient?.history?.[selectedRecordIdx] || null;
-  const selectedPlan = selectedRecord ? findPlan(selectedRecord.planId) : null;
-
-  const totals = useMemo(() => {
-    if (!selectedPlan) return null;
-    const meals = Object.values(selectedPlan.meals).flat();
-    const calories = meals.reduce((s, m) => s + (m.calories || 0), 0);
-    const carbs_g = Math.round((calories * 0.5) / 4);
-    const protein_g = Math.round((calories * 0.2) / 4);
-    const fat_g = Math.round((calories * 0.3) / 9);
-    return { calories, carbs_g, protein_g, fat_g };
-  }, [selectedPlan]);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8] p-2 sm:p-3 md:p-4 lg:p-6">
-      <Link to="/dhome">
-        <button className="px-3 sm:px-4 py-2 sm:py-3 mt-20 sm:mt-3 md:mt-5 ml-2 sm:ml-3 md:ml-5 mb-3 sm:mb-4 md:mb-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
-          ← Back to Home
-        </button>
-      </Link>
-      <div className="max-w-8xl mx-auto">
-        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 md:mb-6 gap-2 sm:gap-3 md:gap-0">
-          <div>
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-emerald-900">
-              Dietitian Dashboard
-            </h1>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
-            <button
-              onClick={() => navigate("/add-patient")}
-              className="px-3 sm:px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold text-xl shadow hover:shadow-md transition-shadow w-full sm:w-auto"
+  // Tab content functions
+  const getTabContent = () => {
+    return {
+      overview: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
             >
-              Add Patient
-            </button>
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="px-3 sm:px-4 py-2 rounded-xl bg-white text-emerald-600 font-semibold text-xl shadow hover:shadow-md transition-shadow w-full sm:w-auto"
-            >
-              View Your Dashboard
-            </button>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
-          {/* Left column: patient list */}
-          <aside className="lg:col-span-1 bg-white rounded-xl p-2 sm:p-3 md:p-4 shadow">
-            <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 md:mb-4">
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search patients or goals..."
-                className="w-full p-2 sm:p-3 border rounded-lg text-xl"
-              />
-            </div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
+                  <FaUsers className="text-white text-xl" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-teal-900">
+                    Total Patients
+                  </h3>
+                  <p className="text-3xl font-bold text-teal-800">
+                    {patients.length}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
             <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={listVariants}
-              className="space-y-1 sm:space-y-2 md:space-y-3 overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[90vh]"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
             >
-              {filtered.length === 0 && (
-                <div className="text-xl text-gray-600">No patients found.</div>
-              )}
-
-              {filtered.map((p) => (
-                <motion.button
-                  key={p.id}
-                  variants={itemVariants}
-                  onClick={() => {
-                    setSelectedPatientId(p.id);
-                    setSelectedRecordIdx(0);
-                  }}
-                  whileHover={{ scale: 1.02 }}
-                  className={`w-full text-left p-2 sm:p-3 rounded-lg border transition-colors flex flex-col gap-1 sm:gap-2 ${
-                    selectedPatientId === p.id
-                      ? "bg-emerald-50 border-emerald-200"
-                      : "bg-white"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="rounded-full w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 bg-emerald-100 flex items-center justify-center text-base sm:text-lg md:text-2xl font-bold text-emerald-700">
-                        {p.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .slice(0, 2)
-                          .join("")}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="font-semibold text-xl text-emerald-900 truncate">
-                          {p.name}
-                        </div>
-                        <div className="text-xl text-gray-700">
-                          {p.age} • {p.gender}
-                        </div>
-                        <div className="text-xl text-gray-600 mt-1 line-clamp-1">
-                          {p.goal}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-xl text-gray-600 text-right flex-shrink-0">
-                      <div className="text-sm sm:text-base">
-                        Last: {p.lastVisit}
-                      </div>
-                      <div className="mt-1 sm:mt-2">
-                        <div className="text-xs sm:text-sm text-emerald-700 font-medium">
-                          Adherence
-                        </div>
-                        <div className="w-16 sm:w-20 md:w-28 bg-gray-200 h-2 sm:h-3 rounded overflow-hidden mt-1">
-                          <div
-                            style={{
-                              width: `${p.adherence}%`,
-                              transition: "width 600ms ease",
-                            }}
-                            className={`h-2 sm:h-3 ${
-                              p.adherence > 75
-                                ? "bg-emerald-600"
-                                : p.adherence > 45
-                                ? "bg-amber-500"
-                                : "bg-red-500"
-                            }`}
-                          />
-                        </div>
-                        <div className="text-sm sm:text-xl text-gray-600 mt-1">
-                          {p.adherence}%
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="text-xl text-gray-600 line-clamp-2">
-                    {p.notes}
-                  </div>
-                </motion.button>
-              ))}
-            </motion.div>
-          </aside>
-
-          {/* Right: patient detail and history (span 3 columns) */}
-          <main className="lg:col-span-3 space-y-2 sm:space-y-3 md:space-y-4 lg:space-y-6">
-            {!selectedPatient ? (
-              <div className="bg-white rounded-xl p-3 sm:p-4 md:p-6 shadow text-xl text-gray-700">
-                Select a patient to view details.
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center">
+                  <FaCheckCircle className="text-white text-xl" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-teal-900">
+                    Active Plans
+                  </h3>
+                  <p className="text-3xl font-bold text-green-800">
+                    {SAMPLE_PLANS.length}
+                  </p>
+                </div>
               </div>
-            ) : (
-              <AnimatePresence mode="wait">
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.3 }}
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center">
+                  <FaChartLine className="text-white text-xl" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-teal-900">
+                    Avg Adherence
+                  </h3>
+                  <p className="text-3xl font-bold text-blue-800">
+                    {Math.round(
+                      patients.reduce((sum, p) => sum + p.adherence, 0) /
+                        patients.length
+                    )}
+                    %
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.4 }}
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center">
+                  <FaCalendarAlt className="text-white text-xl" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-teal-900">
+                    This Month
+                  </h3>
+                  <p className="text-3xl font-bold text-purple-800">
+                    {
+                      patients.filter(
+                        (p) =>
+                          new Date(p.lastVisit) >=
+                          new Date(
+                            new Date().getFullYear(),
+                            new Date().getMonth(),
+                            1
+                          )
+                      ).length
+                    }
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
+            className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+          >
+            <h3 className="text-2xl font-bold text-teal-900 mb-6">
+              Recent Activity
+            </h3>
+            <div className="space-y-4">
+              {patients.slice(0, 5).map((patient, index) => (
                 <motion.div
-                  key={selectedPatient.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  className="bg-white rounded-2xl p-3 sm:p-4 md:p-6 shadow"
+                  key={patient.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
+                  className="flex items-center justify-between p-4 bg-white/60 rounded-xl border border-teal-100/50"
                 >
-                  <div className="flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-3 md:gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                        <div className="rounded-full w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-emerald-100 flex items-center justify-center text-lg sm:text-xl md:text-3xl font-bold text-emerald-700">
-                          {selectedPatient.name
-                            .split(" ")
-                            .map((s) => s[0])
-                            .slice(0, 2)
-                            .join("")}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h2 className="text-xl sm:text-2xl font-semibold text-emerald-900">
-                            {selectedPatient.name}
-                          </h2>
-                          <div className="text-xl text-gray-700">
-                            {selectedPatient.age} • {selectedPatient.gender} •
-                            BMI:{" "}
-                            <span className="font-medium">
-                              {selectedPatient.bmi}
-                            </span>
-                          </div>
-                          <div className="text-xl text-gray-600 mt-1">
-                            Contact: {selectedPatient.contact}
-                          </div>
-                          <div className="text-xl text-gray-600 mt-1">
-                            Last visit: {selectedPatient.lastVisit}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-2 sm:mt-3 md:mt-4 text-xl text-gray-700">
-                        <div className="font-medium text-xl text-emerald-900">
-                          Notes
-                        </div>
-                        <div className="mt-1">{selectedPatient.notes}</div>
-                        <div className="mt-2 sm:mt-3 flex flex-wrap gap-1 sm:gap-2 md:gap-3">
-                          {selectedPatient.flags.map((f) => (
-                            <span
-                              key={f}
-                              className="px-2 sm:px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xl border"
-                            >
-                              {f}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-200 to-cyan-100 flex items-center justify-center">
+                      <FaUser className="text-teal-800" />
                     </div>
-
-                    <div className="flex flex-row sm:flex-col items-stretch sm:items-end gap-2 sm:gap-3 w-full sm:w-auto">
-                      <button
-                        onClick={() =>
-                          navigate(`/add-patient?edit=${selectedPatient.id}`)
-                        }
-                        className="px-3 sm:px-4 py-2 rounded-lg bg-white text-emerald-600 border font-medium text-xl flex-1 sm:flex-none"
-                      >
-                        Edit Patient
-                      </button>
-                      <button
-                        onClick={() =>
-                          alert("Export patient summary (placeholder)")
-                        }
-                        className="px-3 sm:px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold text-xl flex-1 sm:flex-none"
-                      >
-                        Export Summary
-                      </button>
+                    <div>
+                      <h4 className="font-semibold text-gray-800">
+                        {patient.name}
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        Last visit: {patient.lastVisit}
+                      </p>
                     </div>
                   </div>
-
-                  {/* History + preview */}
-                  <div className="mt-3 sm:mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
-                    <div className="md:col-span-1 bg-[#f6f3e8] rounded-lg p-2 sm:p-3 md:p-4">
-                      <div className="font-semibold text-xl text-emerald-900 mb-2">
-                        Chart History
-                      </div>
-                      <div className="space-y-1 sm:space-y-2">
-                        <AnimatePresence>
-                          {selectedPatient.history.map((rec, idx) => {
-                            const plan = findPlan(rec.planId);
-                            return (
-                              <motion.button
-                                key={rec.date + idx}
-                                initial={{ opacity: 0, x: -6 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -6 }}
-                                transition={{
-                                  duration: 0.28,
-                                  delay: idx * 0.03,
-                                }}
-                                onClick={() => setSelectedRecordIdx(idx)}
-                                className={`w-full text-left p-2 sm:p-3 rounded-lg ${
-                                  selectedRecordIdx === idx
-                                    ? "bg-white border ring-2 ring-emerald-200"
-                                    : "bg-white/90"
-                                } shadow`}
-                              >
-                                <div className="flex items-center justify-between">
-                                  <div className="min-w-0 flex-1">
-                                    <div className="font-medium text-xl text-emerald-900 truncate">
-                                      {plan.name}
-                                    </div>
-                                    <div className="text-xl text-gray-700">
-                                      {rec.note}
-                                    </div>
-                                  </div>
-                                  <div className="text-xl text-gray-600 flex-shrink-0 ml-2">
-                                    {rec.date}
-                                  </div>
-                                </div>
-                                <div className="text-xl text-gray-600 mt-2 line-clamp-2">
-                                  {plan.summary}
-                                </div>
-                              </motion.button>
-                            );
-                          })}
-                        </AnimatePresence>
-                      </div>
-                    </div>
-
-                    <div className="md:col-span-2 bg-white rounded-lg p-2 sm:p-3 md:p-4">
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 sm:mb-3 gap-2 sm:gap-0">
-                        <div className="min-w-0 flex-1">
-                          <div className="text-xl sm:text-2xl font-semibold text-emerald-900">
-                            {selectedRecord
-                              ? findPlan(selectedRecord.planId).name
-                              : "No plan selected"}
-                          </div>
-                          <div className="text-xl text-gray-700 mt-1">
-                            {selectedRecord
-                              ? selectedRecord.date +
-                                " — " +
-                                selectedRecord.note
-                              : ""}
-                          </div>
-                        </div>
-
-                        <div className="flex gap-1 sm:gap-2 items-center w-full sm:w-auto">
-                          <button
-                            onClick={() => {
-                              navigator.clipboard?.writeText(
-                                selectedRecord
-                                  ? `${selectedPatient.name} — ${
-                                      selectedRecord.date
-                                    } — ${
-                                      findPlan(selectedRecord.planId).summary
-                                    }`
-                                  : ""
-                              );
-                              alert("Copied summary to clipboard");
-                            }}
-                            className="px-2 sm:px-3 py-2 bg-white text-emerald-600 rounded-lg text-xl border flex-1 sm:flex-none"
-                          >
-                            Copy
-                          </button>
-                          <button
-                            onClick={() => alert("Share placeholder")}
-                            className="px-2 sm:px-3 py-2 bg-emerald-600 text-white rounded-lg text-xl flex-1 sm:flex-none"
-                          >
-                            Share
-                          </button>
-                        </div>
-                      </div>
-
-                      {!selectedPlan ? (
-                        <div className="text-xl text-gray-600">
-                          Select a record to preview the diet chart.
-                        </div>
-                      ) : (
-                        <div className="space-y-2 sm:space-y-3 md:space-y-4">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
-                            <div className="bg-[#f6f3e8] rounded-lg p-2 sm:p-3 md:p-4">
-                              <div className="text-xl font-medium text-emerald-900">
-                                Estimated Calories
-                              </div>
-                              <motion.div
-                                initial={{ scale: 0.98, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 0.35 }}
-                                className="text-xl sm:text-2xl font-extrabold text-emerald-900 mt-2"
-                              >
-                                {totals.calories} cal
-                              </motion.div>
-                              <div className="text-xl text-gray-700 mt-1">
-                                From selected plan
-                              </div>
-                            </div>
-
-                            <div className="bg-[#f6f3e8] rounded-lg p-2 sm:p-3 md:p-4">
-                              <div className="text-xl font-medium text-emerald-900">
-                                Macros (est.)
-                              </div>
-                              <motion.div
-                                initial={{ x: -6 }}
-                                animate={{ x: 0 }}
-                                transition={{ duration: 0.35 }}
-                                className="mt-2 space-y-1 sm:space-y-2 text-xl text-gray-800"
-                              >
-                                <div>Carbs: {totals.carbs_g} g</div>
-                                <div>Protein: {totals.protein_g} g</div>
-                                <div>Fat: {totals.fat_g} g</div>
-                              </motion.div>
-                            </div>
-
-                            <div className="bg-[#f6f3e8] rounded-lg p-2 sm:p-3 md:p-4 sm:col-span-2 md:col-span-1">
-                              <div className="text-xl font-medium text-emerald-900">
-                                Quick Actions
-                              </div>
-                              <div className="mt-2 flex flex-col gap-1 sm:gap-2">
-                                <button
-                                  className="px-2 sm:px-3 py-2 bg-white rounded-lg text-emerald-600 text-xl border"
-                                  onClick={() =>
-                                    alert("Assign to patient (placeholder)")
-                                  }
-                                >
-                                  Assign plan
-                                </button>
-                                <button
-                                  className="px-2 sm:px-3 py-2 bg-white rounded-lg text-emerald-600 text-xl border"
-                                  onClick={() =>
-                                    alert("Edit plan (placeholder)")
-                                  }
-                                >
-                                  Edit plan
-                                </button>
-                                <button
-                                  className="px-2 sm:px-3 py-2 bg-emerald-600 rounded-lg text-white text-xl"
-                                  onClick={() =>
-                                    alert("Export plan PDF (placeholder)")
-                                  }
-                                >
-                                  Export PDF
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="bg-white rounded-lg p-2 sm:p-3 md:p-4 border border-gray-100">
-                            <div className="text-xl font-semibold text-emerald-900 mb-2">
-                              Meals
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                              {Object.entries(selectedPlan.meals).map(
-                                ([mealKey, items]) => (
-                                  <motion.div
-                                    key={mealKey}
-                                    initial={{ opacity: 0, y: 6 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.25 }}
-                                    className="bg-[#fffaf3] p-2 sm:p-3 rounded-lg"
-                                  >
-                                    <div className="font-medium text-xl text-emerald-900 capitalize">
-                                      {mealKey} •{" "}
-                                      {items.reduce(
-                                        (s, i) => s + (i.calories || 0),
-                                        0
-                                      )}{" "}
-                                      cal
-                                    </div>
-                                    <ul className="mt-1 sm:mt-2 list-disc pl-4 sm:pl-5 text-xl text-gray-700">
-                                      {items.map((it, idx) => (
-                                        <li key={idx}>
-                                          {it.name} ({it.calories || "—"} cal)
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </motion.div>
-                                )
-                              )}
-                            </div>
-
-                            <div className="mt-2 sm:mt-3 text-xl text-gray-600">
-                              Note: these estimates use default macro splits.
-                              For clinical tracking, attach exact recipe macros.
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                  <div className="text-right">
+                    <p className="font-semibold text-teal-800">
+                      {patient.adherence}% adherence
+                    </p>
+                    <p className="text-sm text-gray-600">{patient.goal}</p>
                   </div>
                 </motion.div>
-              </AnimatePresence>
-            )}
-          </main>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      ),
+      patients: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <motion.input
+              whileFocus={{ scale: 1.02 }}
+              type="text"
+              placeholder="Search patients..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="flex-1 p-3 border border-gray-300 rounded-xl text-lg focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200 bg-white/80"
+            />
+            <motion.button
+              whileHover={{ y: -2 }}
+              whileTap={{ y: 0 }}
+              onClick={() => navigate("/add-patient")}
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-800 to-cyan-600 text-white text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+            >
+              <FaPlus />
+              Add Patient
+            </motion.button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filtered.map((patient, index) => (
+              <motion.div
+                key={patient.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileHover={{ y: -5 }}
+                onClick={() => setSelectedPatientId(patient.id)}
+                className={`p-6 rounded-2xl border-2 shadow-lg cursor-pointer transition-all duration-300 ${
+                  selectedPatientId === patient.id
+                    ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white border-amber-400"
+                    : "bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 border-teal-200/50 hover:border-amber-300"
+                }`}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                      selectedPatientId === patient.id
+                        ? "bg-white/20"
+                        : "bg-gradient-to-r from-teal-200 to-cyan-100"
+                    }`}
+                  >
+                    <FaUser
+                      className={`text-xl ${
+                        selectedPatientId === patient.id
+                          ? "text-white"
+                          : "text-teal-800"
+                      }`}
+                    />
+                  </div>
+                  <div>
+                    <h3
+                      className={`text-xl font-semibold ${
+                        selectedPatientId === patient.id
+                          ? "text-white"
+                          : "text-teal-900"
+                      }`}
+                    >
+                      {patient.name}
+                    </h3>
+                    <p
+                      className={`text-sm ${
+                        selectedPatientId === patient.id
+                          ? "text-white/80"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      {patient.age} years, {patient.gender}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-sm ${
+                        selectedPatientId === patient.id
+                          ? "text-white/80"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      BMI:
+                    </span>
+                    <span
+                      className={`font-semibold ${
+                        selectedPatientId === patient.id
+                          ? "text-white"
+                          : "text-teal-800"
+                      }`}
+                    >
+                      {patient.bmi}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-sm ${
+                        selectedPatientId === patient.id
+                          ? "text-white/80"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      Adherence:
+                    </span>
+                    <span
+                      className={`font-semibold ${
+                        selectedPatientId === patient.id
+                          ? "text-white"
+                          : "text-green-800"
+                      }`}
+                    >
+                      {patient.adherence}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-sm ${
+                        selectedPatientId === patient.id
+                          ? "text-white/80"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      Last Visit:
+                    </span>
+                    <span
+                      className={`font-semibold ${
+                        selectedPatientId === patient.id
+                          ? "text-white"
+                          : "text-blue-800"
+                      }`}
+                    >
+                      {patient.lastVisit}
+                    </span>
+                  </div>
+                </div>
+
+                <div
+                  className={`text-sm ${
+                    selectedPatientId === patient.id
+                      ? "text-white/90"
+                      : "text-gray-700"
+                  }`}
+                >
+                  <p className="font-medium mb-1">Goal: {patient.goal}</p>
+                  <p className="line-clamp-2">{patient.notes}</p>
+                </div>
+
+                {patient.flags && patient.flags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-3">
+                    {patient.flags.map((flag, idx) => (
+                      <span
+                        key={idx}
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          selectedPatientId === patient.id
+                            ? "bg-white/20 text-white"
+                            : "bg-amber-100 text-teal-800"
+                        }`}
+                      >
+                        {flag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      ),
+      plans: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SAMPLE_PLANS.map((plan, index) => (
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileHover={{ y: -5 }}
+                className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
+                    <FaClipboardList className="text-white text-xl" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-teal-900">
+                      {plan.name}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {plan.calories} calories
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-gray-700 mb-4">{plan.summary}</p>
+
+                <div className="space-y-2 mb-4">
+                  {Object.entries(plan.meals).map(([mealType, items]) => (
+                    <div key={mealType} className="bg-white/60 rounded-lg p-2">
+                      <div className="font-medium text-gray-800 capitalize text-sm mb-1">
+                        {mealType}
+                      </div>
+                      {items.map((item, idx) => (
+                        <div key={idx} className="text-xs text-gray-600">
+                          {item.name} ({item.calories} cal)
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap gap-1">
+                  {plan.tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-teal-800"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      ),
+      analytics: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+            >
+              <h3 className="text-2xl font-bold text-teal-900 mb-6">
+                Patient Adherence
+              </h3>
+              <div className="space-y-4">
+                {patients.map((patient, index) => (
+                  <motion.div
+                    key={patient.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
+                    className="flex items-center justify-between"
+                  >
+                    <span className="text-gray-700 font-medium">
+                      {patient.name}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-32 bg-gray-200 rounded-full h-2">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${patient.adherence}%` }}
+                          transition={{
+                            duration: 0.8,
+                            delay: 0.3 + index * 0.1,
+                          }}
+                          className="bg-gradient-to-r from-teal-800 to-cyan-600 h-2 rounded-full"
+                        />
+                      </div>
+                      <span className="text-teal-800 font-semibold w-12 text-right">
+                        {patient.adherence}%
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+            >
+              <h3 className="text-2xl font-bold text-teal-900 mb-6">
+                BMI Distribution
+              </h3>
+              <div className="space-y-4">
+                {patients.map((patient, index) => (
+                  <motion.div
+                    key={patient.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+                    className="flex items-center justify-between"
+                  >
+                    <span className="text-gray-700 font-medium">
+                      {patient.name}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          patient.bmi < 18.5
+                            ? "bg-blue-100 text-blue-800"
+                            : patient.bmi < 25
+                            ? "bg-green-100 text-green-800"
+                            : patient.bmi < 30
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {patient.bmi < 18.5
+                          ? "Underweight"
+                          : patient.bmi < 25
+                          ? "Normal"
+                          : patient.bmi < 30
+                          ? "Overweight"
+                          : "Obese"}
+                      </span>
+                      <span className="text-teal-800 font-semibold">
+                        {patient.bmi}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      ),
+    };
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
+      {/* Enhanced Ayurvedic Particle System */}
+      <AyurvedicParticleSystem count={1} />
+
+      {/* Top Navigation Bar */}
+      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-white/95 backdrop-blur-md border-b border-amber-200/20">
+        {/* Back to Home Button */}
+        <Link to="/dhome">
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ y: 0 }}
+            className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-amber-200 text-teal-800 text-lg font-semibold hover:bg-amber-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
+          >
+            <FaHome className="text-xl" />
+            Back to Home
+          </motion.button>
+        </Link>
+
+        {/* Dashboard Title */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
+            <FaUserMd className="text-white text-lg" />
+          </div>
+          <h1 className="text-2xl font-bold text-teal-900">
+            Dietitian Dashboard
+          </h1>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="flex items-center gap-2">
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ y: 0 }}
+            onClick={() => navigate("/add-patient")}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+          >
+            <FaPlus />
+            Add Patient
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Dynamic Background Layers */}
+      <div className="absolute inset-0 -z-10">
+        {BG_LAYERS.map((b, i) => (
+          <motion.div
+            key={b.id}
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: i === TABS.findIndex((t) => t.id === activeTab) ? 1 : 0,
+            }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            style={{ backgroundImage: b.gradient }}
+            className="absolute inset-0"
+          />
+        ))}
+
+        {/* Enhanced floating blobs with better animations */}
+        <motion.div
+          animate={{
+            rotate: 360,
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            rotate: { repeat: Infinity, duration: 80, ease: "linear" },
+            scale: { repeat: Infinity, duration: 6, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+          }}
+          className="absolute -left-40 -top-40 w-[420px] h-[420px] rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 blur-3xl pointer-events-none"
+        />
+        <motion.div
+          animate={{
+            rotate: -360,
+            scale: [1, 0.9, 1],
+            opacity: [0.25, 0.4, 0.25],
+          }}
+          transition={{
+            rotate: { repeat: Infinity, duration: 100, ease: "linear" },
+            scale: { repeat: Infinity, duration: 8, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 5, ease: "easeInOut" },
+          }}
+          className="absolute -right-32 bottom-[-60px] w-[360px] h-[360px] rounded-full bg-gradient-to-bl from-orange-200 to-red-100 blur-3xl pointer-events-none"
+        />
+      </div>
+
+      {/* Main Content */}
+      <div className="pt-20 px-4 sm:px-8 md:px-12 lg:px-20 py-6">
+        <div className="max-w-8xl mx-auto">
+          {/* Tab Navigation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-wrap gap-2 mb-4 justify-center"
+          >
+            {TABS.map((tab, index) => (
+              <motion.button
+                key={tab.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-2 mt-2 py-2 rounded-2xl text-lg font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg ${
+                  activeTab === tab.id
+                    ? "bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white border-2 border-amber-400"
+                    : "bg-gradient-to-r from-white/95 via-amber-50/80 to-orange-50/60 backdrop-blur-sm border-2 border-amber-200/60 text-teal-900 hover:border-amber-300/80"
+                }`}
+              >
+                <tab.icon className="text-xl" />
+                {tab.name}
+              </motion.button>
+            ))}
+          </motion.div>
+
+          {/* Tab Content */}
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-amber-200/20 min-h-[600px]"
+          >
+            {getTabContent()[activeTab]}
+          </motion.div>
         </div>
       </div>
     </div>

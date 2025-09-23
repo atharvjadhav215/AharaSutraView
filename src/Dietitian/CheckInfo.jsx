@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import "../EnhancedEffects.css";
 export default function CheckInfo() {
   const navigate = useNavigate();
 
@@ -62,124 +64,186 @@ export default function CheckInfo() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-3xl bg-white mt-10 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden">
-        <div className="p-8">
-          <h2 className="text-2xl font-semibold text-[#3e2a1f] mb-2">
-            Dietitian Verification
-          </h2>
-          <p className="text-xl text-[#6b4d3b] mb-6">
-            Provide hospital details and upload required documents. Background
-            leaves are handled globally.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 pt-5 via-cyan-50 to-teal-50 text-gray-800 overflow-hidden relative">
+      {/* Background decorative elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-teal-200/20 to-cyan-200/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-cyan-200/20 to-teal-200/20 rounded-full blur-3xl"></div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-lg text-[#5a3f2e] mb-1">
-                Hospital name
-              </label>
-              <input
-                value={hospitalName}
-                onChange={(e) => setHospitalName(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-white/5 border border-black text-[#3e2a1f] focus:outline-none"
-                placeholder="e.g., Ayur Clinic"
-                required
-              />
-            </div>
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-5">
+        <motion.div
+          className="w-full max-w-4xl bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-teal-200 overflow-hidden"
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="p-8 md:p-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-center "
+            >
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-teal-800 to-cyan-600 bg-clip-text text-transparent">
+                Dietitian Verification
+              </h2>
+            </motion.div>
 
-            <div>
-              <label className="block text-lg text-[#5a3f2e] mb-1">
-                Location
-              </label>
-              <input
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-3 py-2 rounded-md bg-white/5 border border-black  text-[#3e2a1f] focus:outline-none"
-                placeholder="City, State or full address"
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-lg text-[#5a3f2e] mb-1">
-                  License photo
-                </label>
-                <input
-                  type="file"
-                  accept="image/*,application/pdf"
-                  onChange={(e) => handleFileChange(e, setLicenseData)}
-                  className="text-xl w-full border-black  border p-2 rounded-xl"
-                />
-                {licenseData && (
-                  <img
-                    src={licenseData}
-                    alt="license preview"
-                    className="mt-2 w-full h-28 object-contain rounded-md border border-white/10"
-                  />
-                )}
-              </div>
-
-              <div>
-                <label className="block text-lg text-[#5a3f2e] mb-1">
-                  PAN card photo
-                </label>
-                <input
-                  type="file"
-                  accept="image/*,application/pdf"
-                  onChange={(e) => handleFileChange(e, setPancardData)}
-                  className="text-xl w-full border-black  border p-2 rounded-xl"
-                />
-                {pancardData && (
-                  <img
-                    src={pancardData}
-                    alt="pancard preview"
-                    className="mt-2 w-full h-28 object-contain rounded-md border border-white/10"
-                  />
-                )}
-              </div>
-
-              <div>
-                <label className="block text-lg text-[#5a3f2e] mb-1">
-                  ID-size photo
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleFileChange(e, setIdPhotoData)}
-                  className="text-xl w-full border-black  border p-2 rounded-xl"
-                />
-                {idPhotoData && (
-                  <img
-                    src={idPhotoData}
-                    alt="id preview"
-                    className="mt-2 w-full h-28 object-cover rounded-md border border-white/10"
-                  />
-                )}
-              </div>
-            </div>
-
-            {error && <div className="text-xl text-red-600">{error}</div>}
-
-            <div className="flex items-center justify-between mt-6">
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="px-4 py-2 rounded-full bg-transparent text-[#5a3f2e] border border-white/10 hover:bg-white/5 transition"
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
               >
-                Cancel
-              </button>
-              <Link to ="/dhome">
-                <button
-                  type="submit"
-                  className="px-6 py-2 rounded-full bg-gradient-to-r from-[#4d3b2f] to-[#8b5e3c] text-white font-semibold shadow-md hover:shadow-lg transition"
+                <label className="block text-lg font-semibold text-teal-800 mb-2">
+                  Hospital Name
+                </label>
+                <input
+                  value={hospitalName}
+                  onChange={(e) => setHospitalName(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-white/60 border border-teal-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300"
+                  placeholder="e.g., Ayurvedic Wellness Center"
+                  required
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <label className="block text-lg font-semibold text-teal-800 mb-2">
+                  Location
+                </label>
+                <input
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-white/60 border border-teal-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-300"
+                  placeholder="City, State or full address"
+                  required
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white/60 rounded-xl p-4 border border-teal-200 hover:border-teal-300 transition-all duration-300"
                 >
-                  Submit & Continue
-                </button>
-              </Link>
-            </div>
-          </form>
-        </div>
+                  <label className="block text-lg font-semibold text-teal-800 mb-3">
+                    License Document
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*,application/pdf"
+                    onChange={(e) => handleFileChange(e, setLicenseData)}
+                    className="w-full px-3 py-2 rounded-lg border border-teal-200 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all duration-300"
+                  />
+                  {licenseData && (
+                    <motion.img
+                      src={licenseData}
+                      alt="license preview"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-3 w-full h-32 object-contain rounded-lg border border-teal-200"
+                    />
+                  )}
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white/60 rounded-xl p-4 border border-teal-200 hover:border-teal-300 transition-all duration-300"
+                >
+                  <label className="block text-lg font-semibold text-teal-800 mb-3">
+                    PAN Card Document
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*,application/pdf"
+                    onChange={(e) => handleFileChange(e, setPancardData)}
+                    className="w-full px-3 py-2 rounded-lg border border-teal-200 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all duration-300"
+                  />
+                  {pancardData && (
+                    <motion.img
+                      src={pancardData}
+                      alt="pancard preview"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-3 w-full h-32 object-contain rounded-lg border border-teal-200"
+                    />
+                  )}
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-white/60 rounded-xl p-4 border border-teal-200 hover:border-teal-300 transition-all duration-300"
+                >
+                  <label className="block text-lg font-semibold text-teal-800 mb-3">
+                    ID Photo
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleFileChange(e, setIdPhotoData)}
+                    className="w-full px-3 py-2 rounded-lg border border-teal-200 bg-white/60 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all duration-300"
+                  />
+                  {idPhotoData && (
+                    <motion.img
+                      src={idPhotoData}
+                      alt="id preview"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-3 w-full h-32 object-cover rounded-lg border border-teal-200"
+                    />
+                  )}
+                </motion.div>
+              </motion.div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-lg text-red-600 bg-red-50 border border-red-200 rounded-lg p-3"
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="flex flex-col sm:flex-row items-center justify-between mt-8 gap-4"
+              >
+                <motion.button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-3 rounded-xl bg-white/60 border border-teal-200 text-teal-800 font-semibold hover:bg-teal-50 hover:border-teal-300 transition-all duration-300"
+                >
+                  Cancel
+                </motion.button>
+                <Link to="/dhome">
+                  <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold shadow-lg hover:shadow-xl hover:from-teal-700 hover:to-cyan-700 transition-all duration-300"
+                  >
+                    Submit & Continue
+                  </motion.button>
+                </Link>
+              </motion.div>
+            </form>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

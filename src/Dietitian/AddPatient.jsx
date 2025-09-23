@@ -1,12 +1,202 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "../EnhancedEffects.css";
+import {
+  FaArrowLeft,
+  FaUser,
+  FaWeight,
+  FaRulerVertical,
+  FaHeartbeat,
+  FaUtensils,
+  FaHeart,
+  FaCheckCircle,
+  FaPlay,
+  FaRocket,
+  FaLeaf,
+  FaAppleAlt,
+  FaDumbbell,
+  FaSeedling,
+  FaChevronRight,
+  FaChevronLeft,
+  FaHome,
+  FaLanguage,
+  FaRedo,
+  FaEye,
+  FaCheck,
+  FaUserMd,
+  FaChartLine,
+  FaStethoscope,
+  FaRunning,
+  FaFileMedical,
+} from "react-icons/fa";
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
+const ayurvedicColors = [
+  "#A0D9D9",
+  "#7BC4C4",
+  "#5BAFAF",
+  "#4A9B9B",
+  "#3A8787",
+  "#2A7373",
+  "#1A5F5F",
+  "#0A4B4B",
+];
+
+// Enhanced Ayurvedic Particle System
+const AyurvedicParticleSystem = ({ count = 80 }) => {
+  const particlesRef = useRef([]);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const particles = particlesRef.current;
+    const container = containerRef.current;
+
+    if (!container) return;
+
+    // Create enhanced Ayurvedic particles
+    particles.forEach((particle, index) => {
+      if (particle) {
+        const isSymbol = index % 4 === 0; // Every 4th particle is a symbol
+
+        const color =
+          ayurvedicColors[Math.floor(Math.random() * ayurvedicColors.length)];
+
+        gsap.set(particle, {
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          scale: isSymbol
+            ? Math.random() * 1.2 + 1.0
+            : Math.random() * 0.8 + 0.6,
+          opacity: Math.random() * 0.9 + 0.4,
+          rotation: Math.random() * 360,
+        });
+
+        // Enhanced floating animation
+        gsap.to(particle, {
+          x: `+=${(Math.random() - 0.5) * 200}`,
+          y: `+=${(Math.random() - 0.5) * 200}`,
+          duration: Math.random() * 12 + 12,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+
+        // Rotation animation
+        gsap.to(particle, {
+          rotation: "+=360",
+          duration: Math.random() * 20 + 15,
+          ease: "none",
+          repeat: -1,
+        });
+
+        // Scale pulsing for symbols
+        if (isSymbol) {
+          gsap.to(particle, {
+            scale: "+=0.3",
+            duration: Math.random() * 2 + 1.5,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+          });
+        }
+
+        particle.className = "absolute w-2 h-2 rounded-full ayurvedic-dot";
+        particle.style.backgroundColor = color;
+      }
+    });
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="fixed inset-0 pointer-events-none overflow-hidden"
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          ref={(el) => (particlesRef.current[i] = el)}
+          className="absolute"
+          style={{
+            filter: "blur(0.3px)",
+            willChange: "transform",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 const SECTIONS = [
-  { id: 1, key: "basic", title: "Patient Information" },
-  { id: 2, key: "anthro", title: "Anthropometrics" },
-  { id: 3, key: "vitals", title: "Vitals & Intake" },
-  { id: 4, key: "lifestyle", title: "Habits & Lifestyle" },
-  { id: 5, key: "medical", title: "Medical History" },
+  {
+    id: 1,
+    key: "basic",
+    title: "Patient Information",
+    icon: FaUser,
+    color: "#8B4513",
+  },
+  {
+    id: 2,
+    key: "anthro",
+    title: "Anthropometrics",
+    icon: FaWeight,
+    color: "#A0522D",
+  },
+  {
+    id: 3,
+    key: "vitals",
+    title: "Vitals & Intake",
+    icon: FaHeartbeat,
+    color: "#CD853F",
+  },
+  {
+    id: 4,
+    key: "lifestyle",
+    title: "Habits & Lifestyle",
+    icon: FaUtensils,
+    color: "#D2691E",
+  },
+  {
+    id: 5,
+    key: "medical",
+    title: "Medical History",
+    icon: FaFileMedical,
+    color: "#F4A460",
+  },
+];
+
+// Background Layers
+const BG_LAYERS = [
+  {
+    id: 0,
+    gradient:
+      "radial-gradient( circle at 10% 20%, rgba(139,69,19,0.14), transparent 20% ), linear-gradient(45deg,#FEF3C7,#FFEDD5)",
+  },
+  {
+    id: 1,
+    gradient:
+      "radial-gradient( circle at 80% 10%, rgba(160,82,45,0.12), transparent 18% ), linear-gradient(135deg,#F5DEB3,#FFE4B5)",
+  },
+  {
+    id: 2,
+    gradient:
+      "radial-gradient( circle at 30% 80%, rgba(205,133,63,0.10), transparent 18% ), linear-gradient(90deg,#DEB887,#F4A460)",
+  },
+  {
+    id: 3,
+    gradient:
+      "radial-gradient( circle at 60% 40%, rgba(210,105,30,0.10), transparent 18% ), linear-gradient(120deg,#FFE4B5,#F5DEB3)",
+  },
+  {
+    id: 4,
+    gradient:
+      "radial-gradient( circle at 40% 30%, rgba(244,164,96,0.08), transparent 18% ), linear-gradient(60deg,#FEF3C7,#FFEDD5)",
+  },
 ];
 
 const initialPatient = {
@@ -137,62 +327,140 @@ export default function AddPatient() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-l from-white to-emerald-200">
-      <div className="max-w-8xl mx-auto px-4 sm:px-8 md:px-12 lg:px-20 py-4 sm:py-6 md:py-8 mt-16 sm:mt-20 md:mt-24">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
+      {/* Enhanced Ayurvedic Particle System */}
+      <AyurvedicParticleSystem count={1} />
+
+      {/* Top Navigation Bar */}
+      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-white/95 backdrop-blur-md border-b border-teal-200/20">
+        {/* Back to Home Button */}
         <Link to="/dhome">
-          <button className="px-4 py-3 mb-4 sm:mb-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
-            ← Back to Home
-          </button>
+          <motion.button
+            whileHover={{ scale: 1.05, rotateY: 5 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
+          >
+            <FaHome className="text-xl" />
+            Back to Home
+          </motion.button>
         </Link>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4 sm:gap-0">
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
-            Add Patient
-          </h1>
-          <div className="w-full sm:w-64">
-            <div className="bg-gray-200 h-2 rounded overflow-hidden">
-              <div
-                className="bg-emerald-500 h-2 rounded transition-all"
+
+        {/* Progress Bar */}
+        <div className="flex-1 mx-8">
+          <div className="flex items-center justify-center gap-4">
+            <span className="text-lg font-semibold text-teal-800">
+              Step {step + 1} of {SECTIONS.length}
+            </span>
+            <div className="w-64 bg-white/20 h-3 rounded-full overflow-hidden">
+              <motion.div
+                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-3 rounded shadow-sm"
                 style={{ width: `${progress}%` }}
-                aria-hidden
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
               />
             </div>
-            <div className="text-xl text-gray-900 mt-1 text-left sm:text-right">
-              {progress}% complete
-            </div>
+            <span className="text-lg font-semibold text-teal-800">
+              {Math.round(progress)}%
+            </span>
           </div>
         </div>
+      </div>
 
+      {/* Dynamic Background Layers */}
+      <div className="absolute inset-0 -z-10">
+        {BG_LAYERS.map((b, i) => (
+          <motion.div
+            key={b.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: i === step ? 1 : 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            style={{ backgroundImage: b.gradient }}
+            className="absolute inset-0"
+          />
+        ))}
+
+        {/* Enhanced floating blobs with better animations */}
+        <motion.div
+          animate={{
+            rotate: 360,
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            rotate: { repeat: Infinity, duration: 80, ease: "linear" },
+            scale: { repeat: Infinity, duration: 6, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+          }}
+          className="absolute -left-40 -top-40 w-[420px] h-[420px] rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 blur-3xl pointer-events-none"
+        />
+        <motion.div
+          animate={{
+            rotate: -360,
+            scale: [1, 0.9, 1],
+            opacity: [0.25, 0.4, 0.25],
+          }}
+          transition={{
+            rotate: { repeat: Infinity, duration: 100, ease: "linear" },
+            scale: { repeat: Infinity, duration: 8, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 5, ease: "easeInOut" },
+          }}
+          className="absolute -right-32 bottom-[-60px] w-[360px] h-[360px] rounded-full bg-gradient-to-bl from-cyan-200 to-blue-100 blur-3xl pointer-events-none"
+        />
+      </div>
+
+      <div className="max-w-8xl mx-auto px-4 sm:px-8 md:px-12 mt-20 lg:px-20 py-4 sm:py-6 md:py-8 pt-20">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
           {/* Step navigation (left) */}
-          <nav className="lg:col-span-1 sticky top-20 sm:top-24 self-start space-y-2 sm:space-y-3">
+          <nav className="lg:col-span-1 sticky top-20 sm:top-24 self-start space-y-3">
             {SECTIONS.map((s, i) => (
-              <button
+              <motion.button
                 key={s.key}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.1 }}
+                whileHover={{ scale: 1.02, x: 5 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => go(i)}
-                className={`w-full text-left px-3 sm:px-4 py-2 sm:py-3 rounded-lg shadow-sm flex items-center gap-2 sm:gap-3 transition transform ${
+                className={`w-full text-left px-4 py-4 rounded-xl shadow-lg flex items-center gap-3 transition-all duration-300 ${
                   i === step
-                    ? "bg-emerald-600 text-white -translate-x-1"
-                    : "bg-white text-gray-700 hover:-translate-y-0.5"
+                    ? "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white border-2 border-teal-400"
+                    : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-teal-300 hover:bg-teal-50"
                 }`}
               >
-                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-white text-emerald-600 font-semibold text-sm sm:text-base">
-                  {s.id}
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-lg ${
+                    i === step
+                      ? "bg-white/20 text-white"
+                      : "bg-gradient-to-r from-teal-200 to-cyan-100 text-teal-800"
+                  }`}
+                >
+                  <s.icon
+                    className="text-lg"
+                    style={{ color: i === step ? "white" : s.color }}
+                  />
                 </div>
                 <div className="flex-1">
-                  <div className="font-medium text-xl">{s.title}</div>
-                  <div className="text-xl text-gray-400">
+                  <div className="font-semibold text-lg">{s.title}</div>
+                  <div className="text-sm opacity-75">
                     Step {s.id} of {SECTIONS.length}
                   </div>
                 </div>
-                <div className="text-xl">{i === step ? "Current" : ""}</div>
-              </button>
+                {i === step && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-2 h-2 bg-white rounded-full"
+                  />
+                )}
+              </motion.button>
             ))}
           </nav>
 
           {/* Full page step panels (right) */}
           <main
-            className="lg:col-span-4 relative bg-white rounded-lg shadow overflow-hidden"
-            style={{ minHeight: "400px" }}
+            className="lg:col-span-4 relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-teal-200/20 overflow-hidden"
+            style={{ minHeight: "500px" }}
           >
             <form onSubmit={handleSubmit} className="h-full relative">
               <div ref={containerRef} className="h-full relative">
@@ -204,70 +472,110 @@ export default function AddPatient() {
                     aria-hidden={i !== step}
                     style={{ position: "absolute" }}
                   >
-                    <div className="p-4 sm:p-6 md:p-8 h-full overflow-auto">
-                      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-2 sm:gap-0">
-                        <div>
-                          <h2 className="text-xl font-semibold text-gray-800">
-                            {s.title}
-                          </h2>
-                          <div className="text-xl text-gray-500">
-                            Fill the {s.title.toLowerCase()} details
-                          </div>
-                        </div>
-                        <div className="text-xl text-gray-600">
-                          Step {i + 1} / {SECTIONS.length}
-                        </div>
-                      </header>
+                    <div className="p-6 md:p-8 h-full overflow-auto">
+                      <motion.header
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        className="text-center mb-8"
+                      >
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.4, delay: 0.2 }}
+                          className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 mb-4 shadow-lg"
+                        >
+                          <s.icon
+                            className="text-xl"
+                            style={{ color: s.color }}
+                          />
+                        </motion.div>
+                        <motion.h2
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: 0.3 }}
+                          className="text-2xl md:text-3xl font-bold text-teal-900 mb-2"
+                        >
+                          {s.title}
+                        </motion.h2>
+                        <motion.p
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: 0.4 }}
+                          className="text-lg text-gray-700"
+                        >
+                          Fill the {s.title.toLowerCase()} details
+                        </motion.p>
+                      </motion.header>
 
                       {/* Section content */}
                       <div className="space-y-4 sm:space-y-6">
                         {s.key === "basic" && (
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-                            <div>
-                              <label className="block text-xl text-gray-600">
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.3, delay: 0.1 }}
+                            >
+                              <label className="flex text-lg text-gray-700 items-center gap-2 mb-2">
+                                <FaUser className="text-amber-600 text-lg" />
                                 Patient Name
                               </label>
-                              <input
+                              <motion.input
+                                whileFocus={{ scale: 1.02 }}
                                 value={patient.basic.patientName}
                                 onChange={(e) =>
                                   update("basic", "patientName", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="w-full p-3 border border-gray-300 rounded-xl text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
                                 placeholder="Full name"
                                 required
                               />
-                            </div>
-                            <div>
-                              <label className="block text-xl text-gray-600">
+                            </motion.div>
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.3, delay: 0.2 }}
+                            >
+                              <label className="flex text-lg text-gray-700 items-center gap-2 mb-2">
+                                <FaHeartbeat className="text-amber-600 text-lg" />
                                 Age
                               </label>
-                              <input
+                              <motion.input
+                                whileFocus={{ scale: 1.02 }}
                                 type="number"
                                 value={patient.basic.age}
                                 onChange={(e) =>
                                   update("basic", "age", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="w-full p-3 border border-gray-300 rounded-xl text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
                                 placeholder="Age in years"
                               />
-                            </div>
-                            <div className="sm:col-span-2 md:col-span-1">
-                              <label className="block text-xl text-gray-600">
+                            </motion.div>
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.3, delay: 0.3 }}
+                              className="sm:col-span-2 md:col-span-1"
+                            >
+                              <label className="flex text-lg text-gray-700 items-center gap-2 mb-2">
+                                <FaHeart className="text-amber-600 text-lg" />
                                 Gender
                               </label>
-                              <select
+                              <motion.select
+                                whileFocus={{ scale: 1.02 }}
                                 value={patient.basic.gender}
                                 onChange={(e) =>
                                   update("basic", "gender", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="w-full p-3 border border-gray-300 rounded-xl text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
                               >
                                 <option value="">Select Gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                                 <option value="other">Other</option>
-                              </select>
-                            </div>
+                              </motion.select>
+                            </motion.div>
                           </div>
                         )}
 
@@ -629,42 +937,78 @@ export default function AddPatient() {
                         )}
                       </div>
 
-                      {/* footer controls inside panel */}
-                      <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
-                        <div className="text-xl text-gray-500">
-                          Section:{" "}
-                          <span className="font-medium text-gray-700">
-                            {s.title}
-                          </span>
+                      {/* Navigation */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.3 }}
+                        className="flex items-center justify-between mt-8"
+                      >
+                        <motion.button
+                          whileHover={{
+                            scale: step === 0 ? 1 : 1.05,
+                            y: step === 0 ? 0 : -2,
+                          }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => go(step - 1)}
+                          disabled={step === 0}
+                          className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200 text-amber-700 text-lg disabled:opacity-50 hover:border-teal-300 hover:bg-teal-50 transition-all duration-200 flex items-center gap-2"
+                        >
+                          <FaChevronLeft />
+                          Previous
+                        </motion.button>
+
+                        <div className="flex items-center gap-2">
+                          {SECTIONS.map((s, i) => (
+                            <motion.button
+                              key={s.id}
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.3, delay: i * 0.1 }}
+                              whileHover={{ scale: 1.2 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => go(i)}
+                              className={`w-3 h-3 rounded-full transition-all duration-300 flex items-center justify-center ${
+                                i === step
+                                  ? "bg-gradient-to-r from-amber-600 to-orange-600 shadow-lg shadow-amber-200"
+                                  : "bg-white/50 hover:bg-white/70"
+                              }`}
+                            >
+                              {i === step && (
+                                <motion.div
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  className="w-1 h-1 bg-white rounded-full"
+                                />
+                              )}
+                            </motion.button>
+                          ))}
                         </div>
-                        <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
-                          <button
+
+                        {i < SECTIONS.length - 1 ? (
+                          <motion.button
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
                             type="button"
-                            onClick={() => go(step - 1)}
-                            disabled={step === 0}
-                            className="px-3 sm:px-4 py-2 rounded border bg-white disabled:opacity-50 text-xl flex-1 sm:flex-none"
+                            onClick={() => go(step + 1)}
+                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 text-white text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
                           >
-                            Previous
-                          </button>
-                          {i < SECTIONS.length - 1 ? (
-                            <button
-                              type="button"
-                              onClick={() => go(step + 1)}
-                              className="px-3 sm:px-4 py-2 rounded bg-emerald-600 text-white text-xl flex-1 sm:flex-none"
-                            >
-                              Next
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => navigate("/diet-chart")}
-                              type="submit"
-                              className="px-3 sm:px-4 py-2 rounded bg-emerald-700 text-white text-xl flex-1 sm:flex-none"
-                            >
-                              Save / Submit
-                            </button>
-                          )}
-                        </div>
-                      </div>
+                            Next
+                            <FaChevronRight />
+                          </motion.button>
+                        ) : (
+                          <motion.button
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => navigate("/my-diet-chart")}
+                            type="submit"
+                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                          >
+                            <FaCheck />
+                            Save & Submit
+                          </motion.button>
+                        )}
+                      </motion.div>
                     </div>
                   </section>
                 ))}

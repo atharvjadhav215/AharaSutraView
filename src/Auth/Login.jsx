@@ -231,7 +231,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-[#4d3b2f] to-[#8b5e3c] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
+                className="w-full bg-gradient-to-r from-[#6B8E23] to-[#8B4513] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
               >
                 Create Account
               </button>
@@ -266,7 +266,7 @@ const Login = () => {
               <div className="flex justify-end">
                 <a
                   href="/forgot-password"
-                  className="text-[#6f4e37] text-sm hover:text-[#4d3b2f] hover:underline transition-colors"
+                  className="text-[#6B8E23] text-sm hover:text-[#556B2F] hover:underline transition-colors"
                 >
                   Forgot Password?
                 </a>
@@ -286,7 +286,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-[#4d3b2f] to-[#8b5e3c] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
+                className="w-full bg-gradient-to-r from-[#6B8E23] to-[#8B4513] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
               >
                 Sign In
               </button>
@@ -295,12 +295,12 @@ const Login = () => {
 
           {/* Footer */}
           <div className="mt-6 text-center">
-            <p className="text-[#8b7355] text-sm">
+            <p className="text-[#8B4513] text-sm">
               {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
               <button
                 type="button"
                 onClick={() => setIsSignUp(!isSignUp)}
-                className="text-[#4d3b2f] font-medium hover:underline transition-colors"
+                className="text-[#6B8E23] font-medium hover:underline transition-colors"
               >
                 {isSignUp ? "Sign In" : "Sign Up"}
               </button>

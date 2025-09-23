@@ -1,9 +1,155 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+  useCallback,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { Link } from "react-router-dom";
 import { getTranslation } from "./dietChartTranslations";
 import LanguageSelector from "./LanguageSelector";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "../EnhancedEffects.css";
+import {
+  FaHome,
+  FaLanguage,
+  FaEye,
+  FaCalendarAlt,
+  FaList,
+  FaFire,
+  FaDownload,
+  FaShare,
+  FaChevronRight,
+  FaChevronLeft,
+  FaUtensils,
+  FaChartPie,
+  FaLeaf,
+  FaAppleAlt,
+  FaDumbbell,
+  FaHeartbeat,
+  FaSeedling,
+} from "react-icons/fa";
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
+const ayurvedicColors = [
+  "#A0D9D9",
+  "#7BC4C4",
+  "#5BAFAF",
+  "#4A9B9B",
+  "#3A8787",
+  "#2A7373",
+  "#1A5F5F",
+  "#0A4B4B",
+];
+
+// Enhanced Ayurvedic Particle System
+const AyurvedicParticleSystem = ({ count = 80 }) => {
+  const particlesRef = useRef([]);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const particles = particlesRef.current;
+    const container = containerRef.current;
+
+    if (!container) return;
+
+    // Create enhanced Ayurvedic particles
+    particles.forEach((particle, index) => {
+      if (particle) {
+        const isSymbol = index % 4 === 0; // Every 4th particle is a symbol
+
+        const color =
+          ayurvedicColors[Math.floor(Math.random() * ayurvedicColors.length)];
+
+        gsap.set(particle, {
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          scale: isSymbol
+            ? Math.random() * 1.2 + 1.0
+            : Math.random() * 0.8 + 0.6,
+          opacity: Math.random() * 0.9 + 0.4,
+          rotation: Math.random() * 360,
+        });
+
+        // Enhanced floating animation
+        gsap.to(particle, {
+          x: `+=${(Math.random() - 0.5) * 200}`,
+          y: `+=${(Math.random() - 0.5) * 200}`,
+          duration: Math.random() * 12 + 12,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+
+        // Rotation animation
+        gsap.to(particle, {
+          rotation: "+=360",
+          duration: Math.random() * 20 + 15,
+          ease: "none",
+          repeat: -1,
+        });
+
+        // Scale pulsing for symbols
+        if (isSymbol) {
+          gsap.to(particle, {
+            scale: "+=0.3",
+            duration: Math.random() * 2 + 1.5,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+          });
+        }
+
+        particle.className = "absolute w-2 h-2 rounded-full ayurvedic-dot";
+        particle.style.backgroundColor = color;
+      }
+    });
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="fixed inset-0 pointer-events-none overflow-hidden"
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          ref={(el) => (particlesRef.current[i] = el)}
+          className="absolute"
+          style={{
+            filter: "blur(0.3px)",
+            willChange: "transform",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Background Layers
+const BG_LAYERS = [
+  {
+    id: 0,
+    gradient:
+      "radial-gradient( circle at 10% 20%, rgba(107,142,35,0.14), transparent 20% ), linear-gradient(45deg,#F0F9F0,#E8F5E8)",
+  },
+  {
+    id: 1,
+    gradient:
+      "radial-gradient( circle at 80% 10%, rgba(139,69,19,0.12), transparent 18% ), linear-gradient(135deg,#E8F5E8,#E0F2E0)",
+  },
+  {
+    id: 2,
+    gradient:
+      "radial-gradient( circle at 30% 80%, rgba(156,175,136,0.10), transparent 18% ), linear-gradient(90deg,#E0F2E0,#D8EFD8)",
+  },
+];
+
 const DOSHAS = [
   {
     type: "Vata",
@@ -39,7 +185,7 @@ const DOSHAS = [
   {
     type: "Pitta",
     color: "#F97316",
-    gradientFrom: "from-orange-50",
+    gradientFrom: "from-cyan-50",
     gradientTo: "to-rose-50",
     description:
       "Cooling, calming and moderate foods. Avoid excessive heat, spice and sour stimulants.",
@@ -618,6 +764,9 @@ const itineraryCopy = (plan) =>
 export default function DietChart() {
   const [selected, setSelected] = useState(0);
   const [language, setLanguage] = useState("en");
+  const [activeTab, setActiveTab] = useState("overview");
+  const [selectedDay, setSelectedDay] = useState("Monday");
+  const [analysisTab, setAnalysisTab] = useState("nutrients");
 
   // Get translated DOSHAS based on current language
   const getTranslatedDoshas = () =>
@@ -671,311 +820,842 @@ export default function DietChart() {
 
   const selectedPlan = PLANS.find((p) => p.id === selectedPlanId) || PLANS[0];
 
-  return (
-    <div className="min-h-screen bg-gradient-to-l from-white to-[#f6f3e8] p-2 sm:p-4 md:p-6">
-      <LanguageSelector language={language} onLanguageChange={setLanguage} />
-      <Link to="/dhome">
-        <button className="px-3 sm:px-4 py-2 mt-20 sm:py-3 mb-3 sm:mt-4 md:mt-5 ml-2 sm:ml-3 md:ml-5 rounded-full bg-white border text-emerald-700 text-xl disabled:opacity-50 hover:shadow-md transition-shadow">
-          ← {getTranslation("backToHome", language)}
-        </button>
-      </Link>
-      <div className="max-w-8xl mx-auto">
-        <motion.header
-          initial={{ opacity: 0, y: -10 }}
+  // Generate 7-day diet chart
+  const generate7DayChart = (selectedPlan) => {
+    const days = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+
+    return days.map((day) => ({
+      day,
+      plan: selectedPlan,
+      meals: selectedPlan.meals,
+      totalCalories: Object.values(selectedPlan.meals)
+        .flat()
+        .reduce((sum, meal) => sum + meal.calories, 0),
+    }));
+  };
+
+  // Generate detailed nutrient analysis
+  const generateNutrientAnalysis = (plan) => {
+    const meals = Object.values(plan.meals).flat();
+    const totalCalories = meals.reduce((sum, meal) => sum + meal.calories, 0);
+
+    // Calculate macronutrients (estimated based on typical food composition)
+    const carbs = Math.round((totalCalories * 0.5) / 4); // 50% carbs, 4 cal/g
+    const protein = Math.round((totalCalories * 0.2) / 4); // 20% protein, 4 cal/g
+    const fat = Math.round((totalCalories * 0.3) / 9); // 30% fat, 9 cal/g
+
+    // Calculate micronutrients (estimated)
+    const fiber = Math.round((totalCalories * 0.03) / 4); // 3% fiber
+    const sugar = Math.round((totalCalories * 0.08) / 4); // 8% sugar
+    const sodium = Math.round(totalCalories * 0.02); // 2% sodium (mg)
+    const potassium = Math.round(totalCalories * 0.15); // 15% potassium (mg)
+    const calcium = Math.round(totalCalories * 0.12); // 12% calcium (mg)
+    const iron = Math.round(totalCalories * 0.08); // 8% iron (mg)
+    const vitaminC = Math.round(totalCalories * 0.1); // 10% vitamin C (mg)
+
+    return {
+      totalCalories,
+      macronutrients: { carbs, protein, fat },
+      micronutrients: {
+        fiber,
+        sugar,
+        sodium,
+        potassium,
+        calcium,
+        iron,
+        vitaminC,
+      },
+    };
+  };
+
+  // Generate daily timeline
+  const generateDailyTimeline = () => {
+    return [
+      {
+        time: "6:00 AM",
+        activity: "Wake up & Hydration",
+        type: "water",
+        icon: "💧",
+      },
+      {
+        time: "6:30 AM",
+        activity: "Morning Yoga/Exercise",
+        type: "exercise",
+        icon: "🧘‍♀️",
+      },
+      { time: "7:30 AM", activity: "Breakfast", type: "meal", icon: "🍳" },
+      { time: "9:00 AM", activity: "Water Intake", type: "water", icon: "💧" },
+      { time: "11:00 AM", activity: "Light Snack", type: "snack", icon: "🥜" },
+      { time: "12:00 PM", activity: "Water Intake", type: "water", icon: "💧" },
+      { time: "1:00 PM", activity: "Lunch", type: "meal", icon: "🍽️" },
+      {
+        time: "3:00 PM",
+        activity: "Afternoon Walk",
+        type: "exercise",
+        icon: "🚶‍♀️",
+      },
+      { time: "4:00 PM", activity: "Water Intake", type: "water", icon: "💧" },
+      { time: "5:00 PM", activity: "Evening Snack", type: "snack", icon: "🍎" },
+      { time: "7:00 PM", activity: "Dinner", type: "meal", icon: "🍲" },
+      { time: "8:00 PM", activity: "Water Intake", type: "water", icon: "💧" },
+      {
+        time: "9:00 PM",
+        activity: "Meditation/Relaxation",
+        type: "wellness",
+        icon: "🧘‍♂️",
+      },
+      { time: "10:00 PM", activity: "Bedtime", type: "sleep", icon: "😴" },
+    ];
+  };
+
+  // Tab content components
+  const getTabContent = () => {
+    const currentPlan = selectedPlan;
+    const weeklyChart = generate7DayChart(currentPlan);
+    const nutrientAnalysis = generateNutrientAnalysis(currentPlan);
+    const dailyTimeline = generateDailyTimeline();
+
+    return {
+      overview: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-6 sm:mb-8"
+          className="space-y-2"
         >
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-emerald-900">
-            {getTranslation("selectDosha", language)}
-          </h1>
-          <p className="mt-2 text-xl text-emerald-800/90">
-            {getTranslation("mealPlan", language)}
-          </p>
-        </motion.header>
+          <div className="text-center flex flex-row items-center justify-start gap-5">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 shadow-lg mb-1">
+              <FaChartPie className="text-xl" style={{ color: "#10B981" }} />
+            </div>
+            <h3 className="text-xl md:text-2xl font-bold text-teal-900">
+              {currentPlan.name}
+            </h3>
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-          {/* Left: Dosha selector (existing) */}
-          <div className="lg:col-span-1 text-xl space-y-3 sm:space-y-4">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              className="flex flex-col gap-3 sm:gap-4"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-3 gap-3">
-                {translatedDoshas.map((d, i) => (
-                  <motion.button
-                    key={d.type}
-                    onClick={() => setSelected(i)}
-                    whileHover={{ scale: 1.025 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`text-left rounded-xl p-3 sm:p-4 transition-shadow flex flex-col justify-center items-start gap-2 sm:gap-3 ${
-                      i === selected
-                        ? "ring-2 ring-emerald-300 bg-white shadow-lg"
-                        : "bg-white/90 hover:shadow-md"
-                    }`}
-                    aria-pressed={i === selected}
-                  >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Object.entries(currentPlan.meals).map(([mealType, items]) => (
+              <motion.div
+                key={mealType}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="bg-gradient-to-br from-white to-teal-50/30 p-3 rounded-xl border border-teal-200/30 shadow-sm"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-2xl font-semibold text-teal-900 capitalize">
+                    {mealType}
+                  </h4>
+                  <div className="flex items-center gap-1 text-teal-700">
+                    <FaFire className="text-sm" />
+                    <span className="font-medium">
+                      {items.reduce((s, i) => s + (i.calories || 0), 0)} cal
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  {items.map((item, index) => (
                     <div
-                      className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 ml-4 sm:ml-6 md:ml-8 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl"
-                      style={{ background: d.color }}
+                      key={index}
+                      className="bg-gradient-to-r from-white/90 via-cyan-50/60 to-sky-50/40 rounded-2xl p-4 border-2 border-teal-200/50 shadow-md"
                     >
-                      {d.type.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-emerald-900 text-xl">
-                        {d.type}
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-gray-800 font-medium text-lg">
+                          {item.name}
+                        </span>
+                        <span className="text-teal-700 font-semibold text-lg">
+                          {item.calories} cal
+                        </span>
                       </div>
-                      <div className="text-xl mt-2 sm:mt-3 text-emerald-800/80">
-                        {d.description.slice(0, 90)}…
-                      </div>
+                      {item.recept && (
+                        <div className="text-sm text-gray-700 bg-gradient-to-r from-cyan-50/80 to-sky-50/60 p-3 rounded-xl border-l-4 border-cyan-400 shadow-sm">
+                          <strong>Recipe:</strong> {item.recept}
+                        </div>
+                      )}
                     </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      ),
+      weekly: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          {/* Day Tabs */}
+          <div className="flex flex-wrap gap-2 justify-center">
+            {weeklyChart.map((day, index) => (
+              <motion.button
+                key={day.day}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSelectedDay(day.day)}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                  selectedDay === day.day
+                    ? "bg-gradient-to-r from-cyan-500  to-teal-500 text-white shadow-lg"
+                    : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
+                }`}
+              >
+                <FaCalendarAlt className="text-sm" />
+                {day.day}
+              </motion.button>
+            ))}
+          </div>
 
-                    <div
-                      className="text-xl mt-3 sm:mt-4 p-2 sm:p-3 rounded-2xl h-32 sm:h-40 md:h-48 lg:h-56 xl:h-64 text-emerald-100"
-                      style={{ background: d.color }}
-                    >
-                      <p className="font-bold">Note:</p> {d.rule}…
-                    </div>
-                  </motion.button>
-                ))}
+          {/* Selected Day Content */}
+          <motion.div
+            key={selectedDay}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-2 px-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-teal-900">
+                {selectedDay} Meal Plan
+              </h3>
+              <div className="flex items-center gap-2 text-teal-700">
+                <FaFire className="text-lg" />
+                <span className="text-lg font-semibold">
+                  {
+                    weeklyChart.find((day) => day.day === selectedDay)
+                      ?.totalCalories
+                  }{" "}
+                  cal
+                </span>
               </div>
+            </div>
 
-              {/* Foods panel for selected dosha (appears below buttons) */}
-              <AnimatePresence mode="wait">
+            <div className="space-y-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {Object.entries(
+                weeklyChart.find((day) => day.day === selectedDay)?.meals || {}
+              ).map(([mealType, items]) => (
                 <motion.div
-                  key={DOSHAS[selected].type}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.36 }}
-                  className="bg-white rounded-lg p-3 sm:p-4 py-8 sm:py-12 shadow mt-2"
+                  key={mealType}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                  className="bg-gradient-to-r from-white/80 via-teal-50/60 to-cyan-50/40 rounded-xl p-4 border-2 border-teal-200/40 shadow-sm"
                 >
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2 sm:gap-0">
-                    <div>
-                      <h3 className="text-xl sm:text-2xl font-semibold text-emerald-900">
-                        {getTranslation("recommendedFoods", language)} —{" "}
-                        {active.type}
-                      </h3>
-                      <div className="text-xl text-emerald-800/90 mt-1">
-                        {active.description}
-                      </div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">
+                        {mealType.charAt(0).toUpperCase()}
+                      </span>
                     </div>
-                    <div className="text-xl text-gray-600">
-                      {active.foods.length} {getTranslation("items", language)}
+                    <h4 className="text-xl font-semibold text-gray-800 capitalize">
+                      {mealType}
+                    </h4>
+                    <div className="flex items-center gap-1 text-teal-700 ml-auto">
+                      <FaFire className="text-sm" />
+                      <span className="font-medium">
+                        {items.reduce((sum, item) => sum + item.calories, 0)}{" "}
+                        cal
+                      </span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {active.foods.map((food, idx) => (
+                  <div className="space-y-3">
+                    {items.map((item, idx) => (
                       <motion.div
                         key={idx}
-                        initial={{ opacity: 0, x: -6 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.04 * idx, duration: 0.28 }}
-                        className="flex items-start gap-3 bg-[#f6f3e8] rounded-md p-2 sm:p-3"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: 0.2 + idx * 0.1 }}
+                        className="bg-white/60 rounded-lg p-3 border border-teal-100/50 shadow-sm"
                       >
-                        <div
-                          className="w-3 h-3 rounded-full mt-1"
-                          style={{ background: "#10B981" }}
-                        />
-                        <div className="text-xl text-emerald-900">{food}</div>
+                        <div className="flex items-center justify-between mb-2">
+                          <h5 className="text-lg font-medium text-gray-700">
+                            {item.name}
+                          </h5>
+                          <span className="text-teal-700 font-semibold">
+                            {item.calories} cal
+                          </span>
+                        </div>
                       </motion.div>
                     ))}
                   </div>
                 </motion.div>
-              </AnimatePresence>
-            </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      ),
+      analysis: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          {/* Analysis Tabs */}
+          <div className="flex flex-wrap gap-2 mb-6 justify-center">
+            {[
+              { id: "nutrients", name: "Nutrients", icon: FaChartPie },
+              { id: "timeline", name: "Daily Timeline", icon: FaCalendarAlt },
+              { id: "recommendations", name: "Recommendations", icon: FaLeaf },
+            ].map((tab, index) => (
+              <motion.button
+                key={tab.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setAnalysisTab(tab.id)}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                  analysisTab === tab.id
+                    ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
+                    : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
+                }`}
+              >
+                <tab.icon className="text-sm" />
+                {tab.name}
+              </motion.button>
+            ))}
+          </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08, duration: 0.5 }}
-              className="bg-white rounded-xl p-3 sm:p-4 shadow"
-            >
-              <div className="lg:col-span-1 space-y-3">
-                <div className="bg-white rounded-xl p-3 sm:p-4 shadow">
-                  <div className="text-xl font-semibold text-emerald-900 mb-2">
-                    Plans
+          {/* Tab Content */}
+          <motion.div
+            key={analysisTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-teal-200/20 shadow-lg"
+          >
+            {analysisTab === "nutrients" && (
+              <div className="space-y-6">
+                {/* Total Calories Summary */}
+                <div className="bg-gradient-to-r from-teal-100 to-cyan-100 rounded-xl px-6 py-2 text-center">
+                  <div className="text-4xl font-bold tracking-widest text-teal-800 mb-2">
+                    {nutrientAnalysis.totalCalories} cal
                   </div>
-                  <div className="space-y-2">
-                    {filteredPlans.map((p) => (
-                      <motion.button
-                        key={p.id}
-                        onClick={() => setSelectedPlanId(p.id)}
-                        whileHover={{ scale: 1.02 }}
-                        className={`w-full text-left p-2 sm:p-3 rounded-lg ${
-                          p.id === selectedPlanId
-                            ? "bg-[#f6f3e8] ring-2 ring-emerald-200"
-                            : "bg-white/90"
-                        } shadow`}
-                      >
-                        <div className="font-medium text-emerald-900 text-xl">
-                          {p.name}
-                        </div>
-                        <div className="text-xl text-emerald-800/80">
-                          {p.description}
-                        </div>
-                      </motion.button>
-                    ))}
-                    {filteredPlans.length === 0 && (
-                      <div className="text-xl text-gray-600">
-                        No plans match selected ingredients.
+                  <div className="text-lg text-teal-700">
+                    Total Daily Calories
+                  </div>
+                </div>
+
+                {/* Macronutrient Pie Chart */}
+                <div className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg">
+                  <h4 className="text-xl font-semibold text-teal-900 mb-4 text-center">
+                    Macronutrient Distribution
+                  </h4>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                    {/* Pie Chart */}
+                    <div className="flex justify-center">
+                      <div className="w-64 h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={[
+                                {
+                                  name: "Carbohydrates",
+                                  value: 50,
+                                  color: "#0D9488",
+                                  fill: "#0D9488",
+                                },
+                                {
+                                  name: "Protein",
+                                  value: 20,
+                                  color: "#0891B2",
+                                  fill: "#0891B2",
+                                },
+                                {
+                                  name: "Fats",
+                                  value: 30,
+                                  color: "#059669",
+                                  fill: "#059669",
+                                },
+                              ]}
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={100}
+                              innerRadius={40}
+                              dataKey="value"
+                              label={({ name, value }) => `${name}: ${value}%`}
+                              labelLine={false}
+                            >
+                              {[
+                                {
+                                  name: "Carbohydrates",
+                                  value: 50,
+                                  color: "#0D9488",
+                                  fill: "#0D9488",
+                                },
+                                {
+                                  name: "Protein",
+                                  value: 20,
+                                  color: "#0891B2",
+                                  fill: "#0891B2",
+                                },
+                                {
+                                  name: "Fats",
+                                  value: 30,
+                                  color: "#059669",
+                                  fill: "#059669",
+                                },
+                              ].map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                              ))}
+                            </Pie>
+                            <Tooltip formatter={(value) => `${value}%`} />
+                          </PieChart>
+                        </ResponsiveContainer>
                       </div>
+                    </div>
+
+                    {/* Recommendations */}
+                    <div className="space-y-4">
+                      <h5 className="text-lg font-semibold text-teal-900 mb-3">
+                       Recommendations
+                      </h5>
+                      <div className="space-y-3">
+                        <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-3 border border-teal-200">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-3 h-3 rounded-full bg-teal-500"></div>
+                            <span className="font-medium text-teal-800">
+                              Carbohydrates (50%)
+                            </span>
+                          </div>
+                          <p className="text-sm text-teal-700">
+                            Good balance! Focus on complex carbs like whole
+                            grains, vegetables, and fruits.
+                          </p>
+                        </div>
+
+                        <div className="bg-gradient-to-r from-cyan-50 to-sky-50 rounded-lg p-3 border border-cyan-200">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-3 h-3 rounded-full bg-cyan-500"></div>
+                            <span className="font-medium text-cyan-800">
+                              Protein (20%)
+                            </span>
+                          </div>
+                          <p className="text-sm text-cyan-700">
+                            Consider increasing protein intake with lentils,
+                            paneer, and lean meats for better muscle health.
+                          </p>
+                        </div>
+
+                        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-3 border border-emerald-200">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                            <span className="font-medium text-emerald-800">
+                              Fats (30%)
+                            </span>
+                          </div>
+                          <p className="text-sm text-emerald-700">
+                            Excellent! Include healthy fats like ghee, nuts, and
+                            olive oil for optimal nutrition.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Macronutrients Dropdown */}
+                <div className="space-y-4">
+                  <h4 className="text-xl font-semibold text-teal-900 mb-4">
+                    Macronutrients
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.1 }}
+                      className="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl p-4 border border-teal-200 hover:shadow-md transition-shadow"
+                    >
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-teal-800 mb-2">
+                          {nutrientAnalysis.macronutrients.carbs}g
+                        </div>
+                        <div className="text-lg text-teal-700 font-medium">
+                          Carbohydrates
+                        </div>
+                        <div className="text-sm text-teal-600 mt-1">
+                          50% of calories
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.2 }}
+                      className="bg-gradient-to-br from-cyan-100 to-sky-100 rounded-xl p-4 border border-cyan-200 hover:shadow-md transition-shadow"
+                    >
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-cyan-800 mb-2">
+                          {nutrientAnalysis.macronutrients.protein}g
+                        </div>
+                        <div className="text-lg text-cyan-700 font-medium">
+                          Protein
+                        </div>
+                        <div className="text-sm text-cyan-600 mt-1">
+                          20% of calories
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.3 }}
+                      className="bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl p-4 border border-emerald-200 hover:shadow-md transition-shadow"
+                    >
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-emerald-800 mb-2">
+                          {nutrientAnalysis.macronutrients.fat}g
+                        </div>
+                        <div className="text-lg text-emerald-700 font-medium">
+                          Fats
+                        </div>
+                        <div className="text-sm text-emerald-600 mt-1">
+                          30% of calories
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
+
+                {/* Micronutrients Dropdown */}
+                <div className="space-y-4">
+                  <h4 className="text-xl font-semibold text-teal-900 mb-4">
+                    Micronutrients
+                  </h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {Object.entries(nutrientAnalysis.micronutrients).map(
+                      ([nutrient, value], index) => (
+                        <motion.div
+                          key={nutrient}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.4 + index * 0.1 }}
+                          className="bg-white/80 rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                        >
+                          <div className="text-center">
+                            <div className="text-xl font-bold text-gray-800 mb-1">
+                              {value}
+                              {nutrient === "sodium" ||
+                              nutrient === "potassium" ||
+                              nutrient === "calcium" ||
+                              nutrient === "iron" ||
+                              nutrient === "vitaminC"
+                                ? "mg"
+                                : "g"}
+                            </div>
+                            <div className="text-sm text-gray-600 capitalize">
+                              {nutrient.replace(/([A-Z])/g, " $1").trim()}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )
                     )}
                   </div>
                 </div>
-
-                <div className="bg-white rounded-xl p-3 sm:p-4 shadow">
-                  <div className="text-xl font-semibold text-emerald-900 mb-2">
-                    Quick actions
-                  </div>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <button className="px-3 py-1 bg-white rounded shadow text-xl flex-1 sm:flex-none">
-                      Shuffle
-                    </button>
-                    <button
-                      className="px-3 py-1 bg-emerald-600 text-white rounded shadow text-xl flex-1 sm:flex-none"
-                      onClick={() =>
-                        navigator.clipboard?.writeText(
-                          itineraryCopy(selectedPlan)
-                        )
-                      }
-                    >
-                      {getTranslation("copyDay", language)}
-                    </button>
-                    <button
-                      className="px-3 py-1 bg-white rounded shadow text-xl flex-1 sm:flex-none"
-                      onClick={() =>
-                        alert(getTranslation("exportPlaceholder", language))
-                      }
-                    >
-                      {getTranslation("exportPdf", language)}
-                    </button>
-                  </div>
-                </div>
               </div>
-            </motion.div>
-          </div>
+            )}
 
-          {/* Middle: Daily plan selector and display */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-            <div className="bg-white rounded-xl p-3 sm:p-4 shadow">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
-                <div>
-                  <div className="font-semibold text-xl sm:text-2xl text-emerald-900">
-                    {getTranslation("mealPlan", language)}
-                  </div>
-                  <div className="text-xl text-emerald-800/90">
-                    {getTranslation("mealPlan", language)}
-                  </div>
-                </div>
+            {analysisTab === "timeline" && (
+              <div className="space-y-6">
+                <h4 className="text-xl font-semibold text-teal-900 mb-4">
+                  Daily Activity Timeline
+                </h4>
+                <div className="relative">
+                  {/* Timeline line */}
+                  <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-teal-300 to-cyan-300"></div>
 
-                <div className="flex items-center gap-3">
-                  <label className="flex items-center gap-2 text-xl">
-                    <input
-                      type="checkbox"
-                      checked={showOnlyMatching}
-                      onChange={() => setShowOnlyMatching((s) => !s)}
-                    />
-                    Show only plans that include my selected ingredients
-                  </label>
-                </div>
-              </div>
-
-              <div className="mt-3 sm:mt-4">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-                  {ALL_INGREDIENTS.map((ing) => (
-                    <button
-                      key={ing}
-                      onClick={() => toggleIngredient(ing)}
-                      className={`text-xl px-2 py-1 rounded ${
-                        ingredientFilter.includes(ing)
-                          ? "bg-emerald-600 text-white"
-                          : "bg-white/90 text-emerald-900"
-                      } shadow`}
+                  {dailyTimeline.map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="relative flex items-center mb-4 last:mb-0"
                     >
-                      {ing}
-                    </button>
+                      {/* Timeline dot */}
+                      <div
+                        className={`absolute left-4 w-4 h-4 rounded-full border-2 border-white shadow-sm ${
+                          item.type === "meal"
+                            ? "bg-orange-400"
+                            : item.type === "water"
+                            ? "bg-blue-400"
+                            : item.type === "exercise"
+                            ? "bg-green-400"
+                            : item.type === "snack"
+                            ? "bg-yellow-400"
+                            : item.type === "wellness"  
+                            ? "bg-purple-400"
+                            : "bg-gray-400"
+                        }`}
+                      ></div>
+
+                      {/* Content */}
+                      <div className="ml-12 bg-white/80 rounded-xl p-4 border border-gray-200 shadow-sm flex-1 hover:shadow-md transition-shadow">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl">{item.icon}</span>
+                            <div>
+                              <div className="font-semibold text-gray-800">
+                                {item.activity}
+                              </div>
+                              <div className="text-sm text-gray-600 capitalize">
+                                {item.type}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-sm font-medium text-teal-700 bg-teal-100 px-3 py-1 rounded-full">
+                            {item.time}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
-              <div className="lg:col-span-2">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={selectedPlanId}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.45 }}
-                  >
-                    <DayChart plan={selectedPlan} language={language} />
-                  </motion.div>
-                </AnimatePresence>
+            {analysisTab === "recommendations" && (
+              <div className="space-y-6">
+                <h4 className="text-xl font-semibold text-teal-900 mb-4">
+                  Health Recommendations
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
+                    <h5 className="font-semibold text-green-800 mb-2">
+                      💧 Hydration
+                    </h5>
+                    <p className="text-sm text-green-700">
+                      Drink 8-10 glasses of water daily. Include herbal teas and
+                      coconut water.
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200">
+                    <h5 className="font-semibold text-blue-800 mb-2">
+                      🏃‍♀️ Exercise
+                    </h5>
+                    <p className="text-sm text-blue-700">
+                      30 minutes of moderate exercise daily. Include yoga,
+                      walking, or light cardio.
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-cyan-50 to-red-50 rounded-xl p-4 border border-cyan-200">
+                    <h5 className="font-semibold text-cyan-800 mb-2">
+                      🍎 Balanced Meals
+                    </h5>
+                    <p className="text-sm text-cyan-700">
+                      Eat 3 main meals and 2 snacks. Include variety of colors
+                      and textures.
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+                    <h5 className="font-semibold text-purple-800 mb-2">
+                      🧘‍♀️ Wellness
+                    </h5>
+                    <p className="text-sm text-purple-700">
+                      Practice meditation, deep breathing, and get 7-8 hours of
+                      sleep.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )}
+          </motion.div>
+        </motion.div>
+      ),
+    };
+  };
+
+  return (
+    <div className="h-screen w-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
+      {/* Enhanced Ayurvedic Particle System */}
+      <AyurvedicParticleSystem count={1} />
+
+      {/* Top Navigation Bar */}
+      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-white/95 backdrop-blur-md border-b border-amber-200/20">
+        {/* Back to Home Button */}
+        <Link to="/dhome">
+          <motion.button
+            whileHover={{ scale: 1.05, rotateY: 5 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
+          >
+            <FaHome className="text-xl" />
+            Back to Home
+          </motion.button>
+        </Link>
+
+        {/* Title */}
+        <div className="flex-1 text-center">
+          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-teal-800 to-cyan-600 bg-clip-text text-transparent">
+            Your Diet Chart
+          </h1>
         </div>
 
-        {/* existing charts and lists (kept as before) */}
-        <div className="mt-6 sm:mt-8">
-          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-2xl">
-            <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
-              <div className="w-full lg:w-1/2">
-                <div className="text-xl text-emerald-900 font-semibold mb-2">
-                  The {active.type} Plate
-                </div>
-                <div className="bg-[#f6f3e8] rounded-xl p-3 sm:p-4">
-                  <Chart
-                    data={active.plate}
-                    innerRadius={40}
-                    outerRadius={90}
-                  />
+        {/* Language Selector */}
+        <div className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold">
+          <FaLanguage className="text-xl" />
+        </div>
+      </div>
+
+      {/* Dynamic Background Layers */}
+      <div className="absolute inset-0 -z-10">
+        {BG_LAYERS.map((b, i) => (
+          <motion.div
+            key={b.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            style={{ backgroundImage: b.gradient }}
+            className="absolute inset-0"
+          />
+        ))}
+
+        {/* Enhanced Floating Blobs */}
+        <motion.div
+          animate={{
+            rotate: 360,
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            rotate: { repeat: Infinity, duration: 80, ease: "linear" },
+            scale: { repeat: Infinity, duration: 6, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+          }}
+          className="absolute -left-40 -top-40 w-[420px] h-[420px] rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 blur-3xl pointer-events-none"
+        />
+        <motion.div
+          animate={{
+            rotate: -360,
+            scale: [1, 0.9, 1],
+            opacity: [0.25, 0.4, 0.25],
+          }}
+          transition={{
+            rotate: { repeat: Infinity, duration: 100, ease: "linear" },
+            scale: { repeat: Infinity, duration: 8, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 5, ease: "easeInOut" },
+          }}
+          className="absolute -right-32 bottom-[-60px] w-[360px] h-[360px] rounded-full bg-gradient-to-bl from-cyan-200 to-teal-100 blur-3xl pointer-events-none"
+        />
+      </div>
+
+      {/* Full Screen Container */}
+      <div className="h-screen w-screen flex items-center justify-center pt-20 pb-4">
+        <div className="w-full max-w-6xl h-full flex flex-col">
+          <motion.section
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="flex-1 bg-white/95 backdrop-blur-sm rounded-3xl p-4 md:p-6 lg:p-8 shadow-2xl border border-teal-200/20 flex flex-col overflow-hidden"
+          >
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-center flex-row flex gap-20  mb-6"
+            >
+              <div className="flex-row flex items-center justify-center mx-auto gap-5">
+                {/* Tab Navigation */}
+                <div className="flex flex-wrap gap-2 mb-2 justify-center">
+                  {[
+                    { id: "overview", name: "Overview", icon: FaEye },
+                    {
+                      id: "weekly",
+                      name: "7-Day Chart",
+                      icon: FaCalendarAlt,
+                    },
+                    {
+                      id: "analysis",
+                      name: "Analysis",
+                      icon: FaChartPie,
+                    },
+                  ].map((tab, index) => (
+                    <motion.button
+                      key={tab.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`px-3 py-1 rounded-xl text-lg font-medium transition-all duration-300 flex items-center gap-2 ${
+                        activeTab === tab.id
+                          ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
+                          : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
+                      }`}
+                    >
+                      <tab.icon className="text-xl" />
+                      {tab.name}
+                    </motion.button>
+                  ))}
                 </div>
               </div>
+            </motion.div>
 
-              <div className="w-full lg:w-1/2">
-                <div className="text-xl text-emerald-900 font-semibold mb-2">
-                  Taste Palette
-                </div>
-                <div className="bg-[#f6f3e8] rounded-xl p-3 sm:p-4">
-                  <Chart
-                    data={active.taste}
-                    innerRadius={30}
-                    outerRadius={70}
-                  />
-                </div>
-              </div>
-            </div>
+            {/* Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex-1 overflow-y-auto min-h-0"
+            >
+              {/* Tab Content */}
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="flex-1 bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-teal-200/20 overflow-y-auto min-h-0"
+              >
+                {getTabContent()[activeTab]}
+              </motion.div>
+            </motion.div>
 
-            <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-              {active.plate.map((p, idx) => (
-                <motion.div
-                  key={p.name}
-                  initial={{ y: 8, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.08 + idx * 0.06 }}
-                  className="bg-white/80 rounded-lg p-3 shadow inner-shadow flex items-center gap-3"
-                >
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ background: p.color }}
-                  />
-                  <div>
-                    <div className="font-semibold text-emerald-900 text-xl">
-                      {p.name}
-                    </div>
-                    <div className="text-xl text-emerald-800/90">
-                      {p.value}% of plate
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              className="flex items-center justify-center mt-6 flex-shrink-0 gap-4"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() =>
+                  navigator.clipboard?.writeText(itineraryCopy(selectedPlan))
+                }
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-teal-400"
+              >
+                <FaShare />
+                Copy Plan
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  alert("Diet chart exported successfully!");
+                }}
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-green-400"
+              >
+                <FaDownload />
+                Download Report
+              </motion.button>
+            </motion.div>
+          </motion.section>
         </div>
       </div>
     </div>
