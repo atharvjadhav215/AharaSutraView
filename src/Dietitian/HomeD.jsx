@@ -718,7 +718,7 @@ export default function HomePage() {
             />
 
             <motion.h2
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-2 sm:mb-3 relative z-10 drop-shadow-lg"
+              className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-extrabold text-white mb-2 sm:mb-3 relative z-10 drop-shadow-lg"
               initial={{ x: -50, opacity: 0, rotateX: -20 }}
               animate={{ x: 0, opacity: 1, rotateX: 0 }}
               transition={{
@@ -732,7 +732,7 @@ export default function HomePage() {
               {data.title}
             </motion.h2>
             <motion.p
-              className="text-white/90 text-xl mb-3 sm:mb-4 relative z-10 drop-shadow-md"
+              className="text-white/90 text-sm sm:text-base md:text-lg lg:text-xl mb-3 sm:mb-4 relative z-10 drop-shadow-md"
               initial={{ x: -40, opacity: 0, rotateX: -15 }}
               animate={{ x: 0, opacity: 1, rotateX: 0 }}
               transition={{
@@ -780,7 +780,9 @@ export default function HomePage() {
                       delay: i * 0.3,
                     }}
                   />
-                  <p className="text-xl text-white/95 drop-shadow-sm">{b}</p>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 drop-shadow-sm">
+                    {b}
+                  </p>
                 </motion.div>
               ))}
             </div>
@@ -921,9 +923,7 @@ export default function HomePage() {
           style={{
             backgroundImage: `url('https://kamleshyadav.com/html/pure-ayurveda/html/ayurveda-html/assets/images/banner.jpg')`,
           }}
-        >
-        
-        </div>
+        ></div>
 
         {/* Content Container */}
         <div className="relative z-10">
@@ -986,7 +986,7 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
                   viewport={{ once: true }}
-                  className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto relative z-10"
+                  className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-12 max-w-3xl mx-auto relative z-10"
                 >
                   Join thousands of practitioners who are transforming lives
                   through the perfect harmony of ancient wisdom and modern
@@ -1007,7 +1007,7 @@ export default function HomePage() {
                     }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => navigate("/add-patient")}
-                    className="px-10 py-5 bg-gradient-to-r from-cyan-600 to-teal-600 rounded-xl text-xl font-semibold hover:from-teal-700 hover:to-cyan-700 transition-colors text-white btn-enhanced shadow-floating"
+                    className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 bg-gradient-to-r from-cyan-600 to-teal-600 rounded-xl text-sm sm:text-base md:text-lg lg:text-xl font-semibold hover:from-teal-700 hover:to-cyan-700 transition-colors text-white btn-enhanced shadow-floating"
                   >
                     Add Patient
                   </motion.button>
@@ -1017,7 +1017,7 @@ export default function HomePage() {
                       rotateY: -5,
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-10 py-5 border-2 border-cyan-300 rounded-xl text-xl font-semibold hover:bg-teal-50 transition-colors text-gray-700 hover-lift glass-morphism"
+                    className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 border-2 border-cyan-300 rounded-xl text-sm sm:text-base md:text-lg lg:text-xl font-semibold hover:bg-teal-50 transition-colors text-gray-700 hover-lift glass-morphism"
                     onClick={() => navigate("/dashboard")}
                   >
                     View Dashboard
@@ -1063,7 +1063,7 @@ export default function HomePage() {
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 <motion.span
-                  className="ml-4 text-2xl font-medium"
+                  className="ml-4 text-sm sm:text-base md:text-lg lg:text-xl font-medium"
                   animate={{
                     color: isHovered ? "#ffffff" : "#6b7280",
                   }}
@@ -1110,7 +1110,7 @@ export default function HomePage() {
                         />
                       </motion.div>
                       <motion.h3
-                        className="font-semibold text-gray-800 mb-2"
+                        className="font-semibold text-gray-800 mb-2 text-sm sm:text-base md:text-lg"
                         whileHover={{
                           scale: 1.1,
                           color: dosha.color,
@@ -1120,7 +1120,7 @@ export default function HomePage() {
                         {dosha.name}
                       </motion.h3>
                       <motion.p
-                        className="text-xl text-gray-600 mb-2"
+                        className="text-sm sm:text-base md:text-lg text-gray-600 mb-2"
                         whileHover={{
                           scale: 1.05,
                           transition: { duration: 0.3 },
@@ -1129,7 +1129,7 @@ export default function HomePage() {
                         {dosha.description}
                       </motion.p>
                       <motion.div
-                        className="text-xl text-gray-500"
+                        className="text-xs sm:text-sm md:text-base text-gray-500"
                         whileHover={{
                           scale: 1.05,
                           transition: { duration: 0.3 },
@@ -1160,7 +1160,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-b from-teal-800 to-cyan-600 bg-clip-text text-transparent"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-b from-teal-800 to-cyan-600 bg-clip-text text-transparent"
           >
             Sacred Herbs & Healing Plants
           </motion.h2>
@@ -1169,7 +1169,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
           >
             Discover the powerful healing properties of traditional Ayurvedic
             herbs, each carefully selected for their unique therapeutic
@@ -1210,10 +1210,12 @@ export default function HomePage() {
                   />
                 </motion.div>
                 <div className="text-center">
-                  <h3 className="font-semibold text-gray-800 mb-2">
+                  <h3 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base md:text-lg">
                     {herb.name}
                   </h3>
-                  <p className="text-xl text-gray-600">{herb.benefits}</p>
+                  <p className="text-sm sm:text-base md:text-lg text-gray-600">
+                    {herb.benefits}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -1256,7 +1258,7 @@ export default function HomePage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.4 }}
                       viewport={{ once: true }}
-                      className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-b from-teal-900 to-cyan-600 bg-clip-text text-transparent relative z-10"
+                      className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-6 bg-gradient-to-b from-teal-900 to-cyan-600 bg-clip-text text-transparent relative z-10"
                     >
                       {feature.title}
                     </motion.h3>
@@ -1266,7 +1268,7 @@ export default function HomePage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.5 }}
                       viewport={{ once: true }}
-                      className="text-xl text-gray-700 mb-6 relative z-10"
+                      className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-6 relative z-10"
                     >
                       {feature.subtitle}
                     </motion.p>
@@ -1276,7 +1278,7 @@ export default function HomePage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.6 }}
                       viewport={{ once: true }}
-                      className="text-xl text-gray-600 mb-8 relative z-10"
+                      className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 mb-8 relative z-10"
                     >
                       {feature.description}
                     </motion.p>
@@ -1297,7 +1299,7 @@ export default function HomePage() {
                             whileHover={{ scale: 1.5, rotate: 180 }}
                             transition={{ type: "spring", stiffness: 400 }}
                           />
-                          <span className="text-gray-700 text-xl font-medium">
+                          <span className="text-gray-700 text-sm sm:text-base md:text-lg lg:text-xl font-medium">
                             {item}
                           </span>
                         </motion.div>
@@ -1347,11 +1349,11 @@ export default function HomePage() {
                               ease: "easeInOut",
                             }}
                           />
-                          <span className="text-xl text-gray-600 font-medium">
+                          <span className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 font-medium">
                             Interactive Demo
                           </span>
                         </div>
-                        <div className="text-xl text-gray-500 bg-teal-100 px-3 py-1 rounded-full">
+                        <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-500 bg-teal-100 px-3 py-1 rounded-full">
                           Ayurvedic Focus
                         </div>
                       </div>
@@ -1387,7 +1389,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
           >
             Connect with your favorite health and fitness apps to create a
             comprehensive wellness ecosystem.
@@ -1424,7 +1426,7 @@ export default function HomePage() {
                 >
                   {integration.logo}
                 </motion.div>
-                <div className="text-gray-700 font-medium text-sm">
+                <div className="text-gray-700 font-medium text-xs sm:text-sm md:text-base">
                   {integration.name}
                 </div>
               </motion.div>
@@ -1456,7 +1458,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
           >
             Join thousands of holistic health practitioners who are transforming
             lives through the integration of ancient wisdom and modern nutrition
@@ -1483,7 +1485,7 @@ export default function HomePage() {
               >
                 <motion.div className="text-5xl mb-4">{stat.icon}</motion.div>
                 <motion.div
-                  className="text-3xl md:text-4xl font-bold mb-2 counter"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 counter"
                   data-target={
                     stat.value.includes("+") ? parseInt(stat.value) : stat.value
                   }
@@ -1491,7 +1493,9 @@ export default function HomePage() {
                 >
                   {stat.value}
                 </motion.div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
+                <div className="text-gray-600 font-medium text-sm sm:text-base md:text-lg">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </div>
@@ -1568,20 +1572,20 @@ export default function HomePage() {
                       />
                     </motion.div>
                     <div>
-                      <div className="font-semibold text-gray-800 text-xl">
+                      <div className="font-semibold text-gray-800 text-sm sm:text-base md:text-lg lg:text-xl">
                         {testimonial.name}
                       </div>
-                      <div className="text-xl text-gray-600 font-medium">
+                      <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 font-medium">
                         {testimonial.role}
                       </div>
-                      <div className="text-xl text-gray-500">
+                      <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-500">
                         {testimonial.company}
                       </div>
                     </div>
                   </div>
 
                   <motion.p
-                    className="text-gray-700 italic text-xl leading-relaxed relative z-10"
+                    className="text-gray-700 italic text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed relative z-10"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
@@ -1611,21 +1615,21 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-2xl font-bold mb-4 bg-gradient-to-r from-teal-800 to-cyan-600 bg-clip-text text-transparent"
+                className="text-lg sm:text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-teal-800 to-cyan-600 bg-clip-text text-transparent"
               >
                 AharaSutra
               </motion.div>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed text-sm sm:text-base md:text-lg">
                 Empowering holistic health practitioners with the perfect
                 harmony of ancient Ayurvedic wisdom and modern nutritional
                 science for transformative patient outcomes.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4 text-teal-800">
+              <h3 className="font-semibold mb-4 text-teal-800 text-sm sm:text-base md:text-lg">
                 Ayurvedic Practices
               </h3>
-              <div className="space-y-2 text-gray-600">
+              <div className="space-y-2 text-gray-600 text-xs sm:text-sm md:text-base">
                 <div>Dosha Assessment</div>
                 <div>Herbal Medicine</div>
                 <div>Seasonal Eating</div>
@@ -1633,8 +1637,10 @@ export default function HomePage() {
               </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-4 text-teal-800">Platform</h3>
-              <div className="space-y-2 text-gray-600">
+              <h3 className="font-semibold mb-4 text-teal-800 text-sm sm:text-base md:text-lg">
+                Platform
+              </h3>
+              <div className="space-y-2 text-gray-600 text-xs sm:text-sm md:text-base">
                 <div>Features</div>
                 <div>Pricing</div>
                 <div>Documentation</div>
@@ -1642,8 +1648,10 @@ export default function HomePage() {
               </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-4 text-teal-800">Community</h3>
-              <div className="space-y-2 text-gray-600">
+              <h3 className="font-semibold mb-4 text-teal-800 text-sm sm:text-base md:text-lg">
+                Community
+              </h3>
+              <div className="space-y-2 text-gray-600 text-xs sm:text-sm md:text-base">
                 <div>Practitioner Network</div>
                 <div>Knowledge Base</div>
                 <div>Support Center</div>
@@ -1652,14 +1660,14 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-teal-200 flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-600">
+            <div className="text-gray-600 text-xs sm:text-sm md:text-base">
               © 2024 AharaSutra. Honoring ancient wisdom, embracing modern
               science.
             </div>
             <div className="flex gap-4 mt-4 md:mt-0">
               <motion.button
                 whileHover={{ scale: 1.1 }}
-                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2"
+                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2 text-xs sm:text-sm md:text-base"
               >
                 <svg
                   className="w-5 h-5"
@@ -1672,7 +1680,7 @@ export default function HomePage() {
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.1 }}
-                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2"
+                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2 text-xs sm:text-sm md:text-base"
               >
                 <svg
                   className="w-5 h-5"
@@ -1685,7 +1693,7 @@ export default function HomePage() {
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.1 }}
-                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2"
+                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2 text-xs sm:text-sm md:text-base"
               >
                 <svg
                   className="w-5 h-5"

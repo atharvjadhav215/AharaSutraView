@@ -136,7 +136,7 @@ const SECTIONS = [
   {
     id: 1,
     key: "basic",
-    title: "Patient Information",
+    title: "Basic Information",
     icon: FaUser,
     color: "#8B4513",
   },
@@ -332,35 +332,36 @@ export default function AddPatient() {
       <AyurvedicParticleSystem count={1} />
 
       {/* Top Navigation Bar */}
-      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-white/95 backdrop-blur-md border-b border-teal-200/20">
+      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 sm:p-4 bg-white/95 backdrop-blur-md border-b border-teal-200/20">
         {/* Back to Home Button */}
         <Link to="/dhome">
           <motion.button
             whileHover={{ scale: 1.05, rotateY: 5 }}
             whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
+            className="px-2 sm:px-4 py-1 sm:py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-xs sm:text-sm md:text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-1 sm:gap-2"
           >
-            <FaHome className="text-xl" />
-            Back to Home
+            <FaHome className="text-sm sm:text-base md:text-xl" />
+            <span className="hidden sm:inline">Back to Home</span>
+            <span className="sm:hidden">Home</span>
           </motion.button>
         </Link>
 
         {/* Progress Bar */}
-        <div className="flex-1 mx-8">
-          <div className="flex items-center justify-center gap-4">
-            <span className="text-lg font-semibold text-teal-800">
+        <div className="flex-1 mx-2 sm:mx-4 md:mx-8">
+          <div className="flex items-center justify-center gap-2 sm:gap-4">
+            <span className="text-xs sm:text-sm md:text-lg font-semibold text-teal-800">
               Step {step + 1} of {SECTIONS.length}
             </span>
-            <div className="w-64 bg-white/20 h-3 rounded-full overflow-hidden">
+            <div className="w-32 sm:w-48 md:w-64 bg-white/20 h-2 sm:h-3 rounded-full overflow-hidden">
               <motion.div
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-3 rounded shadow-sm"
+                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-2 sm:h-3 rounded shadow-sm"
                 style={{ width: `${progress}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
               />
             </div>
-            <span className="text-lg font-semibold text-teal-800">
+            <span className="text-xs sm:text-sm md:text-lg font-semibold text-teal-800">
               {Math.round(progress)}%
             </span>
           </div>
@@ -368,17 +369,8 @@ export default function AddPatient() {
       </div>
 
       {/* Dynamic Background Layers */}
-      <div className="absolute inset-0 -z-10">
-        {BG_LAYERS.map((b, i) => (
-          <motion.div
-            key={b.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: i === step ? 1 : 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            style={{ backgroundImage: b.gradient }}
-            className="absolute inset-0"
-          />
-        ))}
+      <div className="relative inset-0 -z-10">
+   
 
         {/* Enhanced floating blobs with better animations */}
         <motion.div
@@ -409,10 +401,10 @@ export default function AddPatient() {
         />
       </div>
 
-      <div className="max-w-8xl mx-auto px-4 sm:px-8 md:px-12 mt-20 lg:px-20 py-4 sm:py-6 md:py-8 pt-20">
+      <div className="max-w-8xl mx-auto px-4 sm:px-8 md:px-12 md:mt-20 lg:px-20 py-4 sm:py-6 md:py-8 pt-20">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
           {/* Step navigation (left) */}
-          <nav className="lg:col-span-1 sticky top-20 sm:top-24 self-start space-y-8">
+          <nav className="lg:col-span-1 sticky top-20 sm:top-24 self-start space-y-2 md:space-y-8">
             {SECTIONS.map((s, i) => (
               <motion.button
                 key={s.key}
@@ -441,8 +433,10 @@ export default function AddPatient() {
                   />
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-lg">{s.title}</div>
-                  <div className="text-sm opacity-75">
+                  <div className="font-semibold text-sm sm:text-base md:text-lg">
+                    {s.title}
+                  </div>
+                  <div className="text-xs sm:text-sm opacity-75">
                     Step {s.id} of {SECTIONS.length}
                   </div>
                 </div>
@@ -495,7 +489,7 @@ export default function AddPatient() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: 0.3 }}
-                            className="text-2xl md:text-3xl font-bold text-teal-900 mb-4 "
+                            className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-teal-900 mb-4 "
                           >
                             {s.title}
                           </motion.h2>
@@ -504,7 +498,7 @@ export default function AddPatient() {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.4, delay: 0.4 }}
-                          className="text-lg text-gray-700"
+                          className="text-sm sm:text-base md:text-lg text-gray-700"
                         >
                           Fill the {s.title.toLowerCase()} details
                         </motion.p>
@@ -519,7 +513,7 @@ export default function AddPatient() {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.3, delay: 0.1 }}
                             >
-                              <label className="flex text-lg text-gray-700 items-center gap-2 mb-2">
+                              <label className="flex text-sm sm:text-base md:text-lg text-gray-700 items-center gap-2 mb-2">
                                 <FaUser className="text-amber-600 text-lg" />
                                 Patient Name
                               </label>
@@ -529,7 +523,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("basic", "patientName", e.target.value)
                                 }
-                                className="w-full p-3 border border-gray-300 rounded-xl text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-base md:text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
                                 placeholder="Full name"
                                 required
                               />
@@ -539,7 +533,7 @@ export default function AddPatient() {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.3, delay: 0.2 }}
                             >
-                              <label className="flex text-lg text-gray-700 items-center gap-2 mb-2">
+                              <label className="flex text-sm sm:text-base md:text-lg text-gray-700 items-center gap-2 mb-2">
                                 <FaHeartbeat className="text-amber-600 text-lg" />
                                 Age
                               </label>
@@ -550,7 +544,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("basic", "age", e.target.value)
                                 }
-                                className="w-full p-3 border border-gray-300 rounded-xl text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-base md:text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
                                 placeholder="Age in years"
                               />
                             </motion.div>
@@ -560,7 +554,7 @@ export default function AddPatient() {
                               transition={{ duration: 0.3, delay: 0.3 }}
                               className="sm:col-span-2 md:col-span-1"
                             >
-                              <label className="flex text-lg text-gray-700 items-center gap-2 mb-2">
+                              <label className="flex text-sm sm:text-base md:text-lg text-gray-700 items-center gap-2 mb-2">
                                 <FaHeart className="text-amber-600 text-lg" />
                                 Gender
                               </label>
@@ -570,7 +564,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("basic", "gender", e.target.value)
                                 }
-                                className="w-full p-3 border border-gray-300 rounded-xl text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-base md:text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
                               >
                                 <option value="">Select Gender</option>
                                 <option value="male">Male</option>
@@ -584,7 +578,7 @@ export default function AddPatient() {
                         {s.key === "anthro" && (
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Height (cm)
                               </label>
                               <input
@@ -592,12 +586,12 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("anthro", "height", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                 placeholder="e.g., 173"
                               />
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Weight (kg)
                               </label>
                               <input
@@ -606,12 +600,12 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("anthro", "weight", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                 placeholder="kg"
                               />
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 BMI
                               </label>
                               <input
@@ -619,12 +613,12 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("anthro", "bmi", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg bg-gray-50 text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg bg-gray-50 text-sm sm:text-base md:text-lg"
                                 placeholder="Auto-calculated or override"
                               />
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Waist (cm)
                               </label>
                               <input
@@ -632,7 +626,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("anthro", "waist", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                 placeholder="cm"
                               />
                             </div>
@@ -642,7 +636,7 @@ export default function AddPatient() {
                         {s.key === "vitals" && (
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Pulse Rate (BPM)
                               </label>
                               <input
@@ -651,12 +645,12 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("vitals", "pulseRate", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                 placeholder="e.g., 72"
                               />
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Blood Pressure
                               </label>
                               <input
@@ -668,12 +662,12 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                 placeholder="e.g., 120/80"
                               />
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Water Intake
                               </label>
                               <select
@@ -685,7 +679,7 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                               >
                                 <option value="">Select</option>
                                 <option value="<1">&lt; 1 L</option>
@@ -696,7 +690,7 @@ export default function AddPatient() {
                               </select>
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Meal Frequency
                               </label>
                               <select
@@ -708,7 +702,7 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                               >
                                 <option value="">Select meals/day</option>
                                 <option value="1">1 meal/day</option>
@@ -724,7 +718,7 @@ export default function AddPatient() {
                         {s.key === "lifestyle" && (
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Cuisine Preference
                               </label>
                               <input
@@ -736,12 +730,12 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                 placeholder="e.g., Indian"
                               />
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Dietary Habits
                               </label>
                               <input
@@ -753,12 +747,12 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                 placeholder="Vegetarian, Vegan, etc."
                               />
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Physical Activities
                               </label>
                               <select
@@ -770,7 +764,7 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                               >
                                 <option value="">Select</option>
                                 <option value="none">None</option>
@@ -780,7 +774,7 @@ export default function AddPatient() {
                               </select>
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Addiction Habits
                               </label>
                               <div className="mt-2 flex gap-2 flex-wrap">
@@ -801,7 +795,7 @@ export default function AddPatient() {
                                         a
                                       )
                                     }
-                                    className={`px-3 py-2 rounded-lg border text-xl ${
+                                    className={`px-2 sm:px-3 py-1 sm:py-2 rounded-lg border text-sm sm:text-base md:text-lg ${
                                       patient.lifestyle.addictionHabits.includes(
                                         a
                                       )
@@ -818,7 +812,7 @@ export default function AddPatient() {
                                 "Smoking"
                               ) && (
                                 <div className="mt-3">
-                                  <label className="block text-xl text-gray-600">
+                                  <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                     Smoking frequency
                                   </label>
                                   <input
@@ -830,14 +824,14 @@ export default function AddPatient() {
                                         e.target.value
                                       )
                                     }
-                                    className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                    className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                     placeholder="e.g., 5/day"
                                   />
                                 </div>
                               )}
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Dosha
                               </label>
                               <select
@@ -845,7 +839,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("lifestyle", "dosha", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                               >
                                 <option value="">Select Dosha</option>
                                 <option value="Vata">Vata</option>
@@ -854,7 +848,7 @@ export default function AddPatient() {
                               </select>
                             </div>
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Rasa (Taste)
                               </label>
                               <select
@@ -862,7 +856,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("lifestyle", "rasa", e.target.value)
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                               >
                                 <option value="">Select</option>
                                 <option value="sweet">Sweet</option>
@@ -876,7 +870,7 @@ export default function AddPatient() {
                         {s.key === "medical" && (
                           <div className="space-y-3 sm:space-y-4">
                             <div>
-                              <label className="block text-xl text-gray-600">
+                              <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                 Medical History
                               </label>
                               <textarea
@@ -888,14 +882,14 @@ export default function AddPatient() {
                                     e.target.value
                                   )
                                 }
-                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                 rows="4"
                                 placeholder="Past and present diseases"
                               />
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                               <div>
-                                <label className="block text-xl text-gray-600">
+                                <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                   Bowel Movements
                                 </label>
                                 <select
@@ -907,7 +901,7 @@ export default function AddPatient() {
                                       e.target.value
                                     )
                                   }
-                                  className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                  className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                 >
                                   <option value="">Select</option>
                                   <option value="regular">Regular</option>
@@ -918,7 +912,7 @@ export default function AddPatient() {
                                 </select>
                               </div>
                               <div>
-                                <label className="block text-xl text-gray-600">
+                                <label className="block text-sm sm:text-base md:text-lg text-gray-600">
                                   Allergies
                                 </label>
                                 <input
@@ -930,7 +924,7 @@ export default function AddPatient() {
                                       e.target.value
                                     )
                                   }
-                                  className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-xl"
+                                  className="mt-1 w-full p-2 sm:p-3 border rounded-lg text-sm sm:text-base md:text-lg"
                                   placeholder="Any known allergies"
                                 />
                               </div>
@@ -954,7 +948,7 @@ export default function AddPatient() {
                           whileTap={{ scale: 0.95 }}
                           onClick={() => go(step - 1)}
                           disabled={step === 0}
-                          className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200 text-amber-700 text-lg disabled:opacity-50 hover:border-teal-300 hover:bg-teal-50 transition-all duration-200 flex items-center gap-2"
+                          className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200 text-amber-700 text-sm sm:text-base md:text-lg disabled:opacity-50 hover:border-teal-300 hover:bg-teal-50 transition-all duration-200 flex items-center gap-2"
                         >
                           <FaChevronLeft />
                           Previous
@@ -993,7 +987,7 @@ export default function AddPatient() {
                             whileTap={{ scale: 0.95 }}
                             type="button"
                             onClick={() => go(step + 1)}
-                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 text-white text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                            className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 text-white text-sm sm:text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
                           >
                             Next
                             <FaChevronRight />
@@ -1004,7 +998,7 @@ export default function AddPatient() {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => navigate("/my-diet-chart")}
                             type="submit"
-                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                            className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white text-sm sm:text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
                           >
                             <FaCheck />
                             Save & Submit

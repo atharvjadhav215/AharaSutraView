@@ -378,7 +378,7 @@ const Login = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.5 }}
-              className="my-4"
+              className="my-4 md:my-4 sm:my-2"
             >
               <div className="relative">
                 {/* Toggle Background */}
@@ -390,7 +390,7 @@ const Login = () => {
                         : "rgb(6 182 212)",
                   }}
                   transition={{ duration: 0.3 }}
-                  className="w-32 h-12 bg-teal-500 rounded-full mx-auto shadow-lg border-2 border-teal-600"
+                  className="w-20 h-12 md:w-20 md:h-12 sm:w-20 sm:h-10 bg-teal-500 rounded-full mx-auto shadow-lg border-2 border-teal-600"
                 >
                   {/* Toggle Slider */}
                   <motion.div
@@ -398,14 +398,14 @@ const Login = () => {
                       x:
                         (isSignUp ? signupMethod : loginMethod) === "email"
                           ? 0
-                          : 64,
+                          : "calc(100% - 0.5rem)",
                     }}
                     transition={{
                       type: "spring",
                       stiffness: 500,
                       damping: 30,
                     }}
-                    className="absolute top-1 left-[143px] w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-teal-400"
+                    className="absolute top-1 left-[113px] md:left-[157px] w-10 h-10 md:w-10 md:h-10 sm:w-8 sm:h-8 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-teal-400"
                   >
                     <motion.div
                       animate={{
@@ -417,9 +417,9 @@ const Login = () => {
                       transition={{ duration: 0.3 }}
                     >
                       {(isSignUp ? signupMethod : loginMethod) === "email" ? (
-                        <FaEnvelope className="text-teal-800 text-sm" />
+                        <FaEnvelope className="text-teal-800 text-sm md:text-sm sm:text-xs" />
                       ) : (
-                        <FaUser className="text-cyan-800 text-sm" />
+                        <FaUser className="text-cyan-800 text-sm md:text-sm sm:text-xs" />
                       )}
                     </motion.div>
                   </motion.div>
@@ -437,7 +437,7 @@ const Login = () => {
                     }
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-1/2 h-12 cursor-pointer relative"
+                    className="w-1/2 h-12 md:h-12 sm:h-10 cursor-pointer relative"
                   >
                     <motion.div
                       animate={{
@@ -453,7 +453,7 @@ const Login = () => {
                       transition={{ duration: 0.2 }}
                       className="flex items-center justify-center h-full"
                     >
-                      <span className="text-cyan-500 font-bold text-sm drop-shadow-md">
+                      <span className="text-cyan-500 font-bold text-sm md:text-sm sm:text-xs drop-shadow-md">
                         Email
                       </span>
                     </motion.div>
@@ -470,7 +470,7 @@ const Login = () => {
                             : 1,
                       }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full border border-teal-300"
+                      className="absolute top-1 right-1 w-2 h-2 md:w-2 md:h-2 sm:w-1.5 sm:h-1.5 bg-white rounded-full border border-teal-300"
                     />
                   </motion.button>
 
@@ -484,7 +484,7 @@ const Login = () => {
                     }
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-1/2 h-12 cursor-pointer relative"
+                    className="w-1/2 h-12 md:h-12 sm:h-10 cursor-pointer relative"
                   >
                     <motion.div
                       animate={{
@@ -500,7 +500,7 @@ const Login = () => {
                       transition={{ duration: 0.2 }}
                       className="flex items-center justify-center h-full"
                     >
-                      <span className="text-cyan-500 font-bold text-sm drop-shadow-md">
+                      <span className="text-cyan-500 font-bold text-sm md:text-sm sm:text-xs drop-shadow-md">
                         Mobile
                       </span>
                     </motion.div>
@@ -517,7 +517,7 @@ const Login = () => {
                             : 1,
                       }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-1 left-1 w-2 h-2 bg-white rounded-full border border-cyan-300"
+                      className="absolute top-1 left-1 w-2 h-2 md:w-2 md:h-2 sm:w-1.5 sm:h-1.5 bg-white rounded-full border border-cyan-300"
                     />
                   </motion.button>
                 </div>
@@ -528,18 +528,16 @@ const Login = () => {
                     x:
                       (isSignUp ? signupMethod : loginMethod) === "email"
                         ? 0
-                        : 64,
+                        : "calc(100% - 0.5rem)",
                     scale: [1, 1.2, 1],
                   }}
                   transition={{
                     x: { type: "spring", stiffness: 500, damping: 30 },
                     scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
                   }}
-                  className="absolute -bottom-2 w-2 h-2 bg-white rounded-full shadow-lg border border-teal-400"
+                  className="absolute -bottom-2 w-2 h-2 md:w-2 md:h-2 sm:w-1.5 sm:h-1.5 bg-white rounded-full shadow-lg border border-teal-400"
                 />
               </div>
-
-           
             </motion.div>
 
             {/* Sign Up Form */}

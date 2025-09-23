@@ -653,7 +653,7 @@ export default function MyDietChart() {
                 style={{ color: currentPlan.color }}
               />
             </div>
-            <h3 className="text-xl md:text-2xl font-bold text-teal-900 ">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-teal-900 ">
               {currentPlan.name}
             </h3>
           </div>
@@ -668,12 +668,12 @@ export default function MyDietChart() {
                 className="bg-gradient-to-br from-white to-teal-50/30 p-3 rounded-xl border border-teal-200/30 shadow-sm"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-2xl font-semibold text-teal-900 capitalize">
+                  <h4 className="text-lg sm:text-xl md:text-2xl font-semibold text-teal-900 capitalize">
                     {mealType}
                   </h4>
                   <div className="flex items-center gap-1 text-teal-700">
                     <FaFire className="text-sm" />
-                    <span className="font-medium">
+                    <span className="font-medium text-sm sm:text-base md:text-lg">
                       {items.reduce((s, i) => s + (i.calories || 0), 0)} cal
                     </span>
                   </div>
@@ -685,15 +685,15 @@ export default function MyDietChart() {
                       className="bg-gradient-to-r from-white/90 via-amber-50/60 to-orange-50/40 rounded-2xl p-4 border-2 border-amber-200/50 shadow-md"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-gray-800 font-medium text-lg">
+                        <span className="text-gray-800 font-medium text-sm sm:text-base md:text-lg">
                           {item.name}
                         </span>
-                        <span className="text-teal-700 font-semibold text-lg">
+                        <span className="text-teal-700 font-semibold text-sm sm:text-base md:text-lg">
                           {item.calories} cal
                         </span>
                       </div>
                       {item.recipe && (
-                        <div className="text-sm text-gray-700 bg-gradient-to-r from-amber-50/80 to-orange-50/60 p-3 rounded-xl border-l-4 border-amber-400 shadow-sm">
+                        <div className="text-xs sm:text-sm md:text-base text-gray-700 bg-gradient-to-r from-amber-50/80 to-orange-50/60 p-3 rounded-xl border-l-4 border-amber-400 shadow-sm">
                           <strong>Recipe:</strong> {item.recipe}
                         </div>
                       )}
@@ -712,7 +712,7 @@ export default function MyDietChart() {
           className="space-y-6"
         >
           {/* Day Tabs */}
-          <div className="flex flex-wrap gap-2 justify-center ">
+          <div className="flex  sm:gap-2  justify-center overflow-x-auto sm:overflow-x-visible scrollbar-hide">
             {weeklyChart.map((day, index) => (
               <motion.button
                 key={day.day}
@@ -722,14 +722,15 @@ export default function MyDietChart() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedDay(day.day)}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                className={`px-1 sm:px-4 py-1 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center gap-1 sm:gap-2 whitespace-nowrap ${
                   selectedDay === day.day
                     ? "bg-gradient-to-r from-cyan-500 via-teal-500 to-cyan-500 text-white shadow-lg"
                     : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
                 }`}
               >
-                <FaCalendarAlt className="text-sm" />
-                {day.day}
+                <FaCalendarAlt className="text-xs sm:text-sm" />
+                <span className="hidden sm:inline">{day.day}</span>
+                <span className="sm:hidden">{day.day.substring(0, 3)}</span>
               </motion.button>
             ))}
           </div>
@@ -797,10 +798,10 @@ export default function MyDietChart() {
                         className="bg-white/60 rounded-lg p-3 border border-amber-100/50 shadow-sm"
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <h5 className="text-lg font-medium text-gray-700">
+                          <h5 className="text-sm sm:text-base md:text-lg font-medium text-gray-700">
                             {item.name}
                           </h5>
-                          <span className="text-teal-700 font-semibold">
+                          <span className="text-teal-700 font-semibold text-sm sm:text-base md:text-lg">
                             {item.calories} cal
                           </span>
                         </div>
@@ -820,17 +821,21 @@ export default function MyDietChart() {
           className="space-y-4"
         >
           <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold text-teal-900 mb-2">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-teal-900 mb-2">
               Selected Foods
             </h3>
-            <p className="text-lg text-gray-700">Your preferred food items</p>
+            <p className="text-sm sm:text-base md:text-lg text-gray-700">
+              Your preferred food items
+            </p>
           </div>
 
           {selectedFoods.length === 0 ? (
             <div className="text-center py-8">
               <FaUtensils className="text-4xl text-gray-400 mx-auto mb-4" />
-              <p className="text-lg text-gray-600">No foods selected yet</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm sm:text-base md:text-lg text-gray-600">
+                No foods selected yet
+              </p>
+              <p className="text-xs sm:text-sm text-gray-500">
                 Go back to step 1 to select your preferred foods
               </p>
             </div>
@@ -854,7 +859,7 @@ export default function MyDietChart() {
                         className="text-xl"
                         style={{ color: category.color }}
                       />
-                      <h4 className="text-lg font-semibold text-teal-900">
+                      <h4 className="text-sm sm:text-base md:text-lg font-semibold text-teal-900">
                         {category.name}
                       </h4>
                     </div>
@@ -869,10 +874,10 @@ export default function MyDietChart() {
                             key={foodKey}
                             className="flex items-center justify-between py-3 px-4 bg-gradient-to-r from-white/80 via-teal-50/60 to-cyan-50/40 rounded-xl border-2 border-amber-200/40 shadow-sm"
                           >
-                            <span className="text-gray-800 font-medium">
+                            <span className="text-gray-800 font-medium text-sm sm:text-base md:text-lg">
                               {itemName}
                             </span>
-                            <span className="text-teal-700 font-semibold">
+                            <span className="text-teal-700 font-semibold text-sm sm:text-base md:text-lg">
                               {item?.calories} cal
                             </span>
                           </div>
@@ -895,43 +900,44 @@ export default function MyDietChart() {
       <AyurvedicParticleSystem count={1} />
 
       {/* Top Navigation Bar */}
-      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-white/95 backdrop-blur-md border-b border-amber-200/20">
+      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 sm:p-4 bg-white/95 backdrop-blur-md border-b border-amber-200/20">
         {/* Back to Home Button */}
         <Link to="/dhome">
           <motion.button
             whileHover={{ scale: 1.05, rotateY: 5 }}
             whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
+            className="px-2 sm:px-4 py-1 sm:py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-xs sm:text-sm md:text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-1 sm:gap-2"
           >
-            <FaHome className="text-xl" />
-            Back to Home
+            <FaHome className="text-sm sm:text-base md:text-xl" />
+            <span className="hidden sm:inline">Back to Home</span>
+            <span className="sm:hidden">Home</span>
           </motion.button>
         </Link>
 
         {/* Progress Bar */}
-        <div className="flex-1 mx-8">
-          <div className="flex items-center justify-center gap-4">
-            <span className="text-lg font-semibold text-teal-800">
+        <div className="flex-1 mx-2 sm:mx-4 md:mx-8">
+          <div className="flex items-center justify-center gap-2 sm:gap-4">
+            <span className="text-xs sm:text-sm md:text-lg font-semibold text-teal-800">
               Step {step + 1} of {STEPS.length}
             </span>
-            <div className="w-64 bg-white/20 h-3 rounded-full overflow-hidden">
+            <div className="w-32 sm:w-48 md:w-64 bg-white/20 h-2 sm:h-3 rounded-full overflow-hidden">
               <motion.div
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-3 rounded shadow-sm"
+                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-2 sm:h-3 rounded shadow-sm"
                 style={{ width: `${progress}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
               />
             </div>
-            <span className="text-lg font-semibold text-teal-800">
+            <span className="text-xs sm:text-sm md:text-lg font-semibold text-teal-800">
               {Math.round(progress)}%
             </span>
           </div>
         </div>
 
         {/* Language Selector Placeholder */}
-        <div className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold">
-          <FaLanguage className="text-xl" />
+        <div className="px-2 sm:px-4 py-1 sm:py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-xs sm:text-sm md:text-lg font-semibold">
+          <FaLanguage className="text-sm sm:text-base md:text-xl" />
         </div>
       </div>
 
@@ -1013,7 +1019,7 @@ export default function MyDietChart() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 0.3 }}
-                    className="text-xl md:text-3xl font-bold text-teal-900 mb-4"
+                    className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-teal-900 mb-4"
                   >
                     {STEPS[step].title}
                   </motion.h2>
@@ -1034,7 +1040,7 @@ export default function MyDietChart() {
                     transition={{ duration: 0.35 }}
                     className="text-center"
                   >
-                    <div className="text-xl md:text-2xl text-gray-700 mb-8 flex items-center justify-center gap-3">
+                    <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-8 flex items-center justify-center gap-3">
                       <FaRocket className="text-teal-600 text-2xl" />
                       Welcome to Your Personalized Diet Chart
                     </div>
@@ -1043,7 +1049,7 @@ export default function MyDietChart() {
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={next}
-                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg md:text-xl shadow-lg hover:shadow-xl flex items-center gap-2 justify-center transition-all duration-300"
+                        className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-sm sm:text-base md:text-lg lg:text-xl shadow-lg hover:shadow-xl flex items-center gap-2 justify-center transition-all duration-300"
                       >
                         <FaPlay className="text-2xl" />
                         Start Customizing
@@ -1074,7 +1080,7 @@ export default function MyDietChart() {
                                 className="text-lg"
                                 style={{ color: category.color }}
                               />
-                              <h3 className="text-sm font-semibold text-teal-900">
+                              <h3 className="text-xs sm:text-sm md:text-base font-semibold text-teal-900">
                                 {category.name}
                               </h3>
                             </div>
@@ -1099,10 +1105,10 @@ export default function MyDietChart() {
                                         item.name
                                       )
                                     }
-                                    className="w-full p-3 text-left flex items-center justify-between"
+                                    className="w-full p-2 sm:p-3 text-left flex items-center justify-between"
                                   >
                                     <div className="flex-1">
-                                      <div className="font-medium text-sm">
+                                      <div className="font-medium text-xs sm:text-sm md:text-base">
                                         {item.name}
                                       </div>
                                       <div className="text-xs opacity-75">
@@ -1160,13 +1166,13 @@ export default function MyDietChart() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => setActiveTab(tab.id)}
-                          className={`px-2 py-1 rounded-xl text-lg font-medium transition-all duration-300 flex items-center gap-2 ${
+                          className={`px-2 sm:px-3 py-1 sm:py-2 rounded-xl text-sm sm:text-base md:text-lg font-medium transition-all duration-300 flex items-center gap-2 ${
                             activeTab === tab.id
                               ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
                               : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
                           }`}
                         >
-                          <tab.icon className="text-xl" />
+                          <tab.icon className="text-sm sm:text-base md:text-xl" />
                           {tab.name}
                         </motion.button>
                       ))}
@@ -1177,7 +1183,7 @@ export default function MyDietChart() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
-                      className="flex-1 bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-teal-200/20 overflow-y-auto min-h-0"
+                      className="flex-1 bg-white/90 backdrop-blur-sm rounded-2xl p-3 border border-teal-200/20 overflow-y-auto min-h-0"
                     >
                       {getTabContent()[activeTab]}
                     </motion.div>
@@ -1200,7 +1206,7 @@ export default function MyDietChart() {
                   whileTap={{ scale: 0.95 }}
                   onClick={prev}
                   disabled={step === 0}
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-white/95 via-teal-50/80 to-cyan-50/60 backdrop-blur-sm border-2 border-amber-200/60 text-teal-700 text-sm disabled:opacity-50 transition-all duration-200 flex items-center gap-2 shadow-md"
+                  className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-white/95 via-teal-50/80 to-cyan-50/60 backdrop-blur-sm border-2 border-amber-200/60 text-teal-700 text-xs sm:text-sm md:text-lg disabled:opacity-50 transition-all duration-200 flex items-center gap-2 shadow-md"
                 >
                   <FaChevronLeft />
                   Previous
@@ -1238,7 +1244,7 @@ export default function MyDietChart() {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={next}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-teal-400"
+                    className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white text-xs sm:text-sm md:text-lg shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-teal-400"
                   >
                     Next
                     <FaChevronRight />
@@ -1251,7 +1257,7 @@ export default function MyDietChart() {
                       // Export or share functionality
                       alert("Diet chart exported successfully!");
                     }}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-green-400"
+                    className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-xs sm:text-sm md:text-lg shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-green-400"
                   >
                     <FaDownload />
                     Download Report
