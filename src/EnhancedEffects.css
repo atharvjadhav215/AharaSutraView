@@ -55,7 +55,7 @@
     rgba(107, 142, 35, 0.1)
   );
   background-size: 400% 400%;
-  animation: gradientShift 8s ease infinite;
+  animation: gradientShift 2s ease infinite;
 }
 
 @keyframes gradientShift {
@@ -69,17 +69,17 @@
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  animation: float 6s ease-in-out infinite;
+  animation: float 2s ease-in-out infinite;
 }
 
 .particle:nth-child(odd) {
-  animation-delay: -2s;
-  animation-duration: 8s;
+  animation-delay: -0.5s;
+  animation-duration: 2s;
 }
 
 .particle:nth-child(even) {
-  animation-delay: -4s;
-  animation-duration: 10s;
+  animation-delay: -1s;
+  animation-duration: 2.5s;
 }
 
 @keyframes float {
@@ -95,7 +95,7 @@
 
 /* Enhanced Hover Effects */
 .hover-lift {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hover-lift:hover {
@@ -107,7 +107,7 @@
 
 /* Spring Animation Classes */
 .spring-bounce {
-  animation: springBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  animation: springBounce 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 @keyframes springBounce {
@@ -140,7 +140,7 @@
 /* 3D Card Hover Effects */
 .card-3d {
   transform-style: preserve-3d;
-  transition: transform 0.3s ease;
+  transition: transform 0.15s ease;
 }
 
 .card-3d:hover {
@@ -167,14 +167,14 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradientShift 3s ease infinite;
+  animation: gradientShift 1.5s ease infinite;
 }
 
 /* Enhanced Button Effects */
 .btn-enhanced {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-enhanced::before {
@@ -190,7 +190,7 @@
     rgba(255, 255, 255, 0.2),
     transparent
   );
-  transition: left 0.5s;
+  transition: left 0.25s;
 }
 
 .btn-enhanced:hover::before {
@@ -223,7 +223,7 @@
     rgba(255, 255, 255, 0) 100%
   );
   background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+  animation: shimmer 1s infinite;
 }
 
 @keyframes shimmer {
@@ -268,7 +268,7 @@
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(45deg, #0cc9e6, #ffffff);
   border-radius: 4px;
-  transition: all 0.3s ease;
+  transition: all 0.15s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -287,7 +287,7 @@
   outline: none;
   box-shadow: 0 0 0 3px rgba(107, 142, 35, 0.3);
   transform: scale(1.02);
-  transition: all 0.2s ease;
+  transition: all 0.1s ease;
 }
 
 /* Improved Mobile Touch Targets */
@@ -324,7 +324,7 @@
 .btn-enhanced-state {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-enhanced-state::before {
@@ -340,7 +340,7 @@
     rgba(255, 255, 255, 0.2),
     transparent
   );
-  transition: left 0.5s ease;
+  transition: left 0.25s ease;
 }
 
 .btn-enhanced-state:hover::before {
@@ -349,7 +349,7 @@
 
 /* Improved Form Input Styling */
 .input-enhanced {
-  transition: all 0.2s ease;
+  transition: all 0.1s ease;
   border: 2px solid transparent;
 }
 
@@ -361,7 +361,7 @@
 
 /* Enhanced Card Hover Effects */
 .card-enhanced {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-enhanced:hover {
@@ -373,7 +373,7 @@
 
 /* Improved Loading States */
 .loading-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse {

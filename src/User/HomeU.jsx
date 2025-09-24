@@ -68,7 +68,7 @@ const AyurvedicParticleSystem = ({ count = 120 }) => {
         gsap.to(particle, {
           x: `+=${(Math.random() - 0.5) * 300}`,
           y: `+=${(Math.random() - 0.5) * 300}`,
-          duration: Math.random() * 15 + 15,
+          duration: Math.random() * 7.5 + 7.5,
           ease: "sine.inOut",
           repeat: -1,
           yoyo: true,
@@ -77,7 +77,7 @@ const AyurvedicParticleSystem = ({ count = 120 }) => {
         // Rotation animation
         gsap.to(particle, {
           rotation: "+=360",
-          duration: Math.random() * 25 + 20,
+          duration: Math.random() * 12.5 + 10,
           ease: "none",
           repeat: -1,
         });
@@ -86,7 +86,7 @@ const AyurvedicParticleSystem = ({ count = 120 }) => {
         if (isSymbol) {
           gsap.to(particle, {
             scale: "+=0.5",
-            duration: Math.random() * 3 + 2,
+            duration: Math.random() * 1.5 + 1,
             ease: "sine.inOut",
             repeat: -1,
             yoyo: true,
@@ -161,7 +161,7 @@ const Card3D = ({ children, className = "" }) => {
       rotateX: rotateX,
       rotateY: rotateY,
       transformPerspective: 1000,
-      duration: 0.3,
+      duration: 0.15,
       ease: "power2.out",
     });
   };
@@ -170,7 +170,7 @@ const Card3D = ({ children, className = "" }) => {
     gsap.to(cardRef.current, {
       rotateX: 0,
       rotateY: 0,
-      duration: 0.5,
+      duration: 0.25,
       ease: "power2.out",
     });
   };
@@ -536,7 +536,7 @@ export default function HomePage() {
             { textContent: 0 },
             {
               textContent: target,
-              duration: 2,
+              duration: 1,
               ease: "power2.out",
               snap: { textContent: 1 },
               onUpdate: function () {
@@ -570,7 +570,7 @@ export default function HomePage() {
           opacity: 1,
           y: 0,
           rotateX: 0,
-          duration: 1,
+          duration: 0.5,
           delay: index * 0.2,
           ease: "power3.out",
           scrollTrigger: {
@@ -670,7 +670,7 @@ export default function HomePage() {
                 rotate: [0, 360],
               }}
               transition={{
-                duration: 4,
+                duration: 1,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -683,7 +683,7 @@ export default function HomePage() {
                 rotate: [360, 0],
               }}
               transition={{
-                duration: 6,
+                duration: 3,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -774,7 +774,7 @@ export default function HomePage() {
                       opacity: [0.7, 1, 0.7],
                     }}
                     transition={{
-                      duration: 2,
+                      duration: 1,
                       repeat: Infinity,
                       ease: "easeInOut",
                       delay: i * 0.3,
@@ -796,7 +796,7 @@ export default function HomePage() {
                         setIsPlaying && setIsPlaying(false);
                         setIndex(i);
                       }}
-                      className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-300 ${
+                      className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-150 ${
                         i === index
                           ? "bg-gradient-to-r from-white to-white/80 shadow-lg"
                           : "bg-white/40 opacity-60 hover:opacity-80 hover:bg-white/60"
@@ -810,7 +810,7 @@ export default function HomePage() {
                         scale: i === index ? [1, 1.1, 1] : 1,
                       }}
                       transition={{
-                        duration: 2,
+                        duration: 1,
                         repeat: Infinity,
                         ease: "easeInOut",
                       }}
@@ -826,7 +826,7 @@ export default function HomePage() {
                     setIsPlaying && setIsPlaying(false);
                     onPrev();
                   }}
-                  className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-300"
+                  className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-150"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   aria-label="Previous slide"
@@ -843,7 +843,7 @@ export default function HomePage() {
                 {/* Play/Pause Button */}
                 <motion.button
                   onClick={() => setIsPlaying && setIsPlaying(!isPlaying)}
-                  className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-300"
+                  className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-150"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
@@ -878,7 +878,7 @@ export default function HomePage() {
                     setIsPlaying && setIsPlaying(false);
                     onNext();
                   }}
-                  className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-300"
+                  className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-150"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   aria-label="Next slide"
@@ -911,7 +911,7 @@ export default function HomePage() {
       />
 
       {/* Enhanced Ayurvedic Particle System */}
-      <AyurvedicParticleSystem count={1} />
+      <AyurvedicParticleSystem count={0} />
 
       {/* Slider Card Section with Background */}
       <section className="relative min-h-screen overflow-hidden">
@@ -1343,7 +1343,7 @@ export default function HomePage() {
                               opacity: [0.3, 0.4, 0.3],
                             }}
                             transition={{
-                              duration: 2,
+                              duration: 1,
                               repeat: Infinity,
                               ease: "easeInOut",
                             }}

@@ -104,7 +104,7 @@ const AyurvedicParticleSystem = ({ count = 1 }) => {
         gsap.to(particle, {
           x: `+=${(Math.random() - 0.5) * 200}`,
           y: `+=${(Math.random() - 0.5) * 200}`,
-          duration: Math.random() * 12 + 12,
+          duration: Math.random() * 4 + 4,
           ease: "sine.inOut",
           repeat: -1,
           yoyo: true,
@@ -113,7 +113,7 @@ const AyurvedicParticleSystem = ({ count = 1 }) => {
         // Rotation animation
         gsap.to(particle, {
           rotation: "+=360",
-          duration: Math.random() * 20 + 15,
+          duration: Math.random() * 6 + 5,
           ease: "none",
           repeat: -1,
         });
@@ -122,7 +122,7 @@ const AyurvedicParticleSystem = ({ count = 1 }) => {
         if (isSymbol) {
           gsap.to(particle, {
             scale: "+=0.3",
-            duration: Math.random() * 2 + 1.5,
+            duration: Math.random() * 0.8 + 0.6,
             ease: "sine.inOut",
             repeat: -1,
             yoyo: true,
@@ -394,7 +394,7 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
+              transition={{ duration: 0.15, delay: 0.05 }}
               className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
             >
               <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -415,7 +415,7 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
+              transition={{ duration: 0.15, delay: 0.1 }}
               className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
             >
               <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -436,7 +436,7 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.3 }}
+              transition={{ duration: 0.15, delay: 0.15 }}
               className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
             >
               <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -461,7 +461,7 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.4 }}
+              transition={{ duration: 0.15, delay: 0.2 }}
               className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
             >
               <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -493,7 +493,7 @@ export default function Dashboard() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.5 }}
+            transition={{ duration: 0.15, delay: 0.25 }}
             className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
           >
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-900 mb-4 sm:mb-6">
@@ -505,7 +505,7 @@ export default function Dashboard() {
                   key={patient.id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
+                  transition={{ duration: 0.15, delay: 0.3 + index * 0.05 }}
                   className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 bg-white/60 rounded-xl border border-teal-100/50 gap-2 sm:gap-0"
                 >
                   <div className="flex items-center gap-2 sm:gap-3">
@@ -548,13 +548,13 @@ export default function Dashboard() {
               placeholder="Search patients..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="flex-1 p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-lg focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200 bg-white/80"
+              className="flex-1 p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-lg focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100 bg-white/80"
             />
             <motion.button
               whileHover={{ y: -2 }}
               whileTap={{ y: 0 }}
               onClick={() => navigate("/add-patient")}
-              className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-teal-800 to-cyan-600 text-white text-sm sm:text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+              className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-teal-800 to-cyan-600 text-white text-sm sm:text-lg shadow-lg hover:shadow-xl transition-all duration-100 flex items-center justify-center gap-2"
             >
               <FaPlus />
               <span className="hidden sm:inline">Add Patient</span>
@@ -568,13 +568,13 @@ export default function Dashboard() {
                 key={patient.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                transition={{ duration: 0.15, delay: index * 0.05 }}
                 whileHover={{ y: -5 }}
                 onClick={() => setSelectedPatientId(patient.id)}
-                className={`p-4 sm:p-6 rounded-2xl border-2 shadow-lg cursor-pointer transition-all duration-300 ${
+                className={`p-4 sm:p-6 rounded-2xl border-2 shadow-lg cursor-pointer transition-all duration-150 ${
                   selectedPatientId === patient.id
-                    ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white border-amber-400"
-                    : "bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 border-teal-200/50 hover:border-amber-300"
+                    ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white border-teal-400"
+                    : "bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 border-teal-200/50 hover:border-teal-300"
                 }`}
               >
                 <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -697,7 +697,7 @@ export default function Dashboard() {
                         className={`px-2 py-1 rounded-full text-xs font-medium ${
                           selectedPatientId === patient.id
                             ? "bg-white/20 text-white"
-                            : "bg-amber-100 text-teal-800"
+                            : "bg-teal-100 text-teal-800"
                         }`}
                       >
                         {flag}
@@ -722,9 +722,9 @@ export default function Dashboard() {
                 key={plan.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                transition={{ duration: 0.15, delay: index * 0.05 }}
                 whileHover={{ y: -5 }}
-                className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-150"
               >
                 <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
@@ -763,7 +763,7 @@ export default function Dashboard() {
                   {plan.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-teal-800"
+                      className="px-2 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800"
                     >
                       {tag}
                     </span>
@@ -784,7 +784,7 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
+              transition={{ duration: 0.15, delay: 0.05 }}
               className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
             >
               <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-900 mb-4 sm:mb-6">
@@ -796,7 +796,7 @@ export default function Dashboard() {
                     key={patient.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
+                    transition={{ duration: 0.15, delay: 0.1 + index * 0.05 }}
                     className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0"
                   >
                     <span className="text-gray-700 font-medium text-sm sm:text-base">
@@ -808,7 +808,7 @@ export default function Dashboard() {
                           initial={{ width: 0 }}
                           animate={{ width: `${patient.adherence}%` }}
                           transition={{
-                            duration: 0.8,
+                            duration: 0.4,
                             delay: 0.3 + index * 0.1,
                           }}
                           className="bg-gradient-to-r from-teal-800 to-cyan-600 h-2 rounded-full"
@@ -826,7 +826,7 @@ export default function Dashboard() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
+              transition={{ duration: 0.15, delay: 0.1 }}
               className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
             >
               <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-900 mb-4 sm:mb-6">
@@ -838,7 +838,7 @@ export default function Dashboard() {
                     key={patient.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+                    transition={{ duration: 0.15, delay: 0.15 + index * 0.05 }}
                     className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0"
                   >
                     <span className="text-gray-700 font-medium text-sm sm:text-base">
@@ -883,46 +883,6 @@ export default function Dashboard() {
       {/* Enhanced Ayurvedic Particle System */}
       <AyurvedicParticleSystem count={1} />
 
-      {/* Top Navigation Bar */}
-      <div className="absolute felx-row top-0 left-0 right-0 z-50 flex  sm:flex-row items-center justify-between p-3 sm:p-4 bg-white/95 backdrop-blur-md border-b border-amber-200/20 gap-2 sm:gap-0">
-        {/* Back to Home Button */}
-        <Link to="/dhome">
-          <motion.button
-            whileHover={{ y: -2 }}
-            whileTap={{ y: 0 }}
-            className="px-3 sm:px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-amber-200 text-teal-800 text-sm sm:text-lg font-semibold hover:bg-amber-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
-          >
-            <FaHome className="text-lg sm:text-xl" />
-            <span className="hidden sm:inline">Back to Home</span>
-            <span className="sm:hidden">Home</span>
-          </motion.button>
-        </Link>
-
-        {/* Dashboard Title */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
-            <FaUserMd className="text-white text-sm sm:text-lg" />
-          </div>
-          <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-900">
-            Dietitian Dashboard
-          </h1>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="flex items-center gap-2">
-          <motion.button
-            whileHover={{ y: -2 }}
-            whileTap={{ y: 0 }}
-            onClick={() => navigate("/add-patient")}
-            className="px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm sm:text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
-          >
-            <FaPlus className="text-sm sm:text-base" />
-            <span className="hidden sm:inline">Add Patient</span>
-            <span className="sm:hidden">Add</span>
-          </motion.button>
-        </div>
-      </div>
-
       {/* Dynamic Background Layers */}
       <div className="absolute inset-0 -z-10">
         {BG_LAYERS.map((b, i) => (
@@ -932,7 +892,7 @@ export default function Dashboard() {
             animate={{
               opacity: i === TABS.findIndex((t) => t.id === activeTab) ? 1 : 0,
             }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
             style={{ backgroundImage: b.gradient }}
             className="absolute inset-0"
           />
@@ -946,9 +906,9 @@ export default function Dashboard() {
             opacity: [0.3, 0.5, 0.3],
           }}
           transition={{
-            rotate: { repeat: Infinity, duration: 80, ease: "linear" },
-            scale: { repeat: Infinity, duration: 6, ease: "easeInOut" },
-            opacity: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+            rotate: { repeat: Infinity, duration: 40, ease: "linear" },
+            scale: { repeat: Infinity, duration: 3, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 2, ease: "easeInOut" },
           }}
           className="absolute -left-40 -top-40 w-[420px] h-[420px] rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 blur-3xl pointer-events-none"
         />
@@ -959,11 +919,11 @@ export default function Dashboard() {
             opacity: [0.25, 0.4, 0.25],
           }}
           transition={{
-            rotate: { repeat: Infinity, duration: 100, ease: "linear" },
-            scale: { repeat: Infinity, duration: 8, ease: "easeInOut" },
-            opacity: { repeat: Infinity, duration: 5, ease: "easeInOut" },
+            rotate: { repeat: Infinity, duration: 50, ease: "linear" },
+            scale: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+            opacity: { repeat: Infinity, duration: 2.5, ease: "easeInOut" },
           }}
-          className="absolute -right-32 bottom-[-60px] w-[360px] h-[360px] rounded-full bg-gradient-to-bl from-orange-200 to-red-100 blur-3xl pointer-events-none"
+          className="absolute -right-32 bottom-[-60px] w-[360px] h-[360px] rounded-full bg-gradient-to-bl from-cyan-200 to-blue-100 blur-3xl pointer-events-none"
         />
       </div>
 
@@ -981,14 +941,14 @@ export default function Dashboard() {
                 key={tab.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                transition={{ duration: 0.15, delay: index * 0.05 }}
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-2 sm:px-3 mt-2 py-2 rounded-2xl text-sm sm:text-lg font-semibold transition-all duration-300 flex items-center gap-2 sm:gap-3 shadow-lg ${
+                className={`px-2 sm:px-3 mt-2 py-2 rounded-2xl text-sm sm:text-lg font-semibold transition-all duration-150 flex items-center gap-2 sm:gap-3 shadow-lg ${
                   activeTab === tab.id
-                    ? "bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-white border-2 border-amber-400"
-                    : "bg-gradient-to-r from-white/95 via-amber-50/80 to-orange-50/60 backdrop-blur-sm border-2 border-amber-200/60 text-teal-900 hover:border-amber-300/80"
+                    ? "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white border-2 border-teal-400"
+                    : "bg-gradient-to-r from-white/95 via-teal-50/80 to-cyan-50/60 backdrop-blur-sm border-2 border-teal-200/60 text-teal-900 hover:border-teal-300/80"
                 }`}
               >
                 <tab.icon className="text-lg sm:text-xl" />
@@ -1003,8 +963,8 @@ export default function Dashboard() {
             key={activeTab}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-amber-200/20 min-h-[500px] sm:min-h-[600px]"
+            transition={{ duration: 0.2 }}
+            className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-teal-200/20 min-h-[500px] sm:min-h-[600px]"
           >
             {getTabContent()[activeTab]}
           </motion.div>

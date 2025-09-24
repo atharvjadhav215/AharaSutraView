@@ -518,8 +518,6 @@ export default function CreateOwnChart() {
       };
     });
 
-  const progress = Math.round(((step + 1) / translatedSteps.length) * 100);
-
   // generator heuristic
   const generatedPlan = useMemo(() => {
     const { goals, lifestyle, anthro } = answers;
@@ -577,45 +575,6 @@ export default function CreateOwnChart() {
     <div className="h-screen w-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
       {/* Enhanced Ayurvedic Particle System */}
       <AyurvedicParticleSystem count={1} />
-
-      {/* Top Navigation Bar */}
-      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-white/95 backdrop-blur-md border-b border-teal-200/20">
-        {/* Back to Home Button */}
-        <Link to="/uhome">
-          <motion.button
-            whileHover={{ scale: 1.05, rotateY: 5 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
-          >
-            <FaHome className="text-xl" />
-            Back to Home
-          </motion.button>
-        </Link>
-
-        {/* Progress Bar */}
-        <div className="flex-1 mx-8">
-          <div className="flex items-center justify-center gap-4">
-            <span className="text-lg font-semibold text-teal-800">
-              Step {step + 1} of {STEPS.length}
-            </span>
-            <div className="w-64 bg-white/20 h-3 rounded-full overflow-hidden">
-              <motion.div
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-3 rounded shadow-sm"
-                style={{ width: `${progress}%` }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-              />
-            </div>
-            <span className="text-lg font-semibold text-teal-800">
-              {Math.round(progress)}%
-            </span>
-          </div>
-        </div>
-
-        {/* Language Selector */}
-        <LanguageSelector language={language} onLanguageChange={setLanguage} />
-      </div>
 
       {/* dynamic background layers */}
       <div className="absolute inset-0 -z-10">
@@ -763,7 +722,7 @@ export default function CreateOwnChart() {
                         onClick={() =>
                           setStep((s) => Math.min(STEPS.length - 1, s + 1))
                         }
-                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg md:text-xl shadow-lg hover:shadow-xl flex items-center gap-2 justify-center transition-all duration-300"
+                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg md:text-xl shadow-lg hover:shadow-xl flex items-center gap-2 justify-center transition-all duration-150"
                       >
                         <FaPlay className="text-2xl" />
                         Start Quiz
@@ -785,7 +744,7 @@ export default function CreateOwnChart() {
                           });
                           setStep(1);
                         }}
-                        className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-700 text-lg md:text-xl hover:bg-teal-50 flex items-center gap-2 justify-center transition-all duration-300"
+                        className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-700 text-lg md:text-xl hover:bg-teal-50 flex items-center gap-2 justify-center transition-all duration-150"
                       >
                         <FaRocket className="text-2xl" />
                         Quick Start
@@ -813,7 +772,7 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("basic", "name", e.target.value)
                           }
-                          className="w-full p-3 border border-gray-300 rounded-lg text-lg md:text-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                          className="w-full p-3 border border-gray-300 rounded-lg text-lg md:text-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                           placeholder={getTranslation("name", language)}
                         />
                       </div>
@@ -829,7 +788,7 @@ export default function CreateOwnChart() {
                             update("basic", "age", e.target.value)
                           }
                           type="number"
-                          className="w-full p-3 border border-gray-300 rounded-lg text-lg md:text-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                          className="w-full p-3 border border-gray-300 rounded-lg text-lg md:text-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                           placeholder={getTranslation("age", language)}
                         />
                       </div>
@@ -844,7 +803,7 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("basic", "gender", e.target.value)
                           }
-                          className="w-full p-3 border border-gray-300 rounded-lg text-lg md:text-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                          className="w-full p-3 border border-gray-300 rounded-lg text-lg md:text-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                         >
                           <option value="">
                             {getTranslation("select", language)}
@@ -881,7 +840,7 @@ export default function CreateOwnChart() {
                         onChange={(e) =>
                           update("anthro", "height", e.target.value)
                         }
-                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-base sm:text-lg md:text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-base sm:text-lg md:text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                         placeholder="e.g. 165"
                       />
                     </div>
@@ -895,7 +854,7 @@ export default function CreateOwnChart() {
                         onChange={(e) =>
                           update("anthro", "weight", e.target.value)
                         }
-                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-base sm:text-lg md:text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-base sm:text-lg md:text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                         placeholder="e.g. 60"
                       />
                     </div>
@@ -933,7 +892,7 @@ export default function CreateOwnChart() {
                               whileHover={{ scale: 1.05, y: -2 }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => update("goals", "goal", goal.text)}
-                              className={`p-4 rounded-xl text-lg md:text-xl transition-all duration-200 flex flex-col items-center gap-3 ${
+                              className={`p-4 rounded-xl text-lg md:text-xl transition-all duration-100 flex flex-col items-center gap-3 ${
                                 answers.goals.goal === goal.text
                                   ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
                                   : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-teal-300 hover:bg-teal-50"
@@ -956,7 +915,7 @@ export default function CreateOwnChart() {
                           onChange={(e) =>
                             update("goals", "note", e.target.value)
                           }
-                          className="w-full p-3 border border-gray-300 rounded-lg text-lg md:text-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                          className="w-full p-3 border border-gray-300 rounded-lg text-lg md:text-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                           placeholder="e.g., vegetarian, prefer warm breakfasts"
                         />
                       </div>
@@ -981,7 +940,7 @@ export default function CreateOwnChart() {
                         onChange={(e) =>
                           update("lifestyle", "dietaryHabits", e.target.value)
                         }
-                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                       >
                         <option value="omnivore">Omnivore</option>
                         <option value="vegetarian">Vegetarian</option>
@@ -1000,7 +959,7 @@ export default function CreateOwnChart() {
                         onChange={(e) =>
                           update("lifestyle", "activity", e.target.value)
                         }
-                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                       >
                         <option value="sedentary">Sedentary</option>
                         <option value="light">Light</option>
@@ -1023,7 +982,7 @@ export default function CreateOwnChart() {
                             e.target.value
                           )
                         }
-                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                         placeholder="e.g., Indian, Mediterranean"
                       />
                     </div>
@@ -1053,7 +1012,7 @@ export default function CreateOwnChart() {
                             },
                           }))
                         }
-                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200"
+                        className="mt-1 p-3 sm:p-4 border border-gray-300 rounded-lg text-xl w-full focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100"
                         placeholder="e.g., nuts, shellfish"
                       />
                     </div>
@@ -1076,7 +1035,7 @@ export default function CreateOwnChart() {
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => toggleDislike(f)}
-                            className={`px-3 sm:px-4 py-2 rounded-lg text-xl transition-all duration-200 flex items-center gap-2 ${
+                            className={`px-3 sm:px-4 py-2 rounded-lg text-xl transition-all duration-100 flex items-center gap-2 ${
                               answers.intolerances.dislikes.includes(f)
                                 ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
                                 : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-teal-300 hover:bg-teal-50"
@@ -1109,7 +1068,7 @@ export default function CreateOwnChart() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => setSelectedPlanId(plan.id)}
-                          className={`px-4 py-3 rounded-xl text-lg font-medium transition-all duration-300 flex items-center gap-2 ${
+                          className={`px-4 py-3 rounded-xl text-lg font-medium transition-all duration-150 flex items-center gap-2 ${
                             selectedPlanId === plan.id
                               ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
                               : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-teal-300 hover:bg-teal-50"
@@ -1222,7 +1181,7 @@ export default function CreateOwnChart() {
                                 whileHover={{ scale: 1.05, y: -2 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={finish}
-                                className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 justify-center"
+                                className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-100 flex items-center gap-2 justify-center"
                               >
                                 <FaCheck />
                                 Add to your diet chart
@@ -1234,7 +1193,7 @@ export default function CreateOwnChart() {
                                   alert("Diet chart exported successfully!");
                                   navigate("/uHome/");
                                 }}
-                                className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-700 text-lg font-semibold hover:bg-teal-50 transition-all duration-200 flex items-center gap-2 justify-center"
+                                className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-700 text-lg font-semibold hover:bg-teal-50 transition-all duration-100 flex items-center gap-2 justify-center"
                               >
                                 <FaEye />
                                 Download Report
@@ -1263,7 +1222,7 @@ export default function CreateOwnChart() {
                   whileTap={{ scale: 0.95 }}
                   onClick={prev}
                   disabled={step === 0}
-                  className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-700 text-lg disabled:opacity-50 hover:border-teal-300 hover:bg-teal-50 transition-all duration-200 flex items-center gap-2"
+                  className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-700 text-lg disabled:opacity-50 hover:border-teal-300 hover:bg-teal-50 transition-all duration-100 flex items-center gap-2"
                 >
                   <FaChevronLeft />
                   {getTranslation("previous", language)}
@@ -1279,7 +1238,7 @@ export default function CreateOwnChart() {
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => setStep(i)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 flex items-center justify-center ${
+                      className={`w-3 h-3 rounded-full transition-all duration-150 flex items-center justify-center ${
                         i === step
                           ? "bg-gradient-to-r from-teal-600 to-cyan-600 shadow-lg shadow-teal-200"
                           : "bg-white/50 hover:bg-white/70"
@@ -1301,7 +1260,7 @@ export default function CreateOwnChart() {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={next}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg shadow-lg hover:shadow-xl transition-all duration-100 flex items-center gap-2"
                   >
                     {getTranslation("next", language)}
                     <FaChevronRight />
@@ -1311,7 +1270,7 @@ export default function CreateOwnChart() {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={finish}
-                    className="px-6 py-3 rounded-xl xt-white text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                    className="px-6 py-3 rounded-xl xt-white text-lg shadow-lg hover:shadow-xl transition-all duration-100 flex items-center gap-2"
                   >
                     <FaCheck />
                     {getTranslation("finish", language)}

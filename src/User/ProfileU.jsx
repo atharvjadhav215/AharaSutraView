@@ -353,7 +353,7 @@ export default function ProfileU() {
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
                   onClick={() => navigate("/edit-profile")}
-                  className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
+                  className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-150 shadow-lg hover:shadow-xl flex items-center gap-2"
                 >
                   <FaEdit />
                   Edit Profile
@@ -362,7 +362,7 @@ export default function ProfileU() {
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
                   onClick={() => navigate("/diet-chart")}
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-100 flex items-center gap-2"
                 >
                   <FaClipboardList />
                   View Diet Chart
@@ -619,7 +619,7 @@ export default function ProfileU() {
               whileHover={{ y: -2 }}
               whileTap={{ y: 0 }}
               onClick={() => navigate("/diet-chart")}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-100 flex items-center gap-2"
             >
               <FaPlus />
               Create New Chart
@@ -636,7 +636,7 @@ export default function ProfileU() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: idx * 0.1 }}
                     whileHover={{ y: -5 }}
-                    className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                    className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-150 cursor-pointer"
                     onClick={() =>
                       setExpandedChart(expandedChart === c.id ? null : c.id)
                     }
@@ -663,7 +663,7 @@ export default function ProfileU() {
                           e.stopPropagation();
                           navigate("/diet-chart");
                         }}
-                        className="flex-1 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+                        className="flex-1 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-100 flex items-center justify-center gap-2"
                       >
                         <FaEye />
                         Open
@@ -678,7 +678,7 @@ export default function ProfileU() {
                           );
                           alert("Chart copied to clipboard");
                         }}
-                        className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-sm font-semibold hover:bg-teal-50 transition-all duration-200 flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-sm font-semibold hover:bg-teal-50 transition-all duration-100 flex items-center gap-2"
                       >
                         <FaShare />
                         Copy
@@ -745,7 +745,7 @@ export default function ProfileU() {
                     whileHover={{ y: -2 }}
                     whileTap={{ y: 0 }}
                     onClick={() => navigate("/diet-chart")}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 mx-auto"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-100 flex items-center gap-2 mx-auto"
                   >
                     <FaPlus />
                     Create Chart
@@ -854,7 +854,7 @@ export default function ProfileU() {
               <motion.button
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
-                className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-200 flex items-center gap-2"
+                className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-100 flex items-center gap-2"
               >
                 <FaDownload />
                 Export Data
@@ -862,7 +862,7 @@ export default function ProfileU() {
               <motion.button
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
-                className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-red-200 text-red-800 text-lg font-semibold hover:bg-red-50 transition-all duration-200 flex items-center gap-2"
+                className="px-6 py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-red-200 text-red-800 text-lg font-semibold hover:bg-red-50 transition-all duration-100 flex items-center gap-2"
               >
                 <FaTrash />
                 Delete Account
@@ -882,7 +882,7 @@ export default function ProfileU() {
       {/* Dynamic Background Layers */}
       <AnimatePresence mode="wait">
         {BG_LAYERS.map((layer) => (
-          <motion.div 
+          <motion.div
             key={layer.id}
             initial={{ opacity: 0 }}
             animate={{ opacity: activeTab === TABS[layer.id]?.id ? 1 : 0 }}
@@ -896,30 +896,6 @@ export default function ProfileU() {
           />
         ))}
       </AnimatePresence>
-
-      {/* Top Navigation Bar */}
-      <div className="relative z-10 flex items-center justify-between p-4 bg-white/20 backdrop-blur-sm border-b border-amber-200/30">
-        <motion.button
-          whileHover={{ y: -2 }}
-          whileTap={{ y: 0 }}
-          onClick={() => navigate("/uhome")}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl"
-        >
-          <FaHome />
-          Back to Home
-        </motion.button>
-
-        <div className="flex items-center gap-4">
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200"
-          >
-            <FaUserMd className="text-teal-600 text-xl" />
-            <span className="text-teal-800 font-semibold">User Profile</span>
-          </motion.div>
-        </div>
-      </div>
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col h-[calc(100vh-80px)]">
@@ -938,7 +914,7 @@ export default function ProfileU() {
                   whileHover={{ y: -2 }}
                   whileTap={{ y: 0 }}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
+                  className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-semibold text-lg transition-all duration-150 ${
                     activeTab === tab.id
                       ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg"
                       : "text-teal-700 hover:bg-white/50"

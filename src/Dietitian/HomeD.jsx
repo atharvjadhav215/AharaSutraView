@@ -495,9 +495,8 @@ export default function HomePage() {
   const [isPlaying, setIsPlaying] = useState(true); // Start with auto-play enabled
   const [slideDirection, setSlideDirection] = useState("right"); // Track slide direction
 
-  // Dosha background image state
-  const [backgroundImage, setBackgroundImage] = useState(DOSHA_TYPES[0].image);
-  const [isHovered, setIsHovered] = useState(false);
+  // Individual dosha hover state management
+  const [hoveredDosha, setHoveredDosha] = useState(null);
 
   const onPrev = () => {
     setSlideDirection("left");
@@ -798,7 +797,7 @@ export default function HomePage() {
                         setIsPlaying && setIsPlaying(false);
                         setIndex(i);
                       }}
-                      className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-300 ${
+                      className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-150 ${
                         i === index
                           ? "bg-gradient-to-r from-white to-white/80 shadow-lg"
                           : "bg-white/40 opacity-60 hover:opacity-80 hover:bg-white/60"
@@ -828,7 +827,7 @@ export default function HomePage() {
                     setIsPlaying && setIsPlaying(false);
                     onPrev();
                   }}
-                  className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-300"
+                  className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-150"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   aria-label="Previous slide"
@@ -845,7 +844,7 @@ export default function HomePage() {
                 {/* Play/Pause Button */}
                 <motion.button
                   onClick={() => setIsPlaying && setIsPlaying(!isPlaying)}
-                  className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-300"
+                  className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-150"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
@@ -880,7 +879,7 @@ export default function HomePage() {
                     setIsPlaying && setIsPlaying(false);
                     onNext();
                   }}
-                  className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-300"
+                  className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 text-white shadow-lg hover:shadow-xl hover:bg-white/30 transition-all duration-150"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   aria-label="Next slide"
@@ -913,7 +912,7 @@ export default function HomePage() {
       />
 
       {/* Enhanced Ayurvedic Particle System */}
-      <AyurvedicParticleSystem count={1} />
+      <AyurvedicParticleSystem count={0} />
 
       {/* Slider Card Section with Background */}
       <section className="relative min-h-screen overflow-hidden">
@@ -1036,39 +1035,12 @@ export default function HomePage() {
           className="mt-16 max-w-6xl mx-auto"
         >
           <div className="">
-            <div
-              className="relative bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl p-6 border border-teal-100 overflow-hidden"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              {/* Background Image that covers entire container on hover */}
-              <motion.div
-                className="absolute inset-0"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{
-                  scale: isHovered ? 1.1 : 0.8,
-                  opacity: isHovered ? 1.0 : 0,
-                }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              >
-                <img
-                  src={backgroundImage}
-                  alt="Dosha background"
-                  className="w-full h-full rounded-4xl  object-cover"
-                />
-              </motion.div>
-
+            <div className="relative bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl p-6 border border-teal-100 overflow-hidden">
               <div className="relative z-10 flex items-center gap-4 mb-6">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <motion.span
-                  className="ml-4 text-sm sm:text-base md:text-lg lg:text-xl font-medium"
-                  animate={{
-                    color: isHovered ? "#ffffff" : "#6b7280",
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
+                <motion.span className="ml-4 text-sm sm:text-base md:text-lg lg:text-xl font-medium text-gray-600">
                   AharaSutra Ayurvedic Dashboard
                 </motion.span>
               </div>
@@ -1092,14 +1064,31 @@ export default function HomePage() {
                       stiffness: 300,
                       damping: 30,
                     }}
-                    onMouseEnter={() => setBackgroundImage(dosha.image)}
+                    onMouseEnter={() => setHoveredDosha(dosha.name)}
+                    onMouseLeave={() => setHoveredDosha(null)}
                   >
-                    <div className="text-center">
+                    {/* Background Image that covers entire container on hover */}
+                    <motion.div
+                      className="absolute inset-0 opacity-45 bg-black"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{
+                        scale: hoveredDosha === dosha.name ? 1.1 : 0.8,
+                        opacity: hoveredDosha === dosha.name ? 1.0 : 0,
+                      }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    >
+                      <img
+                        src={dosha.image}
+                        alt={`${dosha.name} background`}
+                        className="w-full h-full rounded-xl object-cover"
+                      />
+                    </motion.div>
+                    <div className="relative z-10 text-center">
                       <motion.div
                         className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden border-2 border-teal-200"
                         whileHover={{
                           scale: 1.2,
-                          rotate: 360,
+
                           transition: { duration: 0.6 },
                         }}
                       >
@@ -1110,17 +1099,22 @@ export default function HomePage() {
                         />
                       </motion.div>
                       <motion.h3
-                        className="font-semibold text-gray-800 mb-2 text-sm sm:text-base md:text-lg"
-                        whileHover={{
-                          scale: 1.1,
-                          color: dosha.color,
-                          transition: { duration: 0.3 },
+                        className="font-semibold mb-2 text-sm sm:text-base md:text-lg"
+                        animate={{
+                          color:
+                            hoveredDosha === dosha.name ? "#ffffff" : "#374151",
                         }}
+                        transition={{ duration: 0.3 }}
                       >
                         {dosha.name}
                       </motion.h3>
                       <motion.p
-                        className="text-sm sm:text-base md:text-lg text-gray-600 mb-2"
+                        className="text-sm sm:text-base md:text-lg mb-2"
+                        animate={{
+                          color:
+                            hoveredDosha === dosha.name ? "#ffffff" : "#4b5563",
+                        }}
+                        transition={{ duration: 0.3 }}
                         whileHover={{
                           scale: 1.05,
                           transition: { duration: 0.3 },
@@ -1129,7 +1123,12 @@ export default function HomePage() {
                         {dosha.description}
                       </motion.p>
                       <motion.div
-                        className="text-xs sm:text-sm md:text-base text-gray-500"
+                        className="text-xs sm:text-sm md:text-base"
+                        animate={{
+                          color:
+                            hoveredDosha === dosha.name ? "#ffffff" : "#6b7280",
+                        }}
+                        transition={{ duration: 0.3 }}
                         whileHover={{
                           scale: 1.05,
                           transition: { duration: 0.3 },
@@ -1200,7 +1199,7 @@ export default function HomePage() {
                 <motion.div
                   className="w-32 h-32 rounded-full overflow-hidden border-4 border-teal-200 shadow-lg"
                   style={{ backgroundColor: herb.color + "20" }}
-                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.8 }}
                 >
                   <img
@@ -1419,7 +1418,6 @@ export default function HomePage() {
                 <motion.div
                   className="text-teal-600 mb-4 flex justify-center"
                   whileHover={{
-                    rotate: 360,
                     scale: 1.2,
                   }}
                   transition={{ duration: 0.6 }}
@@ -1561,7 +1559,6 @@ export default function HomePage() {
                       className="w-16 h-16 rounded-full overflow-hidden border-4 border-teal-200"
                       whileHover={{
                         scale: 1.1,
-                        rotate: 360,
                       }}
                       transition={{ duration: 0.6 }}
                     >

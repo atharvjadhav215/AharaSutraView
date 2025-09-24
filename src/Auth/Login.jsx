@@ -205,7 +205,7 @@ const Login = () => {
             scale: [1, 1.2, 1],
           }}
           transition={{
-            duration: 20,
+            duration: 10,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -220,7 +220,7 @@ const Login = () => {
             scale: [1, 0.8, 1],
           }}
           transition={{
-            duration: 25,
+            duration: 12.5,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -235,7 +235,7 @@ const Login = () => {
             rotate: [0, 360, 0],
           }}
           transition={{
-            duration: 15,
+            duration: 7.5,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -250,7 +250,7 @@ const Login = () => {
             opacity: [0.3, 0.6, 0.3],
           }}
           transition={{
-            duration: 4,
+            duration: 2,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -266,7 +266,7 @@ const Login = () => {
             opacity: [0.2, 0.5, 0.2],
           }}
           transition={{
-            duration: 6,
+            duration: 3,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -282,7 +282,7 @@ const Login = () => {
             opacity: [0.4, 0.7, 0.4],
           }}
           transition={{
-            duration: 5,
+            duration: 2.5,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -298,20 +298,20 @@ const Login = () => {
           ref={containerRef}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className="w-full max-w-md"
         >
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.25, delay: 0.1 }}
             className="text-center my-4 mt-10"
           >
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
+              transition={{ duration: 0.25, delay: 0.25 }}
               className="text-gray-600 font-bold tracking-widest text-sm md:text-2xl"
             >
               {isSignUp ? "Create your account" : "Welcome back"}
@@ -322,22 +322,22 @@ const Login = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.25, delay: 0.15 }}
             className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8"
           >
             {/* Main Toggle - Sign In/Sign Up */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.4 }}
-              className="relative "
+              transition={{ duration: 0.2, delay: 0.2 }}
+              className="relative mb-5 "
             >
               {/* Background Slider */}
               <motion.div
                 animate={{
                   x: isSignUp ? "100%" : "0%",
                 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                transition={{ duration: 0.15, ease: "easeInOut" }}
                 className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl shadow-lg"
               />
 
@@ -347,7 +347,7 @@ const Login = () => {
                   onClick={() => setIsSignUp(false)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`flex-1 py-3 px-6 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 relative z-10 ${
+                  className={`flex-1 py-3 px-6 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-2 relative z-10 ${
                     !isSignUp
                       ? "text-white bg-gradient-to-br from-teal-500 to-cyan-500"
                       : "text-teal-700 hover:text-teal-600"
@@ -361,7 +361,7 @@ const Login = () => {
                   onClick={() => setIsSignUp(true)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`flex-1 py-3 px-6 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 relative z-10 ${
+                  className={`flex-1 py-3 px-6 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center justify-center gap-2 relative z-10 ${
                     isSignUp
                       ? "text-white bg-gradient-to-br from-teal-500 to-cyan-500"
                       : "text-teal-700 hover:text-teal-600"
@@ -374,185 +374,20 @@ const Login = () => {
             </motion.div>
 
             {/* Method Selection - Toggle Switch Design */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.5 }}
-              className="my-4 md:my-4 sm:my-2"
-            >
-              <div className="relative">
-                {/* Toggle Background */}
-                <motion.div
-                  animate={{
-                    backgroundColor:
-                      (isSignUp ? signupMethod : loginMethod) === "email"
-                        ? "rgb(20 184 166)"
-                        : "rgb(6 182 212)",
-                  }}
-                  transition={{ duration: 0.3 }}
-                  className="w-20 h-12 md:w-20 md:h-12 sm:w-20 sm:h-10 bg-teal-500 rounded-full mx-auto shadow-lg border-2 border-teal-600"
-                >
-                  {/* Toggle Slider */}
-                  <motion.div
-                    animate={{
-                      x:
-                        (isSignUp ? signupMethod : loginMethod) === "email"
-                          ? 0
-                          : "calc(100% - 0.5rem)",
-                    }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 500,
-                      damping: 30,
-                    }}
-                    className="absolute top-1 left-[113px] md:left-[157px] w-10 h-10 md:w-10 md:h-10 sm:w-8 sm:h-8 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-teal-400"
-                  >
-                    <motion.div
-                      animate={{
-                        rotate:
-                          (isSignUp ? signupMethod : loginMethod) === "email"
-                            ? 0
-                            : 180,
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {(isSignUp ? signupMethod : loginMethod) === "email" ? (
-                        <FaEnvelope className="text-teal-800 text-sm md:text-sm sm:text-xs" />
-                      ) : (
-                        <FaUser className="text-cyan-800 text-sm md:text-sm sm:text-xs" />
-                      )}
-                    </motion.div>
-                  </motion.div>
-                </motion.div>
-
-                {/* Clickable Areas */}
-                <div className="absolute inset-0 flex">
-                  {/* Email Area */}
-                  <motion.button
-                    type="button"
-                    onClick={() =>
-                      isSignUp
-                        ? setSignupMethod("email")
-                        : setLoginMethod("email")
-                    }
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-1/2 h-12 md:h-12 sm:h-10 cursor-pointer relative"
-                  >
-                    <motion.div
-                      animate={{
-                        opacity:
-                          (isSignUp ? signupMethod : loginMethod) === "email"
-                            ? 1
-                            : 0.7,
-                        scale:
-                          (isSignUp ? signupMethod : loginMethod) === "email"
-                            ? 1.3
-                            : 1,
-                      }}
-                      transition={{ duration: 0.2 }}
-                      className="flex items-center justify-center h-full"
-                    >
-                      <span className="text-cyan-500 font-bold text-sm md:text-sm sm:text-xs drop-shadow-md">
-                        Email
-                      </span>
-                    </motion.div>
-                    {/* Click Indicator */}
-                    <motion.div
-                      animate={{
-                        opacity:
-                          (isSignUp ? signupMethod : loginMethod) === "email"
-                            ? 0
-                            : 0.3,
-                        scale:
-                          (isSignUp ? signupMethod : loginMethod) === "email"
-                            ? 0.8
-                            : 1,
-                      }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute top-1 right-1 w-2 h-2 md:w-2 md:h-2 sm:w-1.5 sm:h-1.5 bg-white rounded-full border border-teal-300"
-                    />
-                  </motion.button>
-
-                  {/* Mobile Area */}
-                  <motion.button
-                    type="button"
-                    onClick={() =>
-                      isSignUp
-                        ? setSignupMethod("mobile")
-                        : setLoginMethod("mobile")
-                    }
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-1/2 h-12 md:h-12 sm:h-10 cursor-pointer relative"
-                  >
-                    <motion.div
-                      animate={{
-                        opacity:
-                          (isSignUp ? signupMethod : loginMethod) === "mobile"
-                            ? 1
-                            : 0.7,
-                        scale:
-                          (isSignUp ? signupMethod : loginMethod) === "mobile"
-                            ? 1.3
-                            : 1,
-                      }}
-                      transition={{ duration: 0.2 }}
-                      className="flex items-center justify-center h-full"
-                    >
-                      <span className="text-cyan-500 font-bold text-sm md:text-sm sm:text-xs drop-shadow-md">
-                        Mobile
-                      </span>
-                    </motion.div>
-                    {/* Click Indicator */}
-                    <motion.div
-                      animate={{
-                        opacity:
-                          (isSignUp ? signupMethod : loginMethod) === "mobile"
-                            ? 0
-                            : 0.3,
-                        scale:
-                          (isSignUp ? signupMethod : loginMethod) === "mobile"
-                            ? 0.8
-                            : 1,
-                      }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute top-1 left-1 w-2 h-2 md:w-2 md:h-2 sm:w-1.5 sm:h-1.5 bg-white rounded-full border border-cyan-300"
-                    />
-                  </motion.button>
-                </div>
-
-                {/* Active Indicator */}
-                <motion.div
-                  animate={{
-                    x:
-                      (isSignUp ? signupMethod : loginMethod) === "email"
-                        ? 0
-                        : "calc(100% - 0.5rem)",
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    x: { type: "spring", stiffness: 500, damping: 30 },
-                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                  }}
-                  className="absolute -bottom-2 w-2 h-2 md:w-2 md:h-2 sm:w-1.5 sm:h-1.5 bg-white rounded-full shadow-lg border border-teal-400"
-                />
-              </div>
-            </motion.div>
 
             {/* Sign Up Form */}
             {isSignUp ? (
               <motion.form
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.5 }}
+                transition={{ duration: 0.2, delay: 0.25 }}
                 onSubmit={handleSignUp}
-                className="space-y-4"
+                className="space-y-4 "
               >
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.6 }}
+                  transition={{ duration: 0.15, delay: 0.3 }}
                 >
                   <div className="relative">
                     <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
@@ -562,7 +397,7 @@ const Login = () => {
                       value={signUp.name}
                       onChange={handleSignUpChange}
                       placeholder="Full Name"
-                      className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                      className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-100"
                       required
                     />
                   </div>
@@ -571,7 +406,7 @@ const Login = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.7 }}
+                  transition={{ duration: 0.15, delay: 0.35 }}
                 >
                   <div className="relative">
                     {signupMethod === "email" ? (
@@ -582,8 +417,8 @@ const Login = () => {
                           name="email"
                           value={signUp.email}
                           onChange={handleSignUpChange}
-                          placeholder="Email Address"
-                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                          placeholder="Email Address or Mobile Number"
+                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-100"
                           required
                         />
                       </>
@@ -595,8 +430,8 @@ const Login = () => {
                           name="mobile"
                           value={signUp.mobile}
                           onChange={handleSignUpChange}
-                          placeholder="Mobile Number"
-                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                          placeholder="Mobile Number or Email Address"
+                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-100"
                           required
                         />
                       </>
@@ -607,7 +442,7 @@ const Login = () => {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.8 }}
+                    transition={{ duration: 0.15, delay: 0.4 }}
                   >
                     <div className="relative">
                       <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
@@ -617,7 +452,7 @@ const Login = () => {
                         value={signUp.password}
                         onChange={handleSignUpChange}
                         placeholder="Password"
-                        className="w-full pl-10 pr-12 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                        className="w-full pl-10 pr-12 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-100"
                         required
                       />
                       <button
@@ -633,7 +468,7 @@ const Login = () => {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.9 }}
+                    transition={{ duration: 0.15, delay: 0.45 }}
                   >
                     <div className="relative">
                       <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
@@ -643,7 +478,7 @@ const Login = () => {
                         value={signUp.confirmPassword}
                         onChange={handleSignUpChange}
                         placeholder="Confirm "
-                        className="w-full pl-10 pr-12 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                        className="w-full pl-10 pr-12 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40  focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-100"
                         required
                       />
                       <button
@@ -683,7 +518,7 @@ const Login = () => {
                   type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-200"
+                  className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-100"
                 >
                   Create Account
                 </motion.button>
@@ -693,14 +528,14 @@ const Login = () => {
               <motion.form
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.5 }}
+                transition={{ duration: 0.2, delay: 0.25 }}
                 onSubmit={handleSignIn}
                 className="space-y-4"
               >
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.6 }}
+                  transition={{ duration: 0.15, delay: 0.3 }}
                 >
                   <div className="relative">
                     {loginMethod === "email" ? (
@@ -711,8 +546,8 @@ const Login = () => {
                           name="email"
                           value={signIn.email}
                           onChange={handleSignInChange}
-                          placeholder="Email Address"
-                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                          placeholder="Email Address or Mobile Number"
+                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-100"
                           required
                         />
                       </>
@@ -725,7 +560,7 @@ const Login = () => {
                           value={signIn.mobile}
                           onChange={handleSignInChange}
                           placeholder="Mobile Number"
-                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                          className="w-full pl-10 pr-4 py-3 bg-white/60 border border-teal-200 rounded-xl text-teal-900 placeholder-teal-500/40 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-100"
                           required
                         />
                       </>
@@ -736,7 +571,7 @@ const Login = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.7 }}
+                  transition={{ duration: 0.15, delay: 0.35 }}
                 >
                   <div className="relative">
                     <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" />
@@ -762,12 +597,12 @@ const Login = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.8 }}
+                  transition={{ duration: 0.15, delay: 0.4 }}
                   className="flex justify-end"
                 >
                   <a
                     href="/forgot-password"
-                    className="text-teal-600 text-sm hover:text-teal-700 hover:underline transition-colors"
+                    className="text-teal-600 text-sm hover:text-teal-700 hover:underline transition-colors duration-100"
                   >
                     Forgot Password?
                   </a>
@@ -797,7 +632,7 @@ const Login = () => {
                   type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-200"
+                  className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-100"
                 >
                   Sign In
                 </motion.button>
@@ -808,7 +643,7 @@ const Login = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.6 }}
+              transition={{ duration: 0.2, delay: 0.3 }}
               className="mt-6 text-center"
             >
               <p className="text-gray-600 text-sm">
@@ -820,7 +655,7 @@ const Login = () => {
                   onClick={() => setIsSignUp(!isSignUp)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="text-teal-600 font-medium hover:underline transition-colors"
+                  className="text-teal-600 font-medium hover:underline transition-colors duration-100"
                 >
                   {isSignUp ? "Sign In" : "Sign Up"}
                 </motion.button>

@@ -631,8 +631,6 @@ export default function MyDietChart() {
     return selectedFoods.includes(`${categoryId}-${itemName}`);
   };
 
-  const progress = Math.round(((step + 1) / STEPS.length) * 100);
-
   // Tab content components
   const getTabContent = () => {
     const currentPlan =
@@ -722,7 +720,7 @@ export default function MyDietChart() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedDay(day.day)}
-                className={`px-1 sm:px-4 py-1 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center gap-1 sm:gap-2 whitespace-nowrap ${
+                className={`px-1 sm:px-4 py-1 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 flex items-center gap-1 sm:gap-2 whitespace-nowrap ${
                   selectedDay === day.day
                     ? "bg-gradient-to-r from-cyan-500 via-teal-500 to-cyan-500 text-white shadow-lg"
                     : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
@@ -899,48 +897,6 @@ export default function MyDietChart() {
       {/* Enhanced Ayurvedic Particle System */}
       <AyurvedicParticleSystem count={1} />
 
-      {/* Top Navigation Bar */}
-      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 sm:p-4 bg-white/95 backdrop-blur-md border-b border-amber-200/20">
-        {/* Back to Home Button */}
-        <Link to="/dhome">
-          <motion.button
-            whileHover={{ scale: 1.05, rotateY: 5 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-2 sm:px-4 py-1 sm:py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-xs sm:text-sm md:text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-1 sm:gap-2"
-          >
-            <FaHome className="text-sm sm:text-base md:text-xl" />
-            <span className="hidden sm:inline">Back to Home</span>
-            <span className="sm:hidden">Home</span>
-          </motion.button>
-        </Link>
-
-        {/* Progress Bar */}
-        <div className="flex-1 mx-2 sm:mx-4 md:mx-8">
-          <div className="flex items-center justify-center gap-2 sm:gap-4">
-            <span className="text-xs sm:text-sm md:text-lg font-semibold text-teal-800">
-              Step {step + 1} of {STEPS.length}
-            </span>
-            <div className="w-32 sm:w-48 md:w-64 bg-white/20 h-2 sm:h-3 rounded-full overflow-hidden">
-              <motion.div
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-2 sm:h-3 rounded shadow-sm"
-                style={{ width: `${progress}%` }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-              />
-            </div>
-            <span className="text-xs sm:text-sm md:text-lg font-semibold text-teal-800">
-              {Math.round(progress)}%
-            </span>
-          </div>
-        </div>
-
-        {/* Language Selector Placeholder */}
-        <div className="px-2 sm:px-4 py-1 sm:py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-xs sm:text-sm md:text-lg font-semibold">
-          <FaLanguage className="text-sm sm:text-base md:text-xl" />
-        </div>
-      </div>
-
       {/* Dynamic Background Layers */}
       <div className="absolute inset-0 -z-10">
         {BG_LAYERS.map((b, i) => (
@@ -1049,7 +1005,7 @@ export default function MyDietChart() {
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={next}
-                        className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-sm sm:text-base md:text-lg lg:text-xl shadow-lg hover:shadow-xl flex items-center gap-2 justify-center transition-all duration-300"
+                        className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-sm sm:text-base md:text-lg lg:text-xl shadow-lg hover:shadow-xl flex items-center gap-2 justify-center transition-all duration-150"
                       >
                         <FaPlay className="text-2xl" />
                         Start Customizing
@@ -1090,7 +1046,7 @@ export default function MyDietChart() {
                                   key={item.name}
                                   initial={{ opacity: 0, y: 10 }}
                                   animate={{ opacity: 1, y: 0 }}
-                                  className={`rounded-2xl border-2 transition-all duration-300 ${
+                                  className={`rounded-2xl border-2 transition-all duration-150 ${
                                     isFoodSelected(category.id, item.name)
                                       ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white border-teal-500"
                                       : "bg-white/60 hover:bg-teal-50 text-gray-800 border-gray-200"
@@ -1166,7 +1122,7 @@ export default function MyDietChart() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                           onClick={() => setActiveTab(tab.id)}
-                          className={`px-2 sm:px-3 py-1 sm:py-2 rounded-xl text-sm sm:text-base md:text-lg font-medium transition-all duration-300 flex items-center gap-2 ${
+                          className={`px-2 sm:px-3 py-1 sm:py-2 rounded-xl text-sm sm:text-base md:text-lg font-medium transition-all duration-150 flex items-center gap-2 ${
                             activeTab === tab.id
                               ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
                               : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
@@ -1206,7 +1162,7 @@ export default function MyDietChart() {
                   whileTap={{ scale: 0.95 }}
                   onClick={prev}
                   disabled={step === 0}
-                  className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-white/95 via-teal-50/80 to-cyan-50/60 backdrop-blur-sm border-2 border-amber-200/60 text-teal-700 text-xs sm:text-sm md:text-lg disabled:opacity-50 transition-all duration-200 flex items-center gap-2 shadow-md"
+                  className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-white/95 via-teal-50/80 to-cyan-50/60 backdrop-blur-sm border-2 border-amber-200/60 text-teal-700 text-xs sm:text-sm md:text-lg disabled:opacity-50 transition-all duration-100 flex items-center gap-2 shadow-md"
                 >
                   <FaChevronLeft />
                   Previous
@@ -1222,7 +1178,7 @@ export default function MyDietChart() {
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => setStep(i)}
-                      className={`w-4 h-4 rounded-full transition-all duration-300 flex items-center justify-center border-2 ${
+                      className={`w-4 h-4 rounded-full transition-all duration-150 flex items-center justify-center border-2 ${
                         i === step
                           ? "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 border-amber-400 shadow-lg shadow-amber-200 scale-125"
                           : "bg-white/60 border-amber-200/60"
@@ -1244,7 +1200,7 @@ export default function MyDietChart() {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={next}
-                    className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white text-xs sm:text-sm md:text-lg shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-teal-400"
+                    className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white text-xs sm:text-sm md:text-lg shadow-lg transition-all duration-100 flex items-center gap-2 border-2 border-teal-400"
                   >
                     Next
                     <FaChevronRight />
@@ -1257,7 +1213,7 @@ export default function MyDietChart() {
                       // Export or share functionality
                       alert("Diet chart exported successfully!");
                     }}
-                    className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-xs sm:text-sm md:text-lg shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-green-400"
+                    className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-xs sm:text-sm md:text-lg shadow-lg transition-all duration-100 flex items-center gap-2 border-2 border-green-400"
                   >
                     <FaDownload />
                     Download Report

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -230,7 +230,6 @@ export default function AddPatient() {
   const [patient, setPatient] = useState(initialPatient);
   const [step, setStep] = useState(0); // 0..4 full-page steps
   const containerRef = useRef(null);
-  const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
 
   const update = (sectionKey, field, value) => {
@@ -277,27 +276,7 @@ export default function AddPatient() {
 
   // compute overall fill progress
   useEffect(() => {
-    const countFields = (obj) => {
-      let total = 0;
-      let filled = 0;
-      Object.values(obj).forEach((val) => {
-        if (val && typeof val === "object" && !Array.isArray(val)) {
-          const sub = countFields(val);
-          total += sub.total;
-          filled += sub.filled;
-        } else {
-          total += 1;
-          if (Array.isArray(val)) {
-            if (val.length > 0) filled += 1;
-          } else if (val !== "" && val !== null && val !== undefined) {
-            filled += 1;
-          }
-        }
-      });
-      return { total, filled };
-    };
-    const { total, filled } = countFields(patient);
-    setProgress(total ? Math.round((filled / total) * 100) : 0);
+    // Progress calculation removed as it's no longer needed
   }, [patient]);
 
   const go = (index) => {
@@ -331,47 +310,8 @@ export default function AddPatient() {
       {/* Enhanced Ayurvedic Particle System */}
       <AyurvedicParticleSystem count={1} />
 
-      {/* Top Navigation Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 sm:p-4 bg-white/95 backdrop-blur-md border-b border-teal-200/20">
-        {/* Back to Home Button */}
-        <Link to="/dhome">
-          <motion.button
-            whileHover={{ scale: 1.05, rotateY: 5 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-2 sm:px-4 py-1 sm:py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-xs sm:text-sm md:text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-1 sm:gap-2"
-          >
-            <FaHome className="text-sm sm:text-base md:text-xl" />
-            <span className="hidden sm:inline">Back to Home</span>
-            <span className="sm:hidden">Home</span>
-          </motion.button>
-        </Link>
-
-        {/* Progress Bar */}
-        <div className="flex-1 mx-2 sm:mx-4 md:mx-8">
-          <div className="flex items-center justify-center gap-2 sm:gap-4">
-            <span className="text-xs sm:text-sm md:text-lg font-semibold text-teal-800">
-              Step {step + 1} of {SECTIONS.length}
-            </span>
-            <div className="w-32 sm:w-48 md:w-64 bg-white/20 h-2 sm:h-3 rounded-full overflow-hidden">
-              <motion.div
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 h-2 sm:h-3 rounded shadow-sm"
-                style={{ width: `${progress}%` }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-              />
-            </div>
-            <span className="text-xs sm:text-sm md:text-lg font-semibold text-teal-800">
-              {Math.round(progress)}%
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* Dynamic Background Layers */}
       <div className="relative inset-0 -z-10">
-   
-
         {/* Enhanced floating blobs with better animations */}
         <motion.div
           animate={{
@@ -414,7 +354,7 @@ export default function AddPatient() {
                 whileHover={{ scale: 1.02, x: 5 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => go(i)}
-                className={`w-full text-left px-4 py-4 rounded-xl shadow-lg flex items-center gap-3 transition-all duration-300 ${
+                className={`w-full text-left px-4 py-4 rounded-xl shadow-lg flex items-center gap-3 transition-all duration-150 ${
                   i === step
                     ? "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white border-2 border-teal-400"
                     : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-teal-300 hover:bg-teal-50"
@@ -523,7 +463,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("basic", "patientName", e.target.value)
                                 }
-                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-base md:text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-base md:text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-100 bg-white/80"
                                 placeholder="Full name"
                                 required
                               />
@@ -544,7 +484,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("basic", "age", e.target.value)
                                 }
-                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-base md:text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-base md:text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-100 bg-white/80"
                                 placeholder="Age in years"
                               />
                             </motion.div>
@@ -564,7 +504,7 @@ export default function AddPatient() {
                                 onChange={(e) =>
                                   update("basic", "gender", e.target.value)
                                 }
-                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-base md:text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200 bg-white/80"
+                                className="w-full p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-base md:text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-100 bg-white/80"
                               >
                                 <option value="">Select Gender</option>
                                 <option value="male">Male</option>
@@ -948,7 +888,7 @@ export default function AddPatient() {
                           whileTap={{ scale: 0.95 }}
                           onClick={() => go(step - 1)}
                           disabled={step === 0}
-                          className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200 text-amber-700 text-sm sm:text-base md:text-lg disabled:opacity-50 hover:border-teal-300 hover:bg-teal-50 transition-all duration-200 flex items-center gap-2"
+                          className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200 text-amber-700 text-sm sm:text-base md:text-lg disabled:opacity-50 hover:border-teal-300 hover:bg-teal-50 transition-all duration-100 flex items-center gap-2"
                         >
                           <FaChevronLeft />
                           Previous
@@ -964,7 +904,7 @@ export default function AddPatient() {
                               whileHover={{ scale: 1.2 }}
                               whileTap={{ scale: 0.9 }}
                               onClick={() => go(i)}
-                              className={`w-3 h-3 rounded-full transition-all duration-300 flex items-center justify-center ${
+                              className={`w-3 h-3 rounded-full transition-all duration-150 flex items-center justify-center ${
                                 i === step
                                   ? "bg-gradient-to-r from-amber-600 to-orange-600 shadow-lg shadow-amber-200"
                                   : "bg-white/50 hover:bg-white/70"
@@ -987,7 +927,7 @@ export default function AddPatient() {
                             whileTap={{ scale: 0.95 }}
                             type="button"
                             onClick={() => go(step + 1)}
-                            className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 text-white text-sm sm:text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                            className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 text-white text-sm sm:text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-100 flex items-center gap-2"
                           >
                             Next
                             <FaChevronRight />
@@ -998,7 +938,7 @@ export default function AddPatient() {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => navigate("/my-diet-chart")}
                             type="submit"
-                            className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white text-sm sm:text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                            className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white text-sm sm:text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-100 flex items-center gap-2"
                           >
                             <FaCheck />
                             Save & Submit

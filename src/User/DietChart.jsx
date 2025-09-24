@@ -80,7 +80,7 @@ const AyurvedicParticleSystem = ({ count = 80 }) => {
         gsap.to(particle, {
           x: `+=${(Math.random() - 0.5) * 200}`,
           y: `+=${(Math.random() - 0.5) * 200}`,
-          duration: Math.random() * 12 + 12,
+          duration: Math.random() * 4 + 4,
           ease: "sine.inOut",
           repeat: -1,
           yoyo: true,
@@ -89,7 +89,7 @@ const AyurvedicParticleSystem = ({ count = 80 }) => {
         // Rotation animation
         gsap.to(particle, {
           rotation: "+=360",
-          duration: Math.random() * 20 + 15,
+          duration: Math.random() * 6 + 5,
           ease: "none",
           repeat: -1,
         });
@@ -98,7 +98,7 @@ const AyurvedicParticleSystem = ({ count = 80 }) => {
         if (isSymbol) {
           gsap.to(particle, {
             scale: "+=0.3",
-            duration: Math.random() * 2 + 1.5,
+            duration: Math.random() * 0.8 + 0.6,
             ease: "sine.inOut",
             repeat: -1,
             yoyo: true,
@@ -526,7 +526,7 @@ const DayChart = ({ plan, language = "en" }) => {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -6 }}
-      transition={{ duration: 0.45 }}
+      transition={{ duration: 0.225 }}
       className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg"
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
@@ -549,7 +549,7 @@ const DayChart = ({ plan, language = "en" }) => {
               key={mealKey}
               initial={{ scale: 0.995, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.06 }}
+              transition={{ delay: 0.03 }}
               className="bg-[#f6f3e8]/60 rounded-lg p-3 sm:p-4"
             >
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
@@ -597,7 +597,7 @@ const DayChart = ({ plan, language = "en" }) => {
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          transition={{ duration: 0.28 }}
+                          transition={{ duration: 0.14 }}
                           className="mt-2 p-3 bg-white rounded shadow-inner text-xl"
                         >
                           <div className="font-semibold mb-1">Recipe</div>
@@ -633,7 +633,7 @@ const DayChart = ({ plan, language = "en" }) => {
       <motion.div
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.08, duration: 0.45 }}
+        transition={{ delay: 0.04, duration: 0.225 }}
         className="mt-4 sm:mt-6 bg-white rounded-xl p-3 sm:p-4 shadow"
       >
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2 sm:gap-0">
@@ -1219,7 +1219,7 @@ export default function DietChart() {
                     {/* Recommendations */}
                     <div className="space-y-4">
                       <h5 className="text-lg font-semibold text-teal-900 mb-3">
-                       Recommendations
+                        Recommendations
                       </h5>
                       <div className="space-y-3">
                         <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-3 border border-teal-200">
@@ -1396,7 +1396,7 @@ export default function DietChart() {
                             ? "bg-green-400"
                             : item.type === "snack"
                             ? "bg-yellow-400"
-                            : item.type === "wellness"  
+                            : item.type === "wellness"
                             ? "bg-purple-400"
                             : "bg-gray-400"
                         }`}
@@ -1482,33 +1482,6 @@ export default function DietChart() {
     <div className="h-screen w-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
       {/* Enhanced Ayurvedic Particle System */}
       <AyurvedicParticleSystem count={1} />
-
-      {/* Top Navigation Bar */}
-      <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-white/95 backdrop-blur-md border-b border-amber-200/20">
-        {/* Back to Home Button */}
-        <Link to="/dhome">
-          <motion.button
-            whileHover={{ scale: 1.05, rotateY: 5 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold hover:bg-teal-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
-          >
-            <FaHome className="text-xl" />
-            Back to Home
-          </motion.button>
-        </Link>
-
-        {/* Title */}
-        <div className="flex-1 text-center">
-          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-teal-800 to-cyan-600 bg-clip-text text-transparent">
-            Your Diet Chart
-          </h1>
-        </div>
-
-        {/* Language Selector */}
-        <div className="px-4 py-2 rounded-xl bg-white/90 backdrop-blur-sm border border-teal-200 text-teal-800 text-lg font-semibold">
-          <FaLanguage className="text-xl" />
-        </div>
-      </div>
 
       {/* Dynamic Background Layers */}
       <div className="absolute inset-0 -z-10">
