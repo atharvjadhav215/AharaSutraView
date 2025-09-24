@@ -36,7 +36,7 @@ const ayurvedicColors = [
   "#F8F8F8",
 ];
 // Enhanced Ayurvedic Particle System
-const AyurvedicParticleSystem = ({ count = 120 }) => {
+const AyurvedicParticleSystem = ({ count = 1 }) => {
   const particlesRef = useRef([]);
   const containerRef = useRef(null);
 
@@ -68,7 +68,7 @@ const AyurvedicParticleSystem = ({ count = 120 }) => {
         gsap.to(particle, {
           x: `+=${(Math.random() - 0.5) * 300}`,
           y: `+=${(Math.random() - 0.5) * 300}`,
-          duration: Math.random() * 7.5 + 7.5,
+          duration: Math.random() * 15 + 15,
           ease: "sine.inOut",
           repeat: -1,
           yoyo: true,
@@ -77,7 +77,7 @@ const AyurvedicParticleSystem = ({ count = 120 }) => {
         // Rotation animation
         gsap.to(particle, {
           rotation: "+=360",
-          duration: Math.random() * 12.5 + 10,
+          duration: Math.random() * 25 + 20,
           ease: "none",
           repeat: -1,
         });
@@ -86,7 +86,7 @@ const AyurvedicParticleSystem = ({ count = 120 }) => {
         if (isSymbol) {
           gsap.to(particle, {
             scale: "+=0.5",
-            duration: Math.random() * 1.5 + 1,
+            duration: Math.random() * 3 + 2,
             ease: "sine.inOut",
             repeat: -1,
             yoyo: true,
@@ -161,7 +161,7 @@ const Card3D = ({ children, className = "" }) => {
       rotateX: rotateX,
       rotateY: rotateY,
       transformPerspective: 1000,
-      duration: 0.15,
+      duration: 0.3,
       ease: "power2.out",
     });
   };
@@ -170,7 +170,7 @@ const Card3D = ({ children, className = "" }) => {
     gsap.to(cardRef.current, {
       rotateX: 0,
       rotateY: 0,
-      duration: 0.25,
+      duration: 0.5,
       ease: "power2.out",
     });
   };
@@ -495,9 +495,8 @@ export default function HomePage() {
   const [isPlaying, setIsPlaying] = useState(true); // Start with auto-play enabled
   const [slideDirection, setSlideDirection] = useState("right"); // Track slide direction
 
-  // Dosha background image state
-  const [backgroundImage, setBackgroundImage] = useState(DOSHA_TYPES[0].image);
-  const [isHovered, setIsHovered] = useState(false);
+  // Individual dosha hover state management
+  const [hoveredDosha, setHoveredDosha] = useState(null);
 
   const onPrev = () => {
     setSlideDirection("left");
@@ -536,7 +535,7 @@ export default function HomePage() {
             { textContent: 0 },
             {
               textContent: target,
-              duration: 1,
+              duration: 2,
               ease: "power2.out",
               snap: { textContent: 1 },
               onUpdate: function () {
@@ -570,7 +569,7 @@ export default function HomePage() {
           opacity: 1,
           y: 0,
           rotateX: 0,
-          duration: 0.5,
+          duration: 1,
           delay: index * 0.2,
           ease: "power3.out",
           scrollTrigger: {
@@ -670,7 +669,7 @@ export default function HomePage() {
                 rotate: [0, 360],
               }}
               transition={{
-                duration: 1,
+                duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -683,7 +682,7 @@ export default function HomePage() {
                 rotate: [360, 0],
               }}
               transition={{
-                duration: 3,
+                duration: 6,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -718,7 +717,7 @@ export default function HomePage() {
             />
 
             <motion.h2
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-white mb-2 sm:mb-3 relative z-10 drop-shadow-lg"
+              className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-extrabold text-white mb-2 sm:mb-3 relative z-10 drop-shadow-lg"
               initial={{ x: -50, opacity: 0, rotateX: -20 }}
               animate={{ x: 0, opacity: 1, rotateX: 0 }}
               transition={{
@@ -732,7 +731,7 @@ export default function HomePage() {
               {data.title}
             </motion.h2>
             <motion.p
-              className="text-white/90 text-xl mb-3 sm:mb-4 relative z-10 drop-shadow-md"
+              className="text-white/90 text-sm sm:text-base md:text-lg lg:text-xl mb-3 sm:mb-4 relative z-10 drop-shadow-md"
               initial={{ x: -40, opacity: 0, rotateX: -15 }}
               animate={{ x: 0, opacity: 1, rotateX: 0 }}
               transition={{
@@ -774,13 +773,15 @@ export default function HomePage() {
                       opacity: [0.7, 1, 0.7],
                     }}
                     transition={{
-                      duration: 1,
+                      duration: 2,
                       repeat: Infinity,
                       ease: "easeInOut",
                       delay: i * 0.3,
                     }}
                   />
-                  <p className="text-xl text-white/95 drop-shadow-sm">{b}</p>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 drop-shadow-sm">
+                    {b}
+                  </p>
                 </motion.div>
               ))}
             </div>
@@ -810,7 +811,7 @@ export default function HomePage() {
                         scale: i === index ? [1, 1.1, 1] : 1,
                       }}
                       transition={{
-                        duration: 1,
+                        duration: 2,
                         repeat: Infinity,
                         ease: "easeInOut",
                       }}
@@ -921,10 +922,7 @@ export default function HomePage() {
           style={{
             backgroundImage: `url('https://kamleshyadav.com/html/pure-ayurveda/html/ayurveda-html/assets/images/banner.jpg')`,
           }}
-        >
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0"></div>
-        </div>
+        ></div>
 
         {/* Content Container */}
         <div className="relative z-10">
@@ -953,7 +951,7 @@ export default function HomePage() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto"
         >
           {/* Final CTA Section */}
@@ -961,21 +959,21 @@ export default function HomePage() {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.8 }}
               viewport={{ once: true }}
               className="max-w-5xl mx-auto text-center"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
                 className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-3xl p-12 border border-green-200 relative overflow-hidden"
               >
                 <motion.h2
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
                   viewport={{ once: true }}
                   className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-b from-teal-800 to-cyan-600 bg-clip-text text-transparent relative z-10"
                 >
@@ -985,9 +983,9 @@ export default function HomePage() {
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
                   viewport={{ once: true }}
-                  className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto relative z-10"
+                  className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-12 max-w-3xl mx-auto relative z-10"
                 >
                   Join thousands of practitioners who are transforming lives
                   through the perfect harmony of ancient wisdom and modern
@@ -997,7 +995,7 @@ export default function HomePage() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
                   viewport={{ once: true }}
                   className="flex flex-col sm:flex-row gap-6 justify-center relative z-10"
                 >
@@ -1008,7 +1006,7 @@ export default function HomePage() {
                     }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => navigate("/create-own-chart")}
-                    className="px-10 py-5 bg-gradient-to-r from-cyan-600 to-teal-600 rounded-xl text-xl font-semibold hover:from-teal-700 hover:to-cyan-700 transition-colors text-white btn-enhanced shadow-floating"
+                    className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 bg-gradient-to-r from-cyan-600 to-teal-600 rounded-xl text-sm sm:text-base md:text-lg lg:text-xl font-semibold hover:from-teal-700 hover:to-cyan-700 transition-colors text-white btn-enhanced shadow-floating"
                   >
                     Create Your Diet Chart
                   </motion.button>
@@ -1018,7 +1016,7 @@ export default function HomePage() {
                       rotateY: -5,
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-10 py-5 border-2 border-cyan-300 rounded-xl text-xl font-semibold hover:bg-teal-50 transition-colors text-gray-700 hover-lift glass-morphism"
+                    className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 border-2 border-cyan-300 rounded-xl text-sm sm:text-base md:text-lg lg:text-xl font-semibold hover:bg-teal-50 transition-colors text-gray-700 hover-lift glass-morphism"
                     onClick={() => navigate("/uprofile")}
                   >
                     View Profile
@@ -1033,43 +1031,16 @@ export default function HomePage() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
+          transition={{ duration: 1, delay: 0.8 }}
           className="mt-16 max-w-6xl mx-auto"
         >
           <div className="">
-            <div
-              className="relative bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl p-6 border border-teal-100 overflow-hidden"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              {/* Background Image that covers entire container on hover */}
-              <motion.div
-                className="absolute inset-0"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{
-                  scale: isHovered ? 1.1 : 0.8,
-                  opacity: isHovered ? 1.0 : 0,
-                }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              >
-                <img
-                  src={backgroundImage}
-                  alt="Dosha background"
-                  className="w-full h-full rounded-4xl  object-cover"
-                />
-              </motion.div>
-
+            <div className="relative bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl p-6 border border-teal-100 overflow-hidden">
               <div className="relative z-10 flex items-center gap-4 mb-6">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <motion.span
-                  className="ml-4 text-2xl font-medium"
-                  animate={{
-                    color: isHovered ? "#ffffff" : "#6b7280",
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
+                <motion.span className="ml-4 text-sm sm:text-base md:text-lg lg:text-xl font-medium text-gray-600">
                   AharaSutra Ayurvedic Dashboard
                 </motion.span>
               </div>
@@ -1093,14 +1064,31 @@ export default function HomePage() {
                       stiffness: 300,
                       damping: 30,
                     }}
-                    onMouseEnter={() => setBackgroundImage(dosha.image)}
+                    onMouseEnter={() => setHoveredDosha(dosha.name)}
+                    onMouseLeave={() => setHoveredDosha(null)}
                   >
-                    <div className="text-center">
+                    {/* Background Image that covers entire container on hover */}
+                    <motion.div
+                      className="absolute inset-0 opacity-45 bg-black"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{
+                        scale: hoveredDosha === dosha.name ? 1.1 : 0.8,
+                        opacity: hoveredDosha === dosha.name ? 1.0 : 0,
+                      }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    >
+                      <img
+                        src={dosha.image}
+                        alt={`${dosha.name} background`}
+                        className="w-full h-full rounded-xl object-cover"
+                      />
+                    </motion.div>
+                    <div className="relative z-10 text-center">
                       <motion.div
                         className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden border-2 border-teal-200"
                         whileHover={{
                           scale: 1.2,
-                          rotate: 360,
+
                           transition: { duration: 0.6 },
                         }}
                       >
@@ -1111,17 +1099,22 @@ export default function HomePage() {
                         />
                       </motion.div>
                       <motion.h3
-                        className="font-semibold text-gray-800 mb-2"
-                        whileHover={{
-                          scale: 1.1,
-                          color: dosha.color,
-                          transition: { duration: 0.3 },
+                        className="font-semibold mb-2 text-sm sm:text-base md:text-lg"
+                        animate={{
+                          color:
+                            hoveredDosha === dosha.name ? "#ffffff" : "#374151",
                         }}
+                        transition={{ duration: 0.3 }}
                       >
                         {dosha.name}
                       </motion.h3>
                       <motion.p
-                        className="text-xl text-gray-600 mb-2"
+                        className="text-sm sm:text-base md:text-lg mb-2"
+                        animate={{
+                          color:
+                            hoveredDosha === dosha.name ? "#ffffff" : "#4b5563",
+                        }}
+                        transition={{ duration: 0.3 }}
                         whileHover={{
                           scale: 1.05,
                           transition: { duration: 0.3 },
@@ -1130,7 +1123,12 @@ export default function HomePage() {
                         {dosha.description}
                       </motion.p>
                       <motion.div
-                        className="text-xl text-gray-500"
+                        className="text-xs sm:text-sm md:text-base"
+                        animate={{
+                          color:
+                            hoveredDosha === dosha.name ? "#ffffff" : "#6b7280",
+                        }}
+                        transition={{ duration: 0.3 }}
                         whileHover={{
                           scale: 1.05,
                           transition: { duration: 0.3 },
@@ -1161,7 +1159,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-b from-teal-800 to-cyan-600 bg-clip-text text-transparent"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-b from-teal-800 to-cyan-600 bg-clip-text text-transparent"
           >
             Sacred Herbs & Healing Plants
           </motion.h2>
@@ -1170,7 +1168,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
           >
             Discover the powerful healing properties of traditional Ayurvedic
             herbs, each carefully selected for their unique therapeutic
@@ -1201,7 +1199,7 @@ export default function HomePage() {
                 <motion.div
                   className="w-32 h-32 rounded-full overflow-hidden border-4 border-teal-200 shadow-lg"
                   style={{ backgroundColor: herb.color + "20" }}
-                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.8 }}
                 >
                   <img
@@ -1211,10 +1209,12 @@ export default function HomePage() {
                   />
                 </motion.div>
                 <div className="text-center">
-                  <h3 className="font-semibold text-gray-800 mb-2">
+                  <h3 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base md:text-lg">
                     {herb.name}
                   </h3>
-                  <p className="text-xl text-gray-600">{herb.benefits}</p>
+                  <p className="text-sm sm:text-base md:text-lg text-gray-600">
+                    {herb.benefits}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -1257,7 +1257,7 @@ export default function HomePage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.4 }}
                       viewport={{ once: true }}
-                      className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-b from-teal-900 to-cyan-600 bg-clip-text text-transparent relative z-10"
+                      className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-6 bg-gradient-to-b from-teal-900 to-cyan-600 bg-clip-text text-transparent relative z-10"
                     >
                       {feature.title}
                     </motion.h3>
@@ -1267,7 +1267,7 @@ export default function HomePage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.5 }}
                       viewport={{ once: true }}
-                      className="text-xl text-gray-700 mb-6 relative z-10"
+                      className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-6 relative z-10"
                     >
                       {feature.subtitle}
                     </motion.p>
@@ -1277,7 +1277,7 @@ export default function HomePage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.6 }}
                       viewport={{ once: true }}
-                      className="text-xl text-gray-600 mb-8 relative z-10"
+                      className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 mb-8 relative z-10"
                     >
                       {feature.description}
                     </motion.p>
@@ -1298,7 +1298,7 @@ export default function HomePage() {
                             whileHover={{ scale: 1.5, rotate: 180 }}
                             transition={{ type: "spring", stiffness: 400 }}
                           />
-                          <span className="text-gray-700 text-xl font-medium">
+                          <span className="text-gray-700 text-sm sm:text-base md:text-lg lg:text-xl font-medium">
                             {item}
                           </span>
                         </motion.div>
@@ -1343,16 +1343,16 @@ export default function HomePage() {
                               opacity: [0.3, 0.4, 0.3],
                             }}
                             transition={{
-                              duration: 1,
+                              duration: 2,
                               repeat: Infinity,
                               ease: "easeInOut",
                             }}
                           />
-                          <span className="text-xl text-gray-600 font-medium">
+                          <span className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 font-medium">
                             Interactive Demo
                           </span>
                         </div>
-                        <div className="text-xl text-gray-500 bg-teal-100 px-3 py-1 rounded-full">
+                        <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-500 bg-teal-100 px-3 py-1 rounded-full">
                           Ayurvedic Focus
                         </div>
                       </div>
@@ -1388,7 +1388,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
           >
             Connect with your favorite health and fitness apps to create a
             comprehensive wellness ecosystem.
@@ -1418,14 +1418,13 @@ export default function HomePage() {
                 <motion.div
                   className="text-teal-600 mb-4 flex justify-center"
                   whileHover={{
-                    rotate: 360,
                     scale: 1.2,
                   }}
                   transition={{ duration: 0.6 }}
                 >
                   {integration.logo}
                 </motion.div>
-                <div className="text-gray-700 font-medium text-sm">
+                <div className="text-gray-700 font-medium text-xs sm:text-sm md:text-base">
                   {integration.name}
                 </div>
               </motion.div>
@@ -1457,7 +1456,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
           >
             Join thousands of holistic health practitioners who are transforming
             lives through the integration of ancient wisdom and modern nutrition
@@ -1484,7 +1483,7 @@ export default function HomePage() {
               >
                 <motion.div className="text-5xl mb-4">{stat.icon}</motion.div>
                 <motion.div
-                  className="text-3xl md:text-4xl font-bold mb-2 counter"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 counter"
                   data-target={
                     stat.value.includes("+") ? parseInt(stat.value) : stat.value
                   }
@@ -1492,7 +1491,9 @@ export default function HomePage() {
                 >
                   {stat.value}
                 </motion.div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
+                <div className="text-gray-600 font-medium text-sm sm:text-base md:text-lg">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </div>
@@ -1558,7 +1559,6 @@ export default function HomePage() {
                       className="w-16 h-16 rounded-full overflow-hidden border-4 border-teal-200"
                       whileHover={{
                         scale: 1.1,
-                        rotate: 360,
                       }}
                       transition={{ duration: 0.6 }}
                     >
@@ -1569,20 +1569,20 @@ export default function HomePage() {
                       />
                     </motion.div>
                     <div>
-                      <div className="font-semibold text-gray-800 text-xl">
+                      <div className="font-semibold text-gray-800 text-sm sm:text-base md:text-lg lg:text-xl">
                         {testimonial.name}
                       </div>
-                      <div className="text-xl text-gray-600 font-medium">
+                      <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 font-medium">
                         {testimonial.role}
                       </div>
-                      <div className="text-xl text-gray-500">
+                      <div className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-500">
                         {testimonial.company}
                       </div>
                     </div>
                   </div>
 
                   <motion.p
-                    className="text-gray-700 italic text-xl leading-relaxed relative z-10"
+                    className="text-gray-700 italic text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed relative z-10"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
@@ -1612,21 +1612,21 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-2xl font-bold mb-4 bg-gradient-to-r from-teal-800 to-cyan-600 bg-clip-text text-transparent"
+                className="text-lg sm:text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-teal-800 to-cyan-600 bg-clip-text text-transparent"
               >
                 AharaSutra
               </motion.div>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 leading-relaxed text-sm sm:text-base md:text-lg">
                 Empowering holistic health practitioners with the perfect
                 harmony of ancient Ayurvedic wisdom and modern nutritional
                 science for transformative patient outcomes.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold mb-4 text-teal-800">
+              <h3 className="font-semibold mb-4 text-teal-800 text-sm sm:text-base md:text-lg">
                 Ayurvedic Practices
               </h3>
-              <div className="space-y-2 text-gray-600">
+              <div className="space-y-2 text-gray-600 text-xs sm:text-sm md:text-base">
                 <div>Dosha Assessment</div>
                 <div>Herbal Medicine</div>
                 <div>Seasonal Eating</div>
@@ -1634,8 +1634,10 @@ export default function HomePage() {
               </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-4 text-teal-800">Platform</h3>
-              <div className="space-y-2 text-gray-600">
+              <h3 className="font-semibold mb-4 text-teal-800 text-sm sm:text-base md:text-lg">
+                Platform
+              </h3>
+              <div className="space-y-2 text-gray-600 text-xs sm:text-sm md:text-base">
                 <div>Features</div>
                 <div>Pricing</div>
                 <div>Documentation</div>
@@ -1643,8 +1645,10 @@ export default function HomePage() {
               </div>
             </div>
             <div>
-              <h3 className="font-semibold mb-4 text-teal-800">Community</h3>
-              <div className="space-y-2 text-gray-600">
+              <h3 className="font-semibold mb-4 text-teal-800 text-sm sm:text-base md:text-lg">
+                Community
+              </h3>
+              <div className="space-y-2 text-gray-600 text-xs sm:text-sm md:text-base">
                 <div>Practitioner Network</div>
                 <div>Knowledge Base</div>
                 <div>Support Center</div>
@@ -1653,14 +1657,14 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-teal-200 flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-600">
+            <div className="text-gray-600 text-xs sm:text-sm md:text-base">
               © 2024 AharaSutra. Honoring ancient wisdom, embracing modern
               science.
             </div>
             <div className="flex gap-4 mt-4 md:mt-0">
               <motion.button
                 whileHover={{ scale: 1.1 }}
-                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2"
+                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2 text-xs sm:text-sm md:text-base"
               >
                 <svg
                   className="w-5 h-5"
@@ -1673,7 +1677,7 @@ export default function HomePage() {
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.1 }}
-                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2"
+                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2 text-xs sm:text-sm md:text-base"
               >
                 <svg
                   className="w-5 h-5"
@@ -1686,7 +1690,7 @@ export default function HomePage() {
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.1 }}
-                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2"
+                className="text-gray-600 hover:text-teal-600 transition-colors flex items-center gap-2 text-xs sm:text-sm md:text-base"
               >
                 <svg
                   className="w-5 h-5"
