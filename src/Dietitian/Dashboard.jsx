@@ -390,22 +390,22 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-6"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.15, delay: 0.05 }}
-              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md"
             >
-              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
-                  <FaUsers className="text-white text-lg sm:text-xl" />
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
+                  <FaUsers className="text-white text-lg sm:text-base" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-teal-900">
+                  <h3 className="text-md sm:text-lg font-medium text-teal-900">
                     Total Patients
                   </h3>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-teal-800">
+                  <p className="text-xl sm:text-2xl font-bold text-teal-800">
                     {patients.length}
                   </p>
                 </div>
@@ -416,17 +416,17 @@ export default function Dashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.15, delay: 0.1 }}
-              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md"
             >
-              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center">
-                  <FaCheckCircle className="text-white text-lg sm:text-xl" />
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center">
+                  <FaCheckCircle className="text-white text-lg sm:text-base" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-teal-900">
+                  <h3 className="text-md sm:text-lg font-medium text-teal-900">
                     Active Plans
                   </h3>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-800">
+                  <p className="text-xl sm:text-2xl font-bold text-green-800">
                     {SAMPLE_PLANS.length}
                   </p>
                 </div>
@@ -437,17 +437,17 @@ export default function Dashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.15, delay: 0.15 }}
-              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md"
             >
-              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center">
-                  <FaChartLine className="text-white text-lg sm:text-xl" />
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center">
+                  <FaChartLine className="text-white text-lg sm:text-base" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-teal-900">
+                  <h3 className="text-md sm:text-lg font-medium text-teal-900">
                     Avg Adherence
                   </h3>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-800">
+                  <p className="text-xl sm:text-2xl font-bold text-blue-800">
                     {Math.round(
                       patients.reduce((sum, p) => sum + p.adherence, 0) /
                         patients.length
@@ -462,17 +462,17 @@ export default function Dashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.15, delay: 0.2 }}
-              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md"
             >
-              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center">
-                  <FaCalendarAlt className="text-white text-lg sm:text-xl" />
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center">
+                  <FaCalendarAlt className="text-white text-lg sm:text-base" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-teal-900">
+                  <h3 className="text-md sm:text-lg font-medium text-teal-900">
                     This Month
                   </h3>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-800">
+                  <p className="text-xl sm:text-2xl font-bold text-purple-800">
                     {
                       patients.filter(
                         (p) =>
@@ -494,40 +494,38 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.15, delay: 0.25 }}
-            className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+            className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md"
           >
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-900 mb-4 sm:mb-6">
+            <h3 className="text-lg sm:text-base font-bold text-teal-900 mb-3">
               Recent Activity
             </h3>
-            <div className="space-y-3 sm:space-y-4">
+            <div className="space-y-2">
               {patients.slice(0, 5).map((patient, index) => (
                 <motion.div
                   key={patient.id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.15, delay: 0.3 + index * 0.05 }}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 bg-white/60 rounded-xl border border-teal-100/50 gap-2 sm:gap-0"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 bg-white/60 rounded-lg border border-teal-100/50 gap-1 sm:gap-0"
                 >
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-teal-200 to-cyan-100 flex items-center justify-center">
-                      <FaUser className="text-teal-800 text-sm sm:text-base" />
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-r from-teal-200 to-cyan-100 flex items-center justify-center">
+                      <FaUser className="text-teal-800 text-md sm:text-lg" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-800 text-sm sm:text-base">
+                      <h4 className="font-medium text-gray-800 text-md sm:text-lg">
                         {patient.name}
                       </h4>
-                      <p className="text-xs sm:text-sm text-gray-600">
+                      <p className="text-md text-gray-600">
                         Last visit: {patient.lastVisit}
                       </p>
                     </div>
                   </div>
                   <div className="text-left sm:text-right">
-                    <p className="font-semibold text-teal-800 text-sm sm:text-base">
+                    <p className="font-medium text-teal-800 text-md sm:text-lg">
                       {patient.adherence}% adherence
                     </p>
-                    <p className="text-xs sm:text-sm text-gray-600">
-                      {patient.goal}
-                    </p>
+                    <p className="text-md text-gray-600">{patient.goal}</p>
                   </div>
                 </motion.div>
               ))}
@@ -539,22 +537,22 @@ export default function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
+          className="space-y-4"
         >
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
             <motion.input
               whileFocus={{ scale: 1.02 }}
               type="text"
               placeholder="Search patients..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="flex-1 p-2 sm:p-3 border border-gray-300 rounded-xl text-sm sm:text-lg focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100 bg-white/80"
+              className="flex-1 p-2 sm:p-3 border border-gray-300 rounded-lg text-md sm:text-lg focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-100 bg-white/80"
             />
             <motion.button
               whileHover={{ y: -2 }}
               whileTap={{ y: 0 }}
               onClick={() => navigate("/add-patient")}
-              className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-teal-800 to-cyan-600 text-white text-sm sm:text-lg shadow-lg hover:shadow-xl transition-all duration-100 flex items-center justify-center gap-2"
+              className="px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gradient-to-r from-teal-800 to-cyan-600 text-white text-md sm:text-lg shadow-md hover:shadow-lg transition-all duration-100 flex items-center justify-center gap-1 sm:gap-2"
             >
               <FaPlus />
               <span className="hidden sm:inline">Add Patient</span>
@@ -562,31 +560,31 @@ export default function Dashboard() {
             </motion.button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {filtered.map((patient, index) => (
               <motion.div
                 key={patient.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.15, delay: index * 0.05 }}
-                whileHover={{ y: -5 }}
+                whileHover={{ y: -3 }}
                 onClick={() => setSelectedPatientId(patient.id)}
-                className={`p-4 sm:p-6 rounded-2xl border-2 shadow-lg cursor-pointer transition-all duration-150 ${
+                className={`p-3 sm:p-4 rounded-xl border shadow-md cursor-pointer transition-all duration-150 ${
                   selectedPatientId === patient.id
                     ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white border-teal-400"
                     : "bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 border-teal-200/50 hover:border-teal-300"
                 }`}
               >
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="flex items-center gap-2 mb-2">
                   <div
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center ${
+                    className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center ${
                       selectedPatientId === patient.id
                         ? "bg-white/20"
                         : "bg-gradient-to-r from-teal-200 to-cyan-100"
                     }`}
                   >
                     <FaUser
-                      className={`text-lg sm:text-xl ${
+                      className={`text-lg sm:text-base ${
                         selectedPatientId === patient.id
                           ? "text-white"
                           : "text-teal-800"
@@ -595,7 +593,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <h3
-                      className={`text-base sm:text-lg lg:text-xl font-semibold ${
+                      className={`text-lg sm:text-base font-medium ${
                         selectedPatientId === patient.id
                           ? "text-white"
                           : "text-teal-900"
@@ -604,7 +602,7 @@ export default function Dashboard() {
                       {patient.name}
                     </h3>
                     <p
-                      className={`text-xs sm:text-sm ${
+                      className={`text-md ${
                         selectedPatientId === patient.id
                           ? "text-white/80"
                           : "text-gray-600"
@@ -615,10 +613,10 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <div className="space-y-2 mb-3 sm:mb-4">
+                <div className="space-y-1 mb-2">
                   <div className="flex items-center justify-between">
                     <span
-                      className={`text-xs sm:text-sm ${
+                      className={`text-md ${
                         selectedPatientId === patient.id
                           ? "text-white/80"
                           : "text-gray-600"
@@ -627,7 +625,7 @@ export default function Dashboard() {
                       BMI:
                     </span>
                     <span
-                      className={`font-semibold text-sm sm:text-base ${
+                      className={`font-medium text-md sm:text-lg ${
                         selectedPatientId === patient.id
                           ? "text-white"
                           : "text-teal-800"
@@ -638,7 +636,7 @@ export default function Dashboard() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span
-                      className={`text-xs sm:text-sm ${
+                      className={`text-md ${
                         selectedPatientId === patient.id
                           ? "text-white/80"
                           : "text-gray-600"
@@ -647,7 +645,7 @@ export default function Dashboard() {
                       Adherence:
                     </span>
                     <span
-                      className={`font-semibold text-sm sm:text-base ${
+                      className={`font-medium text-md sm:text-lg ${
                         selectedPatientId === patient.id
                           ? "text-white"
                           : "text-green-800"
@@ -658,7 +656,7 @@ export default function Dashboard() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span
-                      className={`text-xs sm:text-sm ${
+                      className={`text-md ${
                         selectedPatientId === patient.id
                           ? "text-white/80"
                           : "text-gray-600"
@@ -667,7 +665,7 @@ export default function Dashboard() {
                       Last Visit:
                     </span>
                     <span
-                      className={`font-semibold text-sm sm:text-base ${
+                      className={`font-medium text-md sm:text-lg ${
                         selectedPatientId === patient.id
                           ? "text-white"
                           : "text-blue-800"
@@ -679,7 +677,7 @@ export default function Dashboard() {
                 </div>
 
                 <div
-                  className={`text-xs sm:text-sm ${
+                  className={`text-md ${
                     selectedPatientId === patient.id
                       ? "text-white/90"
                       : "text-gray-700"
@@ -690,11 +688,11 @@ export default function Dashboard() {
                 </div>
 
                 {patient.flags && patient.flags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-3">
+                  <div className="flex flex-wrap gap-1 mt-2">
                     {patient.flags.map((flag, idx) => (
                       <span
                         key={idx}
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        className={`px-1.5 py-0.5 rounded-full text-md font-medium ${
                           selectedPatientId === patient.id
                             ? "bg-white/20 text-white"
                             : "bg-teal-100 text-teal-800"
@@ -714,44 +712,47 @@ export default function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
+          className="space-y-4"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {SAMPLE_PLANS.map((plan, index) => (
               <motion.div
                 key={plan.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.15, delay: index * 0.05 }}
-                whileHover={{ y: -5 }}
-                className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-150"
+                whileHover={{ y: -3 }}
+                className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md hover:shadow-lg transition-all duration-150"
               >
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
-                    <FaClipboardList className="text-white text-lg sm:text-xl" />
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
+                    <FaClipboardList className="text-white text-lg sm:text-base" />
                   </div>
                   <div>
-                    <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-teal-900">
+                    <h3 className="text-lg sm:text-base font-medium text-teal-900">
                       {plan.name}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-600">
+                    <p className="text-md text-gray-600">
                       {plan.calories} calories
                     </p>
                   </div>
                 </div>
 
-                <p className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
+                <p className="text-gray-700 mb-2 text-md sm:text-lg">
                   {plan.summary}
                 </p>
 
-                <div className="space-y-2 mb-3 sm:mb-4">
+                <div className="space-y-1 mb-2">
                   {Object.entries(plan.meals).map(([mealType, items]) => (
-                    <div key={mealType} className="bg-white/60 rounded-lg p-2">
-                      <div className="font-medium text-gray-800 capitalize text-xs sm:text-sm mb-1">
+                    <div
+                      key={mealType}
+                      className="bg-white/60 rounded-md p-1.5"
+                    >
+                      <div className="font-medium text-gray-800 capitalize text-md mb-0.5">
                         {mealType}
                       </div>
                       {items.map((item, idx) => (
-                        <div key={idx} className="text-xs text-gray-600">
+                        <div key={idx} className="text-md text-gray-600">
                           {item.name} ({item.calories} cal)
                         </div>
                       ))}
@@ -763,7 +764,7 @@ export default function Dashboard() {
                   {plan.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800"
+                      className="px-1.5 py-0.5 rounded-full text-md font-medium bg-teal-100 text-teal-800"
                     >
                       {tag}
                     </span>
@@ -778,32 +779,32 @@ export default function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
+          className="space-y-4"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.15, delay: 0.05 }}
-              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md"
             >
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-900 mb-4 sm:mb-6">
+              <h3 className="text-lg sm:text-base font-bold text-teal-900 mb-3">
                 Patient Adherence
               </h3>
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-2">
                 {patients.map((patient, index) => (
                   <motion.div
                     key={patient.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.15, delay: 0.1 + index * 0.05 }}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-0"
                   >
-                    <span className="text-gray-700 font-medium text-sm sm:text-base">
+                    <span className="text-gray-700 font-medium text-md sm:text-lg">
                       {patient.name}
                     </span>
                     <div className="flex items-center gap-2">
-                      <div className="w-24 sm:w-32 bg-gray-200 rounded-full h-2">
+                      <div className="w-20 sm:w-24 bg-gray-200 rounded-full h-1.5">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${patient.adherence}%` }}
@@ -811,10 +812,10 @@ export default function Dashboard() {
                             duration: 0.4,
                             delay: 0.3 + index * 0.1,
                           }}
-                          className="bg-gradient-to-r from-teal-800 to-cyan-600 h-2 rounded-full"
+                          className="bg-gradient-to-r from-teal-800 to-cyan-600 h-1.5 rounded-full"
                         />
                       </div>
-                      <span className="text-teal-800 font-semibold w-10 sm:w-12 text-right text-sm sm:text-base">
+                      <span className="text-teal-800 font-medium w-8 sm:w-10 text-right text-md sm:text-lg">
                         {patient.adherence}%
                       </span>
                     </div>
@@ -827,26 +828,26 @@ export default function Dashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.15, delay: 0.1 }}
-              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 sm:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+              className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md"
             >
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-900 mb-4 sm:mb-6">
+              <h3 className="text-lg sm:text-base font-bold text-teal-900 mb-3">
                 BMI Distribution
               </h3>
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-2">
                 {patients.map((patient, index) => (
                   <motion.div
                     key={patient.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.15, delay: 0.15 + index * 0.05 }}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-0"
                   >
-                    <span className="text-gray-700 font-medium text-sm sm:text-base">
+                    <span className="text-gray-700 font-medium text-md sm:text-lg">
                       {patient.name}
                     </span>
                     <div className="flex items-center gap-2">
                       <span
-                        className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                        className={`px-2 py-0.5 rounded-full text-md font-medium ${
                           patient.bmi < 18.5
                             ? "bg-blue-100 text-blue-800"
                             : patient.bmi < 25
@@ -864,7 +865,7 @@ export default function Dashboard() {
                           ? "Overweight"
                           : "Obese"}
                       </span>
-                      <span className="text-teal-800 font-semibold text-sm sm:text-base">
+                      <span className="text-teal-800 font-medium text-md sm:text-lg">
                         {patient.bmi}
                       </span>
                     </div>
@@ -879,9 +880,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
       {/* Enhanced Ayurvedic Particle System */}
-      <AyurvedicParticleSystem count={1} />
+      <AyurvedicParticleSystem count={0} />
 
       {/* Dynamic Background Layers */}
       <div className="absolute inset-0 -z-10">
@@ -928,46 +929,133 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="pt-16 sm:pt-20 px-3 sm:px-4 md:px-8 lg:px-12 xl:px-20 py-4 sm:py-6">
-        <div className="max-w-8xl mx-auto">
-          {/* Tab Navigation */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-wrap gap-2 mb-3 sm:mb-4 justify-center"
-          >
-            {TABS.map((tab, index) => (
-              <motion.button
-                key={tab.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.15, delay: index * 0.05 }}
-                whileHover={{ y: -2 }}
-                whileTap={{ y: 0 }}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-2 sm:px-3 mt-2 py-2 rounded-2xl text-sm sm:text-lg font-semibold transition-all duration-150 flex items-center gap-2 sm:gap-3 shadow-lg ${
-                  activeTab === tab.id
-                    ? "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white border-2 border-teal-400"
-                    : "bg-gradient-to-r from-white/95 via-teal-50/80 to-cyan-50/60 backdrop-blur-sm border-2 border-teal-200/60 text-teal-900 hover:border-teal-300/80"
-                }`}
+      <div className="pt-20 sm:pt-20 px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 py-3 sm:py-4">
+        <div className="w-full mx-auto">
+          <div className="flex gap-4 h-full">
+            {/* Creative Sidebar Navigation */}
+            <div className="w-64 flex-shrink-0 fixed">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-gradient-to-br from-teal-50/80 to-cyan-50/80 rounded-xl p-4 h-fit border border-teal-200/60 shadow-lg sticky  overflow-hidden"
               >
-                <tab.icon className="text-lg sm:text-xl" />
-                <span className="hidden sm:inline">{tab.name}</span>
-                <span className="sm:hidden">{tab.name.split(" ")[0]}</span>
-              </motion.button>
-            ))}
-          </motion.div>
+                {/* Sidebar Header */}
+                <div className="text-center mb-6">
+                  <div className="w-full h-9 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 flex items-center justify-center mx-auto mb-2 shadow-lg">
+                    <FaChartPie className="text-white text-2xl" />
+                  </div>
+                
+                </div>
 
-          {/* Tab Content */}
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-            className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl border border-teal-200/20 min-h-[500px] sm:min-h-[600px]"
-          >
-            {getTabContent()[activeTab]}
-          </motion.div>
+                {/* Navigation Tabs */}
+                <div className="space-y-2">
+                  {TABS.map((tab, index) => (
+                    <motion.button
+                      key={tab.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      whileHover={{ scale: 1.02, x: 3 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`w-full p-4 rounded-xl transition-all duration-300 flex items-start gap-3 group ${
+                        activeTab === tab.id
+                          ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg transform scale-105"
+                          : "bg-white/70 hover:bg-white/90 text-gray-700 hover:shadow-md"
+                      }`}
+                    >
+                      <div
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                          activeTab === tab.id
+                            ? "bg-white/20"
+                            : `bg-gradient-to-r ${
+                                tab.color.includes("#")
+                                  ? ""
+                                  : "from-teal-400 to-cyan-400"
+                              }`
+                        }`}
+                        style={
+                          activeTab !== tab.id
+                            ? { backgroundColor: tab.color }
+                            : {}
+                        }
+                      >
+                        <tab.icon
+                          className={`text-lg ${
+                            activeTab === tab.id ? "text-white" : "text-white"
+                          }`}
+                        />
+                      </div>
+                      <div className="flex-1 text-left">
+                        <div
+                          className={`font-semibold text-sm mb-1 ${
+                            activeTab === tab.id
+                              ? "text-white"
+                              : "text-gray-800"
+                          }`}
+                        >
+                          {tab.name}
+                        </div>
+                        <div
+                          className={`text-xs ${
+                            activeTab === tab.id
+                              ? "text-white/80"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {tab.id === "overview" && "Quick summary"}
+                          {tab.id === "patients" && "Patient management"}
+                          {tab.id === "plans" && "Diet planning"}
+                          {tab.id === "analytics" && "Performance metrics"}
+                        </div>
+                      </div>
+                      {activeTab === tab.id && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="w-2 h-2 bg-white rounded-full self-center"
+                        />
+                      )}
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Quick Stats */}
+                <div className="mt-8 p-4 bg-white/60 rounded-lg">
+                  <div className="text-xs font-medium text-gray-600 mb-3">
+                    Quick Stats
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-white/60 p-3 rounded-lg text-center">
+                      <div className="text-lg font-bold text-teal-600">
+                        {patients.length}
+                      </div>
+                      <div className="text-xs text-gray-600">Patients</div>
+                    </div>
+                    <div className="bg-white/60 p-3 rounded-lg text-center">
+                      <div className="text-lg font-bold text-cyan-600">4</div>
+                      <div className="text-xs text-gray-600">Plans</div>
+                    </div>
+                  </div>
+                </div>
+
+              </motion.div>
+            </div>
+
+            {/* Main Content Area */}
+            <div className="flex-1 ml-72">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white/95 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-6 shadow-xl border border-teal-200/20 min-h-[400px] sm:min-h-[500px]"
+              >
+                {getTabContent()[activeTab]}
+              </motion.div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

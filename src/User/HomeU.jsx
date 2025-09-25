@@ -1309,7 +1309,7 @@ export default function HomePage() {
 
                 {/* Image Section */}
                 <ParallaxLayer speed={0.6} className={imageClass}>
-                  <Card3D className="relative ">
+                  <div className="relative ">
                     <motion.div
                       initial={{ opacity: 0, scale: 0.8 }}
                       whileInView={{ opacity: 1, scale: 1 }}
@@ -1357,7 +1357,7 @@ export default function HomePage() {
                         </div>
                       </div>
                     </motion.div>
-                  </Card3D>
+                  </div>
                 </ParallaxLayer>
               </motion.div>
             );
@@ -1533,7 +1533,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((testimonial, index) => (
-              <Card3D key={testimonial.name}>
+              <div key={testimonial.name}>
                 <motion.div
                   initial={{ opacity: 0, y: 30, rotateX: -15 }}
                   whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
@@ -1596,7 +1596,7 @@ export default function HomePage() {
                     "
                   </div>
                 </motion.div>
-              </Card3D>
+              </div>
             ))}
           </div>
         </motion.div>
