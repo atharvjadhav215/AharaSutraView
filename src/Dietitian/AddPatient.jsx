@@ -229,8 +229,30 @@ const initialPatient = {
 export default function AddPatient() {
   const [patient, setPatient] = useState(initialPatient);
   const [step, setStep] = useState(0); // 0..4 full-page steps
+  const [expandedSection, setExpandedSection] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
   const navigate = useNavigate();
+
+  // Mobile detection and responsive behavior
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Handle section expansion for mobile
+  const handleSectionClick = (index) => {
+    if (isMobile) {
+      setExpandedSection(expandedSection === index ? null : index);
+    } else {
+      setStep(index);
+    }
+  };
 
   const update = (sectionKey, field, value) => {
     setPatient((p) => ({
@@ -289,20 +311,288 @@ export default function AddPatient() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("SUBMIT PATIENT", patient);
-    alert("Patient data logged to console. Implement API submit.");
+    
+    navigate("/my-diet-chart");
   };
 
   // helper for rendering animated slide panels
   const renderPanelClass = (i) => {
     const offset = i - step;
     // using transform translateX with tailwind-friendly inline style for percent
-    const base =
-      "absolute inset-0 ";
+    const base = "absolute inset-0 ";
     if (offset === 0) return `${base} translate-x-0 opacity-100 z-20`;
     if (offset < 0) return `${base} -translate-x-full opacity-0 z-10`;
     return `${base} translate-x-full opacity-0 z-10`;
+  };
+
+  // Render section content for mobile collapsible sections
+  const renderSectionContent = (sectionIndex) => {
+    const section = SECTIONS[sectionIndex];
+    const sectionKey = section.key;
+    const data = patient[sectionKey];
+
+    switch (sectionKey) {
+      case "basic":
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={data.fullName || ""}
+                onChange={(e) => update(sectionKey, "fullName", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="Enter full name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Age
+              </label>
+              <input
+                type="number"
+                value={data.age || ""}
+                onChange={(e) => update(sectionKey, "age", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="Enter age"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Gender
+              </label>
+              <select
+                value={data.gender || ""}
+                onChange={(e) => update(sectionKey, "gender", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              >
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Contact Number
+              </label>
+              <input
+                type="tel"
+                value={data.contactNumber || ""}
+                onChange={(e) =>
+                  update(sectionKey, "contactNumber", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="Enter contact number"
+              />
+            </div>
+          </div>
+        );
+
+      case "anthro":
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Height (cm)
+              </label>
+              <input
+                type="number"
+                value={data.height || ""}
+                onChange={(e) => update(sectionKey, "height", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="Enter height in cm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Weight (kg)
+              </label>
+              <input
+                type="number"
+                value={data.weight || ""}
+                onChange={(e) => update(sectionKey, "weight", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="Enter weight in kg"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                BMI
+              </label>
+              <input
+                type="number"
+                value={data.bmi || ""}
+                onChange={(e) => update(sectionKey, "bmi", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="Enter BMI"
+              />
+            </div>
+          </div>
+        );
+
+      case "vitals":
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Blood Pressure
+              </label>
+              <input
+                type="text"
+                value={data.bloodPressure || ""}
+                onChange={(e) =>
+                  update(sectionKey, "bloodPressure", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="e.g., 120/80"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Heart Rate (bpm)
+              </label>
+              <input
+                type="number"
+                value={data.heartRate || ""}
+                onChange={(e) =>
+                  update(sectionKey, "heartRate", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="Enter heart rate"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Water Intake (liters/day)
+              </label>
+              <input
+                type="number"
+                step="0.5"
+                value={data.waterIntake || ""}
+                onChange={(e) =>
+                  update(sectionKey, "waterIntake", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="Enter daily water intake"
+              />
+            </div>
+          </div>
+        );
+
+      case "lifestyle":
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Sleep Hours
+              </label>
+              <input
+                type="number"
+                value={data.sleepHours || ""}
+                onChange={(e) =>
+                  update(sectionKey, "sleepHours", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                placeholder="Enter sleep hours per night"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Exercise Frequency
+              </label>
+              <select
+                value={data.exerciseFrequency || ""}
+                onChange={(e) =>
+                  update(sectionKey, "exerciseFrequency", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              >
+                <option value="">Select frequency</option>
+                <option value="daily">Daily</option>
+                <option value="3-4 times/week">3-4 times/week</option>
+                <option value="1-2 times/week">1-2 times/week</option>
+                <option value="rarely">Rarely</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Stress Level
+              </label>
+              <select
+                value={data.stressLevel || ""}
+                onChange={(e) =>
+                  update(sectionKey, "stressLevel", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              >
+                <option value="">Select stress level</option>
+                <option value="low">Low</option>
+                <option value="moderate">Moderate</option>
+                <option value="high">High</option>
+                <option value="very-high">Very High</option>
+              </select>
+            </div>
+          </div>
+        );
+
+      case "medical":
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Medical History
+              </label>
+              <textarea
+                value={data.medicalHistory || ""}
+                onChange={(e) =>
+                  update(sectionKey, "medicalHistory", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                rows="3"
+                placeholder="Enter any medical conditions or history"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Bowel Movements
+              </label>
+              <select
+                value={data.bowelMovements || ""}
+                onChange={(e) =>
+                  update(sectionKey, "bowelMovements", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              >
+                <option value="">Select frequency</option>
+                <option value="regular">Regular (daily)</option>
+                <option value="irregular">Irregular</option>
+                <option value="constipated">Constipated</option>
+                <option value="loose">Loose</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Allergies
+              </label>
+              <textarea
+                value={data.allergies || ""}
+                onChange={(e) =>
+                  update(sectionKey, "allergies", e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                rows="2"
+                placeholder="Enter any known allergies"
+              />
+            </div>
+          </div>
+        );
+
+      default:
+        return <div>Section content not found</div>;
+    }
   };
 
   return (
@@ -343,10 +633,10 @@ export default function AddPatient() {
 
       <div className="h-screen w-full px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:pt-16">
         <div className="h-full grid grid-cols-1 lg:grid-cols-5 gap-2 sm:gap-3">
-          {/* Step navigation (left) */}
-          <nav className="lg:col-span-1 h-full overflow-y-auto space-y-1.5 md:space-y-4">
+          {/* Step navigation (left) - Desktop */}
+          <nav className="hidden lg:block lg:col-span-1 h-full overflow-y-auto space-y-1.5 md:space-y-4">
             {SECTIONS.map((s, i) => (
-              <button
+              <motion.button
                 key={s.key}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -381,18 +671,112 @@ export default function AddPatient() {
                   </div>
                 </div>
                 {i === step && (
-                  <div
+                  <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     className="w-1.5 h-1.5 bg-white rounded-full"
                   />
                 )}
-              </button>
+              </motion.button>
             ))}
           </nav>
 
-          {/* Full page step panels (right) */}
-          <main className="lg:col-span-4 h-full relative bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-teal-200/20 overflow-hidden">
+          {/* Mobile Collapsible Sections */}
+          <div className="lg:hidden w-full space-y-20 mt-12 overflow-y-auto h-full pb-8">
+            <div className="space-y-2">
+              {SECTIONS.map((s, i) => (
+                <motion.div
+                  key={s.key}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.1 }}
+                  className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-teal-200/20 overflow-hidden"
+                >
+                  {/* Section Header */}
+                  <motion.button
+                    onClick={() => handleSectionClick(i)}
+                    className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-all duration-200 ${
+                      expandedSection === i
+                        ? "bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white"
+                        : "bg-white/90 hover:bg-teal-50 text-teal-900"
+                    }`}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center font-medium ${
+                        expandedSection === i
+                          ? "bg-white/20 text-white"
+                          : "bg-gradient-to-r from-teal-200 to-cyan-100 text-teal-800"
+                      }`}
+                    >
+                      <s.icon
+                        className="text-lg"
+                        style={{
+                          color: expandedSection === i ? "white" : s.color,
+                        }}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-semibold text-base">{s.title}</div>
+                      <div className="text-sm opacity-75">
+                        Step {s.id} of {SECTIONS.length}
+                      </div>
+                    </div>
+                    <motion.div
+                      animate={{ rotate: expandedSection === i ? 90 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-lg"
+                    >
+                      <FaChevronRight />
+                    </motion.div>
+                  </motion.button>
+
+                  {/* Collapsible Content */}
+                  <AnimatePresence>
+                    {expandedSection === i && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="p-4 border-t border-teal-200/20">
+                          {renderSectionContent(i)}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Mobile Submit Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.5 }}
+              className=" p-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-teal-200/20"
+            >
+              <div className="flex flex-col sm:flex-row gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={(e) => {
+                      
+                    handleSubmit(e);
+                  }}
+                  className="flex-1 px-4 py-1 rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <FaRocket />
+                  Submit Patient
+                </motion.button>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Full page step panels (right) - Desktop Only */}
+          <main className="hidden lg:block lg:col-span-4 h-full relative bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-teal-200/20 overflow-hidden">
             <form onSubmit={handleSubmit} className="h-full relative">
               <div ref={containerRef} className="h-full relative">
                 {/* Panels positioned absolutamente; only active panel visible due to transform */}
@@ -445,8 +829,7 @@ export default function AddPatient() {
                       <div className="flex-1 space-y-3 sm:space-y-4 overflow-y-auto">
                         {s.key === "basic" && (
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
-                            <div
-                            >
+                            <div>
                               <label className="flex text-lg sm:text-md text-gray-700 items-center gap-1.5 mb-1.5">
                                 <FaUser className="text-teal-600 text-md" />
                                 Patient Name
@@ -887,8 +1270,6 @@ export default function AddPatient() {
                           <FaChevronLeft />
                           Previous
                         </button>
-
-                      
 
                         {i < SECTIONS.length - 1 ? (
                           <button

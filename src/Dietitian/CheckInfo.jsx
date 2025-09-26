@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../EnhancedEffects.css";
+import backgroundImage from "../assets/background.png";
 export default function CheckInfo() {
   const navigate = useNavigate();
 
@@ -64,7 +65,15 @@ export default function CheckInfo() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 pt-5 via-cyan-50 to-teal-50 text-gray-800 overflow-hidden relative">
+    <div
+      className="min-h-screen pt-5 text-gray-800 overflow-hidden relative"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-teal-200/20 to-cyan-200/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-cyan-200/20 to-teal-200/20 rounded-full blur-3xl"></div>

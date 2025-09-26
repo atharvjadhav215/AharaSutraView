@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import backgroundImage from "../assets/background.png";
 
 export default function Onboarding() {
   const [role, setRole] = useState("");
@@ -14,7 +15,15 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 flex items-center justify-center p-4">
+    <div
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="w-full max-w-4xl mt-12 md:mt-12 sm:mt-10">
         {/* Header */}
         <div className="text-center mb-8 md:mb-8 sm:mb-6">

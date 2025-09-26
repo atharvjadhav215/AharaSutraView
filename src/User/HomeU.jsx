@@ -21,103 +21,10 @@ import Triphala from "../assets/Triphala.png";
 import Pitta from "../assets/Pitta.png";
 import Kapha from "../assets/Kapha.png";
 import Vata from "../assets/vata.png";
+import backgroundImage from "../assets/background1.png";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
-
-const ayurvedicColors = [
-  "#8B4513",
-  "#6B8E23",
-  "#9CAF88",
-  "#A0522D",
-  "#556B2F",
-  "#DEB887",
-  "#F5F5DC",
-  "#F8F8F8",
-];
-// Enhanced Ayurvedic Particle System
-const AyurvedicParticleSystem = ({ count = 1 }) => {
-  const particlesRef = useRef([]);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const particles = particlesRef.current;
-    const container = containerRef.current;
-
-    if (!container) return;
-
-    // Create enhanced Ayurvedic particles
-    particles.forEach((particle, index) => {
-      if (particle) {
-        const isSymbol = index % 3 === 0; // Every 3rd particle is a symbol
-
-        const color =
-          ayurvedicColors[Math.floor(Math.random() * ayurvedicColors.length)];
-
-        gsap.set(particle, {
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          scale: isSymbol
-            ? Math.random() * 1.2 + 1.0
-            : Math.random() * 0.8 + 0.6,
-          opacity: Math.random() * 0.9 + 0.4,
-          rotation: Math.random() * 360,
-        });
-
-        // Enhanced floating animation
-        gsap.to(particle, {
-          x: `+=${(Math.random() - 0.5) * 300}`,
-          y: `+=${(Math.random() - 0.5) * 300}`,
-          duration: Math.random() * 15 + 15,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
-
-        // Rotation animation
-        gsap.to(particle, {
-          rotation: "+=360",
-          duration: Math.random() * 25 + 20,
-          ease: "none",
-          repeat: -1,
-        });
-
-        // Scale pulsing for symbols
-        if (isSymbol) {
-          gsap.to(particle, {
-            scale: "+=0.5",
-            duration: Math.random() * 3 + 2,
-            ease: "sine.inOut",
-            repeat: -1,
-            yoyo: true,
-          });
-        }
-
-        particle.className = "absolute w-2 h-2 rounded-full ayurvedic-dot";
-        particle.style.backgroundColor = color;
-      }
-    });
-  }, []);
-
-  return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 pointer-events-none overflow-hidden"
-    >
-      {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          ref={(el) => (particlesRef.current[i] = el)}
-          className="absolute"
-          style={{
-            filter: "blur(0.3px)",
-            willChange: "transform",
-          }}
-        />
-      ))}
-    </div>
-  );
-};
 
 // Enhanced Parallax Component
 const ParallaxLayer = ({ children, speed = 0.5, className = "" }) => {
@@ -486,6 +393,7 @@ const STATS = [
 ];
 
 export default function HomePage() {
+  const [currentHerbIndex, setCurrentHerbIndex] = useState(0);
   const navigate = useNavigate();
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll();
@@ -911,16 +819,13 @@ export default function HomePage() {
         style={{ scaleX: scrollYProgress }}
       />
 
-      {/* Enhanced Ayurvedic Particle System */}
-      <AyurvedicParticleSystem count={0} />
-
       {/* Slider Card Section with Background */}
       <section className="relative min-h-screen overflow-hidden">
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('https://kamleshyadav.com/html/pure-ayurveda/html/ayurveda-html/assets/images/banner.jpg')`,
+            backgroundImage: `url(${backgroundImage})`,
           }}
         ></div>
 
@@ -1008,7 +913,7 @@ export default function HomePage() {
                     onClick={() => navigate("/create-own-chart")}
                     className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 bg-gradient-to-r from-cyan-600 to-teal-600 rounded-xl text-sm sm:text-base md:text-lg lg:text-xl font-semibold hover:from-teal-700 hover:to-cyan-700 transition-colors text-white btn-enhanced shadow-floating"
                   >
-                    Create Your Diet Chart
+                    Create Diet Chart
                   </motion.button>
                   <motion.button
                     whileHover={{
@@ -1175,7 +1080,78 @@ export default function HomePage() {
             benefits.
           </motion.p>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          {/* Mobile Carousel */}
+          <div className="md:hidden">
+            <div className="relative overflow-hidden">
+              <motion.div
+                className="flex"
+                drag="x"
+                dragConstraints={{
+                  left: -(AYURVEDIC_HERBS.length - 1) * 288,
+                  right: 0,
+                }}
+                dragElastic={0.1}
+                onDragEnd={(event, info) => {
+                  const threshold = 50;
+                  if (info.offset.x > threshold && currentHerbIndex > 0) {
+                    setCurrentHerbIndex(currentHerbIndex - 1);
+                  } else if (
+                    info.offset.x < -threshold &&
+                    currentHerbIndex < AYURVEDIC_HERBS.length - 1
+                  ) {
+                    setCurrentHerbIndex(currentHerbIndex + 1);
+                  }
+                }}
+                animate={{ x: -currentHerbIndex * 288 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                {AYURVEDIC_HERBS.map((herb, index) => (
+                  <div key={herb.name} className="flex-shrink-0 w-72 px-4">
+                    <div className="feature-card flex flex-col items-center gap-4 p-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-teal-200 transform-gpu">
+                      <motion.div
+                        className="w-32 h-32 rounded-full overflow-hidden border-4 border-teal-200 shadow-lg"
+                        style={{ backgroundColor: herb.color + "20" }}
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.8 }}
+                      >
+                        <img
+                          src={herb.image}
+                          alt={herb.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </motion.div>
+                      <div className="text-center">
+                        <h3 className="font-semibold text-gray-800 mb-2 text-base">
+                          {herb.name}
+                        </h3>
+                        <p className="text-base text-gray-600">
+                          {herb.benefits}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Carousel Indicators */}
+            <div className="flex justify-center mt-6 space-x-2">
+              {AYURVEDIC_HERBS.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentHerbIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentHerbIndex
+                      ? "bg-teal-600 scale-125"
+                      : "bg-teal-300 hover:bg-teal-400"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop Grid */}
+          <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
             {AYURVEDIC_HERBS.map((herb, index) => (
               <motion.div
                 key={herb.name}
@@ -1309,7 +1285,7 @@ export default function HomePage() {
 
                 {/* Image Section */}
                 <ParallaxLayer speed={0.6} className={imageClass}>
-                  <div className="relative ">
+                  <Card3D className="relative ">
                     <motion.div
                       initial={{ opacity: 0, scale: 0.8 }}
                       whileInView={{ opacity: 1, scale: 1 }}
@@ -1357,7 +1333,7 @@ export default function HomePage() {
                         </div>
                       </div>
                     </motion.div>
-                  </div>
+                  </Card3D>
                 </ParallaxLayer>
               </motion.div>
             );
@@ -1533,7 +1509,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((testimonial, index) => (
-              <div key={testimonial.name}>
+              <Card3D key={testimonial.name}>
                 <motion.div
                   initial={{ opacity: 0, y: 30, rotateX: -15 }}
                   whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
@@ -1596,7 +1572,7 @@ export default function HomePage() {
                     "
                   </div>
                 </motion.div>
-              </div>
+              </Card3D>
             ))}
           </div>
         </motion.div>

@@ -14,6 +14,7 @@ import MyDietChart from "./User/MyDietChart";
 import CreateOwnChart from "./User/CreateOwnChart";
 import Documentation from "./components/Documentation";
 import Admin from "./Admin/Admin";
+import Report from "./User/Report";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="create-own-chart" element={<CreateOwnChart />} />
           <Route path="documentation" element={<Documentation />} />
           <Route path="admin" element={<Admin />} />
+          <Route path="report" element={<Report />} />
         </Route>
       </Routes>
     </BrowserRouter>
