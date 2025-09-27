@@ -570,7 +570,7 @@ export default function HomePage() {
           >
             {/* Ayurvedic Energy Rings */}
             <motion.div
-              className="absolute inset-0 rounded-full border-4 border-green-300/30"
+              className="absolute inset-0 rounded-full border-2 border-white/50"
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.3, 0.6, 0.3],
@@ -583,7 +583,7 @@ export default function HomePage() {
               }}
             />
             <motion.div
-              className="absolute inset-0 rounded-full border-2 border-teal-300/40"
+              className="absolute inset-0 rounded-full border-2 border-white/50"
               animate={{
                 scale: [1.1, 1.3, 1.1],
                 opacity: [0.2, 0.5, 0.2],

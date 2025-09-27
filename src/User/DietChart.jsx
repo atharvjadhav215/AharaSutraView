@@ -1,11 +1,5 @@
-import React, {
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-  useCallback,
-} from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { Link } from "react-router-dom";
 import { getTranslation } from "./dietChartTranslations";
@@ -500,7 +494,7 @@ const DayChart = ({ plan, language = "en" }) => {
       fiber_g,
       micron,
     };
-  }, [plan]);
+  }, [plan, language]);
 
   // helper to render a nutrient bar (percent relative to a simple target)
   const NutrientBar = ({ label, value, unit, target }) => {
@@ -762,63 +756,18 @@ const itineraryCopy = (plan) =>
     .join("\n\n");
 
 export default function DietChart() {
-  const [selected, setSelected] = useState(0);
-  const [language, setLanguage] = useState("en");
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedDay, setSelectedDay] = useState("Monday");
   const [analysisTab, setAnalysisTab] = useState("nutrients");
 
-  // Get translated DOSHAS based on current language
-  const getTranslatedDoshas = () =>
-    DOSHAS.map((dosha) => ({
-      ...dosha,
-      type: getTranslation(dosha.type.toLowerCase(), language),
-      description: getTranslation(dosha.type.toLowerCase() + "Desc", language),
-      rule: getTranslation(dosha.type.toLowerCase() + "Rule", language),
-      plate: dosha.plate.map((item) => ({
-        ...item,
-        name: getTranslation(item.name.toLowerCase(), language),
-      })),
-      taste: dosha.taste.map((item) => ({
-        ...item,
-        name: getTranslation(item.name.toLowerCase(), language),
-      })),
-      foods: dosha.foods.map((food, index) => {
-        const foodKey = dosha.type.toLowerCase() + "food" + (index + 1);
-        return getTranslation(foodKey, language) || food;
-      }),
-    }));
-
-  const translatedDoshas = getTranslatedDoshas();
-  const active = translatedDoshas[selected];
+  const language = "en"; // eslint-disable-line no-unused-vars
 
   useEffect(() => {
     // no-op: placeholder in case animation hook needed later
-  }, [selected]);
+  }, []);
 
   // new UI state for daily plans
-  const [selectedPlanId, setSelectedPlanId] = useState(PLANS[0].id);
-  const [ingredientFilter, setIngredientFilter] = useState([]); // ingredients the user selects to filter plans
-  const [showOnlyMatching, setShowOnlyMatching] = useState(false);
-
-  const toggleIngredient = (name) => {
-    setIngredientFilter((s) =>
-      s.includes(name) ? s.filter((i) => i !== name) : [...s, name]
-    );
-  };
-
-  const filteredPlans = useMemo(() => {
-    if (!showOnlyMatching || ingredientFilter.length === 0) return PLANS;
-    return PLANS.filter((p) => {
-      // check whether plan contains all selected ingredients
-      const items = new Set(
-        Object.values(p.meals).flatMap((arr) => arr.flatMap((m) => m.items))
-      );
-      return ingredientFilter.every((ing) => items.has(ing));
-    });
-  }, [ingredientFilter, showOnlyMatching, language]);
-
-  const selectedPlan = PLANS.find((p) => p.id === selectedPlanId) || PLANS[0];
+  const selectedPlan = PLANS[0];
 
   // Generate 7-day diet chart
   const generate7DayChart = (selectedPlan) => {
@@ -930,51 +879,54 @@ export default function DietChart() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-2"
         >
-          <div className="text-center flex flex-row items-center justify-start gap-5">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 shadow-lg mb-1">
-              <FaChartPie className="text-xl" style={{ color: "#10B981" }} />
+          <div className="text-center flex flex-row items-center justify-start gap-3 md:gap-5">
+            <div className="inline-flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-tr from-teal-200 to-cyan-100 shadow-lg mb-1">
+              <FaChartPie
+                className="text-lg md:text-xl"
+                style={{ color: "#10B981" }}
+              />
             </div>
-            <h3 className="text-xl md:text-2xl font-bold text-teal-900">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-teal-900">
               {currentPlan.name}
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
             {Object.entries(currentPlan.meals).map(([mealType, items]) => (
               <motion.div
                 key={mealType}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="bg-gradient-to-br from-white to-teal-50/30 p-3 rounded-xl border border-teal-200/30 shadow-sm"
+                className="bg-gradient-to-br from-white to-teal-50/30 p-3 md:p-4 rounded-xl border border-teal-200/30 shadow-sm"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-2xl font-semibold text-teal-900 capitalize">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
+                  <h4 className="text-lg md:text-xl lg:text-2xl font-semibold text-teal-900 capitalize">
                     {mealType}
                   </h4>
                   <div className="flex items-center gap-1 text-teal-700">
                     <FaFire className="text-sm" />
-                    <span className="font-medium">
+                    <span className="font-medium text-sm md:text-base">
                       {items.reduce((s, i) => s + (i.calories || 0), 0)} cal
                     </span>
                   </div>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {items.map((item, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-r from-white/90 via-cyan-50/60 to-sky-50/40 rounded-2xl p-4 border-2 border-teal-200/50 shadow-md"
+                      className="bg-gradient-to-r from-white/90 via-cyan-50/60 to-sky-50/40 rounded-xl md:rounded-2xl p-3 md:p-4 border-2 border-teal-200/50 shadow-md"
                     >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-gray-800 font-medium text-lg">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-1">
+                        <span className="text-gray-800 font-medium text-base md:text-lg">
                           {item.name}
                         </span>
-                        <span className="text-teal-700 font-semibold text-lg">
+                        <span className="text-teal-700 font-semibold text-sm md:text-base">
                           {item.calories} cal
                         </span>
                       </div>
                       {item.recept && (
-                        <div className="text-sm text-gray-700 bg-gradient-to-r from-cyan-50/80 to-sky-50/60 p-3 rounded-xl border-l-4 border-cyan-400 shadow-sm">
+                        <div className="text-xs md:text-sm text-gray-700 bg-gradient-to-r from-cyan-50/80 to-sky-50/60 p-2 md:p-3 rounded-lg md:rounded-xl border-l-4 border-cyan-400 shadow-sm">
                           <strong>Recipe:</strong> {item.recept}
                         </div>
                       )}
@@ -990,10 +942,10 @@ export default function DietChart() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
+          className="space-y-4 md:space-y-6"
         >
           {/* Day Tabs */}
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
             {weeklyChart.map((day, index) => (
               <motion.button
                 key={day.day}
@@ -1003,13 +955,13 @@ export default function DietChart() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedDay(day.day)}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                className={`px-3 md:px-4 py-1 md:py-2 rounded-xl text-xs md:text-sm font-semibold transition-all duration-300 flex items-center gap-1 md:gap-2 ${
                   selectedDay === day.day
                     ? "bg-gradient-to-r from-cyan-500  to-teal-500 text-white shadow-lg"
                     : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
                 }`}
               >
-                <FaCalendarAlt className="text-sm" />
+                <FaCalendarAlt className="text-xs md:text-sm" />
                 {day.day}
               </motion.button>
             ))}
@@ -1021,15 +973,15 @@ export default function DietChart() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-2 px-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
+            className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 md:p-4 lg:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-teal-900">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 md:mb-6 gap-2">
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-teal-900">
                 {selectedDay} Meal Plan
               </h3>
               <div className="flex items-center gap-2 text-teal-700">
-                <FaFire className="text-lg" />
-                <span className="text-lg font-semibold">
+                <FaFire className="text-sm md:text-lg" />
+                <span className="text-sm md:text-lg font-semibold">
                   {
                     weeklyChart.find((day) => day.day === selectedDay)
                       ?.totalCalories
@@ -1039,7 +991,7 @@ export default function DietChart() {
               </div>
             </div>
 
-            <div className="space-y-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
               {Object.entries(
                 weeklyChart.find((day) => day.day === selectedDay)?.meals || {}
               ).map(([mealType, items]) => (
@@ -1048,40 +1000,42 @@ export default function DietChart() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 }}
-                  className="bg-gradient-to-r from-white/80 via-teal-50/60 to-cyan-50/40 rounded-xl p-4 border-2 border-teal-200/40 shadow-sm"
+                  className="bg-gradient-to-r from-white/80 via-teal-50/60 to-cyan-50/40 rounded-xl p-3 md:p-4 border-2 border-teal-200/40 shadow-sm"
                 >
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">
-                        {mealType.charAt(0).toUpperCase()}
-                      </span>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 md:mb-4">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
+                        <span className="text-white font-bold text-xs md:text-sm">
+                          {mealType.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <h4 className="text-base md:text-lg lg:text-xl font-semibold text-gray-800 capitalize">
+                        {mealType}
+                      </h4>
                     </div>
-                    <h4 className="text-xl font-semibold text-gray-800 capitalize">
-                      {mealType}
-                    </h4>
-                    <div className="flex items-center gap-1 text-teal-700 ml-auto">
-                      <FaFire className="text-sm" />
-                      <span className="font-medium">
+                    <div className="flex items-center gap-1 text-teal-700 sm:ml-auto">
+                      <FaFire className="text-xs md:text-sm" />
+                      <span className="font-medium text-xs md:text-sm">
                         {items.reduce((sum, item) => sum + item.calories, 0)}{" "}
                         cal
                       </span>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2 md:space-y-3">
                     {items.map((item, idx) => (
                       <motion.div
                         key={idx}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 + idx * 0.1 }}
-                        className="bg-white/60 rounded-lg p-3 border border-teal-100/50 shadow-sm"
+                        className="bg-white/60 rounded-lg p-2 md:p-3 border border-teal-100/50 shadow-sm"
                       >
-                        <div className="flex items-center justify-between mb-2">
-                          <h5 className="text-lg font-medium text-gray-700">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                          <h5 className="text-sm md:text-base lg:text-lg font-medium text-gray-700">
                             {item.name}
                           </h5>
-                          <span className="text-teal-700 font-semibold">
+                          <span className="text-teal-700 font-semibold text-xs md:text-sm">
                             {item.calories} cal
                           </span>
                         </div>
@@ -1101,7 +1055,7 @@ export default function DietChart() {
           className="space-y-6"
         >
           {/* Analysis Tabs */}
-          <div className="flex flex-wrap gap-2 mb-6 justify-center">
+          <div className="flex flex-wrap gap-1 md:gap-2 mb-4 md:mb-6 justify-center">
             {[
               { id: "nutrients", name: "Nutrients", icon: FaChartPie },
               { id: "timeline", name: "Daily Timeline", icon: FaCalendarAlt },
@@ -1115,13 +1069,13 @@ export default function DietChart() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setAnalysisTab(tab.id)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                className={`px-3 md:px-4 py-1 md:py-2 rounded-xl text-xs md:text-sm font-medium transition-all duration-300 flex items-center gap-1 md:gap-2 ${
                   analysisTab === tab.id
                     ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
                     : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
                 }`}
               >
-                <tab.icon className="text-sm" />
+                <tab.icon className="text-xs md:text-sm" />
                 {tab.name}
               </motion.button>
             ))}
@@ -1133,29 +1087,29 @@ export default function DietChart() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-teal-200/20 shadow-lg"
+            className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 md:p-6 border border-teal-200/20 shadow-lg"
           >
             {analysisTab === "nutrients" && (
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {/* Total Calories Summary */}
-                <div className="bg-gradient-to-r from-teal-100 to-cyan-100 rounded-xl px-6 py-2 text-center">
-                  <div className="text-4xl font-bold tracking-widest text-teal-800 mb-2">
+                <div className="bg-gradient-to-r from-teal-100 to-cyan-100 rounded-xl px-4 md:px-6 py-3 md:py-4 text-center">
+                  <div className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-widest text-teal-800 mb-2">
                     {nutrientAnalysis.totalCalories} cal
                   </div>
-                  <div className="text-lg text-teal-700">
+                  <div className="text-sm md:text-base lg:text-lg text-teal-700">
                     Total Daily Calories
                   </div>
                 </div>
 
                 {/* Macronutrient Pie Chart */}
-                <div className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg">
-                  <h4 className="text-xl font-semibold text-teal-900 mb-4 text-center">
+                <div className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-4 md:p-6 rounded-2xl border-2 border-teal-200/50 shadow-lg">
+                  <h4 className="text-lg md:text-xl font-semibold text-teal-900 mb-3 md:mb-4 text-center">
                     Macronutrient Distribution
                   </h4>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 items-center">
                     {/* Pie Chart */}
                     <div className="flex justify-center">
-                      <div className="w-64 h-64">
+                      <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64">
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
                             <Pie
@@ -1181,8 +1135,8 @@ export default function DietChart() {
                               ]}
                               cx="50%"
                               cy="50%"
-                              outerRadius={100}
-                              innerRadius={40}
+                              outerRadius={80}
+                              innerRadius={30}
                               dataKey="value"
                               label={({ name, value }) => `${name}: ${value}%`}
                               labelLine={false}
@@ -1217,45 +1171,45 @@ export default function DietChart() {
                     </div>
 
                     {/* Recommendations */}
-                    <div className="space-y-4">
-                      <h5 className="text-lg font-semibold text-teal-900 mb-3">
+                    <div className="space-y-3 md:space-y-4">
+                      <h5 className="text-base md:text-lg font-semibold text-teal-900 mb-2 md:mb-3">
                         Recommendations
                       </h5>
-                      <div className="space-y-3">
-                        <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-3 border border-teal-200">
+                      <div className="space-y-2 md:space-y-3">
+                        <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-2 md:p-3 border border-teal-200">
                           <div className="flex items-center gap-2 mb-1">
-                            <div className="w-3 h-3 rounded-full bg-teal-500"></div>
-                            <span className="font-medium text-teal-800">
+                            <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-teal-500"></div>
+                            <span className="font-medium text-teal-800 text-sm md:text-base">
                               Carbohydrates (50%)
                             </span>
                           </div>
-                          <p className="text-sm text-teal-700">
+                          <p className="text-xs md:text-sm text-teal-700">
                             Good balance! Focus on complex carbs like whole
                             grains, vegetables, and fruits.
                           </p>
                         </div>
 
-                        <div className="bg-gradient-to-r from-cyan-50 to-sky-50 rounded-lg p-3 border border-cyan-200">
+                        <div className="bg-gradient-to-r from-cyan-50 to-sky-50 rounded-lg p-2 md:p-3 border border-cyan-200">
                           <div className="flex items-center gap-2 mb-1">
-                            <div className="w-3 h-3 rounded-full bg-cyan-500"></div>
-                            <span className="font-medium text-cyan-800">
+                            <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-cyan-500"></div>
+                            <span className="font-medium text-cyan-800 text-sm md:text-base">
                               Protein (20%)
                             </span>
                           </div>
-                          <p className="text-sm text-cyan-700">
+                          <p className="text-xs md:text-sm text-cyan-700">
                             Consider increasing protein intake with lentils,
                             paneer, and lean meats for better muscle health.
                           </p>
                         </div>
 
-                        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-3 border border-emerald-200">
+                        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-2 md:p-3 border border-emerald-200">
                           <div className="flex items-center gap-2 mb-1">
-                            <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                            <span className="font-medium text-emerald-800">
+                            <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-emerald-500"></div>
+                            <span className="font-medium text-emerald-800 text-sm md:text-base">
                               Fats (30%)
                             </span>
                           </div>
-                          <p className="text-sm text-emerald-700">
+                          <p className="text-xs md:text-sm text-emerald-700">
                             Excellent! Include healthy fats like ghee, nuts, and
                             olive oil for optimal nutrition.
                           </p>
@@ -1266,25 +1220,25 @@ export default function DietChart() {
                 </div>
 
                 {/* Macronutrients Dropdown */}
-                <div className="space-y-4">
-                  <h4 className="text-xl font-semibold text-teal-900 mb-4">
+                <div className="space-y-3 md:space-y-4">
+                  <h4 className="text-lg md:text-xl font-semibold text-teal-900 mb-3 md:mb-4">
                     Macronutrients
                   </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.1 }}
-                      className="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl p-4 border border-teal-200 hover:shadow-md transition-shadow"
+                      className="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl p-3 md:p-4 border border-teal-200 hover:shadow-md transition-shadow"
                     >
                       <div className="text-center">
-                        <div className="text-3xl font-bold text-teal-800 mb-2">
+                        <div className="text-2xl md:text-3xl font-bold text-teal-800 mb-2">
                           {nutrientAnalysis.macronutrients.carbs}g
                         </div>
-                        <div className="text-lg text-teal-700 font-medium">
+                        <div className="text-base md:text-lg text-teal-700 font-medium">
                           Carbohydrates
                         </div>
-                        <div className="text-sm text-teal-600 mt-1">
+                        <div className="text-xs md:text-sm text-teal-600 mt-1">
                           50% of calories
                         </div>
                       </div>
@@ -1294,16 +1248,16 @@ export default function DietChart() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.2 }}
-                      className="bg-gradient-to-br from-cyan-100 to-sky-100 rounded-xl p-4 border border-cyan-200 hover:shadow-md transition-shadow"
+                      className="bg-gradient-to-br from-cyan-100 to-sky-100 rounded-xl p-3 md:p-4 border border-cyan-200 hover:shadow-md transition-shadow"
                     >
                       <div className="text-center">
-                        <div className="text-3xl font-bold text-cyan-800 mb-2">
+                        <div className="text-2xl md:text-3xl font-bold text-cyan-800 mb-2">
                           {nutrientAnalysis.macronutrients.protein}g
                         </div>
-                        <div className="text-lg text-cyan-700 font-medium">
+                        <div className="text-base md:text-lg text-cyan-700 font-medium">
                           Protein
                         </div>
-                        <div className="text-sm text-cyan-600 mt-1">
+                        <div className="text-xs md:text-sm text-cyan-600 mt-1">
                           20% of calories
                         </div>
                       </div>
@@ -1313,16 +1267,16 @@ export default function DietChart() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.3 }}
-                      className="bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl p-4 border border-emerald-200 hover:shadow-md transition-shadow"
+                      className="bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl p-3 md:p-4 border border-emerald-200 hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1"
                     >
                       <div className="text-center">
-                        <div className="text-3xl font-bold text-emerald-800 mb-2">
+                        <div className="text-2xl md:text-3xl font-bold text-emerald-800 mb-2">
                           {nutrientAnalysis.macronutrients.fat}g
                         </div>
-                        <div className="text-lg text-emerald-700 font-medium">
+                        <div className="text-base md:text-lg text-emerald-700 font-medium">
                           Fats
                         </div>
-                        <div className="text-sm text-emerald-600 mt-1">
+                        <div className="text-xs md:text-sm text-emerald-600 mt-1">
                           30% of calories
                         </div>
                       </div>
@@ -1331,11 +1285,11 @@ export default function DietChart() {
                 </div>
 
                 {/* Micronutrients Dropdown */}
-                <div className="space-y-4">
-                  <h4 className="text-xl font-semibold text-teal-900 mb-4">
+                <div className="space-y-3 md:space-y-4">
+                  <h4 className="text-lg md:text-xl font-semibold text-teal-900 mb-3 md:mb-4">
                     Micronutrients
                   </h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3">
                     {Object.entries(nutrientAnalysis.micronutrients).map(
                       ([nutrient, value], index) => (
                         <motion.div
@@ -1343,10 +1297,10 @@ export default function DietChart() {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.4 + index * 0.1 }}
-                          className="bg-white/80 rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                          className="bg-white/80 rounded-lg p-3 md:p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
                         >
                           <div className="text-center">
-                            <div className="text-xl font-bold text-gray-800 mb-1">
+                            <div className="text-lg md:text-xl font-bold text-gray-800 mb-1">
                               {value}
                               {nutrient === "sodium" ||
                               nutrient === "potassium" ||
@@ -1356,7 +1310,7 @@ export default function DietChart() {
                                 ? "mg"
                                 : "g"}
                             </div>
-                            <div className="text-sm text-gray-600 capitalize">
+                            <div className="text-xs md:text-sm text-gray-600 capitalize">
                               {nutrient.replace(/([A-Z])/g, " $1").trim()}
                             </div>
                           </div>
@@ -1369,8 +1323,8 @@ export default function DietChart() {
             )}
 
             {analysisTab === "timeline" && (
-              <div className="space-y-6">
-                <h4 className="text-xl font-semibold text-teal-900 mb-4">
+              <div className="space-y-4 md:space-y-6">
+                <h4 className="text-lg md:text-xl font-semibold text-teal-900 mb-3 md:mb-4">
                   Daily Activity Timeline
                 </h4>
                 <div className="relative">
@@ -1403,20 +1357,22 @@ export default function DietChart() {
                       ></div>
 
                       {/* Content */}
-                      <div className="ml-12 bg-white/80 rounded-xl p-4 border border-gray-200 shadow-sm flex-1 hover:shadow-md transition-shadow">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{item.icon}</span>
+                      <div className="ml-10 md:ml-12 bg-white/80 rounded-xl p-3 md:p-4 border border-gray-200 shadow-sm flex-1 hover:shadow-md transition-shadow">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 md:gap-3">
+                            <span className="text-lg md:text-2xl">
+                              {item.icon}
+                            </span>
                             <div>
-                              <div className="font-semibold text-gray-800">
+                              <div className="font-semibold text-gray-800 text-sm md:text-base">
                                 {item.activity}
                               </div>
-                              <div className="text-sm text-gray-600 capitalize">
+                              <div className="text-xs md:text-sm text-gray-600 capitalize">
                                 {item.type}
                               </div>
                             </div>
                           </div>
-                          <div className="text-sm font-medium text-teal-700 bg-teal-100 px-3 py-1 rounded-full">
+                          <div className="text-xs md:text-sm font-medium text-teal-700 bg-teal-100 px-2 md:px-3 py-1 rounded-full">
                             {item.time}
                           </div>
                         </div>
@@ -1428,43 +1384,43 @@ export default function DietChart() {
             )}
 
             {analysisTab === "recommendations" && (
-              <div className="space-y-6">
-                <h4 className="text-xl font-semibold text-teal-900 mb-4">
+              <div className="space-y-4 md:space-y-6">
+                <h4 className="text-lg md:text-xl font-semibold text-teal-900 mb-3 md:mb-4">
                   Health Recommendations
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
-                    <h5 className="font-semibold text-green-800 mb-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-3 md:p-4 border border-green-200">
+                    <h5 className="font-semibold text-green-800 mb-2 text-sm md:text-base">
                       💧 Hydration
                     </h5>
-                    <p className="text-sm text-green-700">
+                    <p className="text-xs md:text-sm text-green-700">
                       Drink 8-10 glasses of water daily. Include herbal teas and
                       coconut water.
                     </p>
                   </div>
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200">
-                    <h5 className="font-semibold text-blue-800 mb-2">
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-3 md:p-4 border border-blue-200">
+                    <h5 className="font-semibold text-blue-800 mb-2 text-sm md:text-base">
                       🏃‍♀️ Exercise
                     </h5>
-                    <p className="text-sm text-blue-700">
+                    <p className="text-xs md:text-sm text-blue-700">
                       30 minutes of moderate exercise daily. Include yoga,
                       walking, or light cardio.
                     </p>
                   </div>
-                  <div className="bg-gradient-to-br from-cyan-50 to-red-50 rounded-xl p-4 border border-cyan-200">
-                    <h5 className="font-semibold text-cyan-800 mb-2">
+                  <div className="bg-gradient-to-br from-cyan-50 to-red-50 rounded-xl p-3 md:p-4 border border-cyan-200">
+                    <h5 className="font-semibold text-cyan-800 mb-2 text-sm md:text-base">
                       🍎 Balanced Meals
                     </h5>
-                    <p className="text-sm text-cyan-700">
+                    <p className="text-xs md:text-sm text-cyan-700">
                       Eat 3 main meals and 2 snacks. Include variety of colors
                       and textures.
                     </p>
                   </div>
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
-                    <h5 className="font-semibold text-purple-800 mb-2">
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 md:p-4 border border-purple-200">
+                    <h5 className="font-semibold text-purple-800 mb-2 text-sm md:text-base">
                       🧘‍♀️ Wellness
                     </h5>
-                    <p className="text-sm text-purple-700">
+                    <p className="text-xs md:text-sm text-purple-700">
                       Practice meditation, deep breathing, and get 7-8 hours of
                       sleep.
                     </p>
@@ -1479,13 +1435,12 @@ export default function DietChart() {
   };
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
-      {/* Enhanced Ayurvedic Particle System */}
-      <AyurvedicParticleSystem count={1} />
+    <div className="min-h-screen w-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 relative">
+     
 
       {/* Dynamic Background Layers */}
       <div className="absolute inset-0 -z-10">
-        {BG_LAYERS.map((b, i) => (
+        {BG_LAYERS.map((b) => (
           <motion.div
             key={b.id}
             initial={{ opacity: 0 }}
@@ -1526,110 +1481,156 @@ export default function DietChart() {
       </div>
 
       {/* Full Screen Container */}
-      <div className="h-screen w-screen flex items-center justify-center pt-20 pb-4">
-        <div className="w-full max-w-6xl h-full flex flex-col">
-          <motion.section
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="flex-1 bg-white/95 backdrop-blur-sm rounded-3xl p-4 md:p-6 lg:p-8 shadow-2xl border border-teal-200/20 flex flex-col overflow-hidden"
-          >
-            {/* Header */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-center flex-row flex gap-20  mb-6"
+      <div className="min-h-screen w-screen flex flex-col">
+        {/* Main Content Area */}
+        <div className="flex-1 flex items-start justify-center pt-12 pb-20 md:pb-4 md:pt-16 px-2 md:px-4">
+          <div className="w-full max-w-6xl flex flex-col">
+            <motion.section
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="bg-white/95 backdrop-blur-sm rounded-2xl md:rounded-3xl p-3 md:p-6 lg:p-8 shadow-2xl border border-teal-200/20 flex flex-col"
             >
-              <div className="flex-row flex items-center justify-center mx-auto gap-5">
-                {/* Tab Navigation */}
-                <div className="flex flex-wrap gap-2 mb-2 justify-center">
-                  {[
-                    { id: "overview", name: "Overview", icon: FaEye },
-                    {
-                      id: "weekly",
-                      name: "7-Day Chart",
-                      icon: FaCalendarAlt,
-                    },
-                    {
-                      id: "analysis",
-                      name: "Analysis",
-                      icon: FaChartPie,
-                    },
-                  ].map((tab, index) => (
-                    <motion.button
-                      key={tab.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`px-3 py-1 rounded-xl text-lg font-medium transition-all duration-300 flex items-center gap-2 ${
-                        activeTab === tab.id
-                          ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
-                          : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
-                      }`}
-                    >
-                      <tab.icon className="text-xl" />
-                      {tab.name}
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Content */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex-1 overflow-y-auto min-h-0"
-            >
-              {/* Tab Content */}
+              {/* Header - Desktop Navigation */}
               <motion.div
-                key={activeTab}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="flex-1 bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-teal-200/20 overflow-y-auto min-h-0"
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="hidden md:block text-center mb-6"
               >
-                {getTabContent()[activeTab]}
+                <div className="flex items-center justify-center mx-auto gap-5">
+                  {/* Tab Navigation - Desktop */}
+                  <div className="flex flex-wrap gap-2 mb-2 justify-center">
+                    {[
+                      { id: "overview", name: "Overview", icon: FaEye },
+                      {
+                        id: "weekly",
+                        name: "7-Day Chart",
+                        icon: FaCalendarAlt,
+                      },
+                      {
+                        id: "analysis",
+                        name: "Analysis",
+                        icon: FaChartPie,
+                      },
+                    ].map((tab, index) => (
+                      <motion.button
+                        key={tab.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`px-3 py-1 rounded-xl text-lg font-medium transition-all duration-300 flex items-center gap-2 ${
+                          activeTab === tab.id
+                            ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg"
+                            : "bg-white/90 backdrop-blur-sm border border-gray-200 text-teal-900 hover:border-amber-300 hover:bg-teal-50"
+                        }`}
+                      >
+                        <tab.icon className="text-xl" />
+                        {tab.name}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
               </motion.div>
-            </motion.div>
 
-            {/* Action Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
-              className="flex items-center justify-center mt-6 flex-shrink-0 gap-4"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() =>
-                  navigator.clipboard?.writeText(itineraryCopy(selectedPlan))
-                }
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-teal-400"
+              {/* Content */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className=""
               >
-                <FaShare />
-                Copy Plan
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  alert("Diet chart exported successfully!");
-                }}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-sm shadow-lg transition-all duration-200 flex items-center gap-2 border-2 border-green-400"
+                {/* Tab Content */}
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-6 border border-teal-200/20"
+                >
+                  {getTabContent()[activeTab]}
+                </motion.div>
+              </motion.div>
+
+              {/* Action Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+                className="flex items-center justify-center mt-4 md:mt-6 gap-2 md:gap-4"
               >
-                <FaDownload />
-                Download Report
-              </motion.button>
-            </motion.div>
-          </motion.section>
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() =>
+                    navigator.clipboard?.writeText(itineraryCopy(selectedPlan))
+                  }
+                  className="px-4 md:px-6 py-2 md:py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-xs md:text-sm shadow-lg transition-all duration-200 flex items-center gap-1 md:gap-2 border-2 border-teal-400"
+                >
+                  <FaShare className="text-sm md:text-base" />
+                  <span className="hidden sm:inline">Copy Plan</span>
+                  <span className="sm:hidden">Copy</span>
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    alert("Diet chart exported successfully!");
+                  }}
+                  className="px-4 md:px-6 py-2 md:py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-xs md:text-sm shadow-lg transition-all duration-200 flex items-center gap-1 md:gap-2 border-2 border-green-400"
+                >
+                  <FaDownload className="text-sm md:text-base" />
+                  <span className="hidden sm:inline">Download Report</span>
+                  <span className="sm:hidden">Download</span>
+                </motion.button>
+              </motion.div>
+            </motion.section>
+          </div>
         </div>
+
+        {/* Mobile Bottom Navigation */}
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-teal-200/20 shadow-lg z-50"
+        >
+          <div className="flex items-center justify-around py-2 px-4">
+            {[
+              { id: "overview", name: "Overview", icon: FaEye },
+              {
+                id: "weekly",
+                name: "Weekly",
+                icon: FaCalendarAlt,
+              },
+              {
+                id: "analysis",
+                name: "Analysis",
+                icon: FaChartPie,
+              },
+            ].map((tab, index) => (
+              <motion.button
+                key={tab.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-300 ${
+                  activeTab === tab.id
+                    ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-md"
+                    : "text-teal-700 hover:bg-teal-50"
+                }`}
+              >
+                <tab.icon className="text-lg mb-1" />
+                <span className="text-xs font-medium">{tab.name}</span>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   );

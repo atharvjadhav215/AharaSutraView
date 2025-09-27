@@ -214,6 +214,21 @@ const BG_LAYERS = [
 export default function ProfileU() {
   const navigate = useNavigate();
 
+  // Mobile detection state
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check for mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   // Hard-coded profile (no backend / no localStorage)
   const hardUser = {
     name: "Ananya Desai",
@@ -333,9 +348,15 @@ export default function ProfileU() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="bg-white/90 backdrop-blur-sm p-6 rounded-lg border border-gray-200/60 shadow-xl mb-6"
+            className="bg-white/90 backdrop-blur-sm p-4 md:p-6 rounded-lg border border-gray-200/60 shadow-xl mb-6"
           >
-            <div className="flex items-center gap-6">
+            <div
+              className={`flex ${
+                isMobile
+                  ? "flex-col items-center text-center gap-4"
+                  : "items-center gap-6"
+              }`}
+            >
               <div className="relative">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 via-cyan-400 to-blue-400 flex items-center justify-center shadow-lg">
                   <span className="text-white text-xl font-bold">
@@ -346,8 +367,8 @@ export default function ProfileU() {
                   <FaCheck className="text-white text-xs" />
                 </div>
               </div>
-              <div className="flex-1">
-                <h2 className="text-2xl font-bold text-gray-800 mb-1">
+              <div className={`${isMobile ? "w-full" : "flex-1"}`}>
+                <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1">
                   {profile.name}
                 </h2>
                 <p className="text-sm text-gray-600 mb-2">{profile.username}</p>
@@ -355,12 +376,18 @@ export default function ProfileU() {
                   {profile.notes}
                 </p>
               </div>
-              <div className="flex gap-3">
+              <div
+                className={`flex ${
+                  isMobile ? "flex-col w-full gap-2" : "gap-3"
+                }`}
+              >
                 <motion.button
                   whileHover={{ y: -2, scale: 1.02 }}
                   whileTap={{ y: 0, scale: 0.98 }}
                   onClick={() => navigate("/edit-profile")}
-                  className="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+                  className={`${
+                    isMobile ? "w-full" : ""
+                  } px-4 py-2 rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2`}
                 >
                   <FaEdit />
                   Edit Profile
@@ -369,7 +396,9 @@ export default function ProfileU() {
                   whileHover={{ y: -2, scale: 1.02 }}
                   whileTap={{ y: 0, scale: 0.98 }}
                   onClick={() => navigate("/diet-chart")}
-                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                  className={`${
+                    isMobile ? "w-full" : ""
+                  } px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2`}
                 >
                   <FaClipboardList />
                   View Diet Chart
@@ -379,22 +408,44 @@ export default function ProfileU() {
           </motion.div>
 
           {/* Enhanced Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            className={`grid ${
+              isMobile
+                ? "grid-cols-2"
+                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+            } gap-4 md:gap-6`}
+          >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.2 }}
-              className="bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200"
+              className={`bg-white/90 backdrop-blur-sm ${
+                isMobile ? "p-3" : "p-4"
+              } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div
+                className={`flex ${
+                  isMobile
+                    ? "flex-col items-center text-center gap-2"
+                    : "items-center gap-3"
+                } mb-3`}
+              >
                 <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center shadow-lg">
                   <FaUser className="text-white text-sm" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-1">
+                  <h3
+                    className={`${
+                      isMobile ? "text-xs" : "text-sm"
+                    } font-semibold text-gray-700 mb-1`}
+                  >
                     Age / Gender
                   </h3>
-                  <p className="text-lg font-bold text-blue-600">
+                  <p
+                    className={`${
+                      isMobile ? "text-sm" : "text-lg"
+                    } font-bold text-blue-600`}
+                  >
                     {profile.basic.age || "—"} / {profile.basic.gender || "—"}
                   </p>
                 </div>
@@ -405,17 +456,33 @@ export default function ProfileU() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.3 }}
-              className="bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200"
+              className={`bg-white/90 backdrop-blur-sm ${
+                isMobile ? "p-3" : "p-4"
+              } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div
+                className={`flex ${
+                  isMobile
+                    ? "flex-col items-center text-center gap-2"
+                    : "items-center gap-3"
+                } mb-3`}
+              >
                 <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center shadow-lg">
                   <FaWeight className="text-white text-sm" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-1">
+                  <h3
+                    className={`${
+                      isMobile ? "text-xs" : "text-sm"
+                    } font-semibold text-gray-700 mb-1`}
+                  >
                     Height / Weight
                   </h3>
-                  <p className="text-lg font-bold text-green-600">
+                  <p
+                    className={`${
+                      isMobile ? "text-sm" : "text-lg"
+                    } font-bold text-green-600`}
+                  >
                     {profile.anthro.height || "—"} cm /{" "}
                     {profile.anthro.weight || "—"} kg
                   </p>
@@ -427,17 +494,33 @@ export default function ProfileU() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.4 }}
-              className="bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200"
+              className={`bg-white/90 backdrop-blur-sm ${
+                isMobile ? "p-3" : "p-4"
+              } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div
+                className={`flex ${
+                  isMobile
+                    ? "flex-col items-center text-center gap-2"
+                    : "items-center gap-3"
+                } mb-3`}
+              >
                 <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center shadow-lg">
                   <FaChartLine className="text-white text-sm" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-1">
+                  <h3
+                    className={`${
+                      isMobile ? "text-xs" : "text-sm"
+                    } font-semibold text-gray-700 mb-1`}
+                  >
                     BMI
                   </h3>
-                  <p className="text-lg font-bold text-purple-600">
+                  <p
+                    className={`${
+                      isMobile ? "text-sm" : "text-lg"
+                    } font-bold text-purple-600`}
+                  >
                     {profile.anthro.bmi || "—"}
                   </p>
                 </div>
@@ -448,17 +531,33 @@ export default function ProfileU() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
-              className="bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200"
+              className={`bg-white/90 backdrop-blur-sm ${
+                isMobile ? "p-3" : "p-4"
+              } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div
+                className={`flex ${
+                  isMobile
+                    ? "flex-col items-center text-center gap-2"
+                    : "items-center gap-3"
+                } mb-3`}
+              >
                 <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-400 to-blue-400 flex items-center justify-center shadow-lg">
                   <FaCalendarAlt className="text-white text-sm" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-1">
+                  <h3
+                    className={`${
+                      isMobile ? "text-xs" : "text-sm"
+                    } font-semibold text-gray-700 mb-1`}
+                  >
                     Last Update
                   </h3>
-                  <p className="text-lg font-bold text-cyan-600">
+                  <p
+                    className={`${
+                      isMobile ? "text-sm" : "text-lg"
+                    } font-bold text-cyan-600`}
+                  >
                     {profile.basic.date || "—"}
                   </p>
                 </div>
@@ -473,12 +572,18 @@ export default function ProfileU() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-6"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            className={`grid ${
+              isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
+            } gap-4 md:gap-6`}
+          >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.1 }}
-              className="bg-white/90 backdrop-blur-sm p-6 rounded-lg border border-gray-200/60 shadow-xl"
+              className={`bg-white/90 backdrop-blur-sm ${
+                isMobile ? "p-4" : "p-6"
+              } rounded-lg border border-gray-200/60 shadow-xl`}
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-red-400 to-pink-400 flex items-center justify-center shadow-lg">
@@ -528,7 +633,9 @@ export default function ProfileU() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.2 }}
-              className="bg-white/90 backdrop-blur-sm p-6 rounded-lg border border-gray-200/60 shadow-xl"
+              className={`bg-white/90 backdrop-blur-sm ${
+                isMobile ? "p-4" : "p-6"
+              } rounded-lg border border-gray-200/60 shadow-xl`}
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center shadow-lg">
@@ -580,38 +687,96 @@ export default function ProfileU() {
             transition={{ duration: 0.3, delay: 0.3 }}
             className="bg-white/90 backdrop-blur-sm p-6 rounded-lg border border-gray-200/60 shadow-xl"
           >
-            <div className="flex items-center gap-4 mb-8">
+            <div
+              className={`flex ${
+                isMobile
+                  ? "flex-col items-center text-center gap-4"
+                  : "items-center gap-4"
+              } mb-8`}
+            >
               <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center shadow-lg">
                 <FaFileMedical className="text-white text-2xl" />
               </div>
-              <h3 className="text-3xl font-bold text-gray-800">
+              <h3
+                className={`${
+                  isMobile ? "text-2xl" : "text-3xl"
+                } font-bold text-gray-800`}
+              >
                 Medical Information
               </h3>
             </div>
             <div className="space-y-6">
-              <div className="p-6 bg-gray-50/80 rounded-lg border border-gray-200/60">
-                <h4 className="text-xl font-semibold text-gray-800 mb-3">
+              <div
+                className={`${
+                  isMobile ? "p-4" : "p-6"
+                } bg-gray-50/80 rounded-lg border border-gray-200/60`}
+              >
+                <h4
+                  className={`${
+                    isMobile ? "text-lg" : "text-xl"
+                  } font-semibold text-gray-800 mb-3`}
+                >
                   Medical History
                 </h4>
-                <p className="text-gray-700 text-lg leading-relaxed">
+                <p
+                  className={`text-gray-700 ${
+                    isMobile ? "text-base" : "text-lg"
+                  } leading-relaxed`}
+                >
                   {profile.medical.medicalHistory ||
                     "No medical history provided."}
                 </p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center justify-between p-4 bg-gray-50/80 rounded-lg border border-gray-200/60">
-                  <span className="text-gray-700 font-medium text-lg">
+              <div
+                className={`grid ${
+                  isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
+                } gap-4`}
+              >
+                <div
+                  className={`flex ${
+                    isMobile
+                      ? "flex-col items-center text-center gap-2"
+                      : "items-center justify-between"
+                  } ${
+                    isMobile ? "p-3" : "p-4"
+                  } bg-gray-50/80 rounded-lg border border-gray-200/60`}
+                >
+                  <span
+                    className={`text-gray-700 font-medium ${
+                      isMobile ? "text-base" : "text-lg"
+                    }`}
+                  >
                     Bowel Movements
                   </span>
-                  <span className="text-teal-600 font-bold text-xl">
+                  <span
+                    className={`text-teal-600 font-bold ${
+                      isMobile ? "text-lg" : "text-xl"
+                    }`}
+                  >
                     {profile.medical.bowelMovements || "—"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-gray-50/80 rounded-lg border border-gray-200/60">
-                  <span className="text-gray-700 font-medium text-lg">
+                <div
+                  className={`flex ${
+                    isMobile
+                      ? "flex-col items-center text-center gap-2"
+                      : "items-center justify-between"
+                  } ${
+                    isMobile ? "p-3" : "p-4"
+                  } bg-gray-50/80 rounded-lg border border-gray-200/60`}
+                >
+                  <span
+                    className={`text-gray-700 font-medium ${
+                      isMobile ? "text-base" : "text-lg"
+                    }`}
+                  >
                     Allergies
                   </span>
-                  <span className="text-teal-600 font-bold text-xl">
+                  <span
+                    className={`text-teal-600 font-bold ${
+                      isMobile ? "text-lg" : "text-xl"
+                    }`}
+                  >
                     {profile.medical.allergies || "—"}
                   </span>
                 </div>
@@ -626,20 +791,38 @@ export default function ProfileU() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-6"
         >
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-bold text-gray-800">My Diet Charts</h3>
+          <div
+            className={`flex ${
+              isMobile ? "flex-col gap-4" : "items-center justify-between"
+            } mb-6`}
+          >
+            <h3
+              className={`${
+                isMobile ? "text-xl" : "text-2xl"
+              } font-bold text-gray-800 ${isMobile ? "text-center" : ""}`}
+            >
+              My Diet Charts
+            </h3>
             <motion.button
               whileHover={{ y: -2, scale: 1.02 }}
               whileTap={{ y: 0, scale: 0.98 }}
               onClick={() => navigate("/diet-chart")}
-              className="px-6 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+              className={`${
+                isMobile ? "w-full" : ""
+              } px-6 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2`}
             >
               <FaPlus />
               Create New Chart
             </motion.button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            className={`grid ${
+              isMobile
+                ? "grid-cols-1"
+                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            } gap-4 md:gap-6`}
+          >
             <AnimatePresence>
               {charts && charts.length ? (
                 charts.map((c, idx) => (
@@ -649,17 +832,29 @@ export default function ProfileU() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: idx * 0.1 }}
                     whileHover={{ y: -5, scale: 1.02 }}
-                    className="bg-white/90 backdrop-blur-sm p-6 rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
+                    className={`bg-white/90 backdrop-blur-sm ${
+                      isMobile ? "p-4" : "p-6"
+                    } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer`}
                     onClick={() =>
                       setExpandedChart(expandedChart === c.id ? null : c.id)
                     }
                   >
-                    <div className="flex items-center gap-3 mb-4">
+                    <div
+                      className={`flex ${
+                        isMobile
+                          ? "flex-col items-center text-center gap-2"
+                          : "items-center gap-3"
+                      } mb-4`}
+                    >
                       <div className="w-12 h-12 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center shadow-lg">
                         <FaClipboardList className="text-white text-lg" />
                       </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-semibold text-gray-800 mb-1">
+                      <div className={`${isMobile ? "w-full" : "flex-1"}`}>
+                        <h4
+                          className={`${
+                            isMobile ? "text-base" : "text-lg"
+                          } font-semibold text-gray-800 mb-1`}
+                        >
                           {c.title}
                         </h4>
                         <p className="text-gray-600 text-sm">{c.date}</p>
@@ -670,7 +865,11 @@ export default function ProfileU() {
                       {c.summary}
                     </p>
 
-                    <div className="flex gap-3">
+                    <div
+                      className={`flex ${
+                        isMobile ? "flex-col gap-2" : "gap-3"
+                      }`}
+                    >
                       <motion.button
                         whileHover={{ y: -2, scale: 1.02 }}
                         whileTap={{ y: 0, scale: 0.98 }}
@@ -678,7 +877,9 @@ export default function ProfileU() {
                           e.stopPropagation();
                           navigate("/diet-chart");
                         }}
-                        className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+                        className={`${
+                          isMobile ? "w-full" : "flex-1"
+                        } px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2`}
                       >
                         <FaEye />
                         Open
@@ -693,7 +894,9 @@ export default function ProfileU() {
                           );
                           alert("Chart copied to clipboard");
                         }}
-                        className="px-4 py-2 rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 flex items-center gap-2"
+                        className={`${
+                          isMobile ? "w-full" : ""
+                        } px-4 py-2 rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 flex items-center justify-center gap-2`}
                       >
                         <FaShare />
                         Copy
@@ -713,7 +916,13 @@ export default function ProfileU() {
                             <h5 className="text-lg font-semibold text-teal-900 mb-3">
                               Meals
                             </h5>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div
+                              className={`grid ${
+                                isMobile
+                                  ? "grid-cols-1"
+                                  : "grid-cols-1 sm:grid-cols-2"
+                              } gap-3`}
+                            >
                               {Object.entries(c.meals).map(
                                 ([mealType, items]) => (
                                   <div
@@ -746,7 +955,11 @@ export default function ProfileU() {
                   </motion.div>
                 ))
               ) : (
-                <div className="md:col-span-2 lg:col-span-3 text-center py-12">
+                <div
+                  className={`${
+                    isMobile ? "col-span-1" : "md:col-span-2 lg:col-span-3"
+                  } text-center py-12`}
+                >
                   <div className="w-16 h-16 rounded-full bg-gradient-to-r from-teal-200 to-orange-100 flex items-center justify-center mx-auto mb-4">
                     <FaClipboardList className="text-teal-800 text-2xl" />
                   </div>
@@ -782,7 +995,9 @@ export default function ProfileU() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.1 }}
-              className="bg-white/90 backdrop-blur-sm p-6 rounded-lg border border-gray-200/60 shadow-xl"
+              className={`bg-white/90 backdrop-blur-sm ${
+                isMobile ? "p-4" : "p-6"
+              } rounded-lg border border-gray-200/60 shadow-xl`}
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center shadow-lg">
@@ -824,7 +1039,9 @@ export default function ProfileU() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.2 }}
-              className="bg-white/90 backdrop-blur-sm p-6 rounded-lg border border-gray-200/60 shadow-xl"
+              className={`bg-white/90 backdrop-blur-sm ${
+                isMobile ? "p-4" : "p-6"
+              } rounded-lg border border-gray-200/60 shadow-xl`}
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center shadow-lg">
@@ -873,11 +1090,15 @@ export default function ProfileU() {
                 Account Actions
               </h3>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div
+              className={`flex ${isMobile ? "flex-col" : "flex-wrap"} gap-3`}
+            >
               <motion.button
                 whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ y: 0, scale: 0.98 }}
-                className="px-6 py-3 rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl"
+                className={`${
+                  isMobile ? "w-full" : ""
+                } px-6 py-3 rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl`}
               >
                 <FaDownload />
                 Export Data
@@ -885,7 +1106,9 @@ export default function ProfileU() {
               <motion.button
                 whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ y: 0, scale: 0.98 }}
-                className="px-6 py-3 rounded-lg bg-white border-2 border-red-200 text-red-700 text-sm font-semibold hover:bg-red-50 hover:border-red-300 transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl"
+                className={`${
+                  isMobile ? "w-full" : ""
+                } px-6 py-3 rounded-lg bg-white border-2 border-red-200 text-red-700 text-sm font-semibold hover:bg-red-50 hover:border-red-300 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl`}
               >
                 <FaTrash />
                 Delete Account
@@ -921,65 +1144,75 @@ export default function ProfileU() {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col mt-16 h-[calc(100vh-80px)]">
-        {/* Enhanced Tab Navigation */}
-        <div className="flex-shrink-0 max-w-7xl mx-32 px-6 py-4">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white/80 backdrop-blur-md rounded-lg p-1.5 border border-gray-200/60 shadow-xl"
-          >
-            <div className="flex gap-1">
-              {TABS.map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                return (
-                  <motion.button
-                    key={tab.id}
-                    whileHover={{ y: -1, scale: 1.02 }}
-                    whileTap={{ y: 0, scale: 0.98 }}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`relative flex-1 flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-lg font-medium text-sm transition-all duration-200 ${
-                      isActive
-                        ? "text-white shadow-lg"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50/80"
-                    }`}
-                    style={{
-                      background: isActive
-                        ? `linear-gradient(135deg, ${tab.color}, ${tab.color}dd)`
-                        : "transparent",
-                    }}
-                  >
-                    <Icon
-                      className={`text-lg ${
-                        isActive ? "text-white" : "text-gray-500"
+      <div
+        className={`relative z-10 flex flex-col ${
+          isMobile ? "h-screen pt-16" : "mt-16 h-[calc(100vh-80px)]"
+        }`}
+      >
+        {/* Desktop Tab Navigation - Top */}
+        {!isMobile && (
+          <div className="flex-shrink-0 max-w-7xl mx-32 px-6 py-4">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white/80 backdrop-blur-md rounded-lg p-1.5 border border-gray-200/60 shadow-xl"
+            >
+              <div className="flex gap-1">
+                {TABS.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <motion.button
+                      key={tab.id}
+                      whileHover={{ y: -1, scale: 1.02 }}
+                      whileTap={{ y: 0, scale: 0.98 }}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`relative flex-1 flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-lg font-medium text-sm transition-all duration-200 ${
+                        isActive
+                          ? "text-white shadow-lg"
+                          : "text-gray-600 hover:text-gray-800 hover:bg-gray-50/80"
                       }`}
-                    />
-                    <span className="font-semibold tracking-wide">
-                      {tab.name}
-                    </span>
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeTab"
-                        className="absolute inset-0 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 shadow-lg"
-                        initial={false}
-                        transition={{
-                          type: "spring",
-                          bounce: 0.2,
-                          duration: 0.6,
-                        }}
-                        style={{ zIndex: -1 }}
+                      style={{
+                        background: isActive
+                          ? `linear-gradient(135deg, ${tab.color}, ${tab.color}dd)`
+                          : "transparent",
+                      }}
+                    >
+                      <Icon
+                        className={`text-lg ${
+                          isActive ? "text-white" : "text-gray-500"
+                        }`}
                       />
-                    )}
-                  </motion.button>
-                );
-              })}
-            </div>
-          </motion.div>
-        </div>
+                      <span className="font-semibold tracking-wide">
+                        {tab.name}
+                      </span>
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute inset-0 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 shadow-lg"
+                          initial={false}
+                          transition={{
+                            type: "spring",
+                            bounce: 0.2,
+                            duration: 0.6,
+                          }}
+                          style={{ zIndex: -1 }}
+                        />
+                      )}
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        )}
 
         {/* Enhanced Tab Content */}
-        <div className="flex-1 overflow-hidden px-6 pb-6">
+        <div
+          className={`flex-1 overflow-hidden ${
+            isMobile ? "px-4 pb-20" : "px-6 pb-6"
+          }`}
+        >
           <motion.div
             key={activeTab}
             initial={{ opacity: 0, y: 20 }}
@@ -988,11 +1221,69 @@ export default function ProfileU() {
             transition={{ duration: 0.4, ease: "easeOut" }}
             className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
           >
-            <div className="max-w-7xl mx-auto">
+            <div className={`${isMobile ? "max-w-full" : "max-w-7xl"} mx-auto`}>
               {getTabContent()[activeTab]}
             </div>
           </motion.div>
         </div>
+
+        {/* Mobile Tab Navigation - Bottom Fixed */}
+        {isMobile && (
+          <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-200/60 shadow-2xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="px-4 py-2"
+            >
+              <div className="flex gap-1">
+                {TABS.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <motion.button
+                      key={tab.id}
+                      whileHover={{ y: -1, scale: 1.02 }}
+                      whileTap={{ y: 0, scale: 0.98 }}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`relative flex-1 flex flex-col items-center justify-center gap-1 px-2 py-3 rounded-lg font-medium text-xs transition-all duration-200 ${
+                        isActive
+                          ? "text-white shadow-lg"
+                          : "text-gray-600 hover:text-gray-800 hover:bg-gray-50/80"
+                      }`}
+                      style={{
+                        background: isActive
+                          ? `linear-gradient(135deg, ${tab.color}, ${tab.color}dd)`
+                          : "transparent",
+                      }}
+                    >
+                      <Icon
+                        className={`text-lg ${
+                          isActive ? "text-white" : "text-gray-500"
+                        }`}
+                      />
+                      <span className="font-semibold tracking-wide text-center leading-tight">
+                        {tab.name}
+                      </span>
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeTabMobile"
+                          className="absolute inset-0 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 shadow-lg"
+                          initial={false}
+                          transition={{
+                            type: "spring",
+                            bounce: 0.2,
+                            duration: 0.6,
+                          }}
+                          style={{ zIndex: -1 }}
+                        />
+                      )}
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        )}
       </div>
     </div>
   );

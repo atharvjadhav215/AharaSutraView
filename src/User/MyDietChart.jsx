@@ -1364,8 +1364,8 @@ export default function MyDietChart() {
 
                 {step === 2 && (
                   <div className="flex flex-col h-full">
-                    {/* Tab Navigation */}
-                    <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-2 justify-center">
+                    {/* Tab Navigation - Desktop Only */}
+                    <div className="hidden md:flex flex-wrap gap-1 sm:gap-1.5 mb-2 justify-center">
                       {[
                         { id: "overview", name: "Overview", icon: FaEye },
                         {
@@ -1407,7 +1407,7 @@ export default function MyDietChart() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
-                      className="flex-1 bg-white/90 backdrop-blur-sm rounded-md p-2 sm:p-3 border border-teal-200/20 overflow-y-auto min-h-0"
+                      className="flex-1 bg-white/90 backdrop-blur-sm rounded-md p-2 sm:p-3 border border-teal-200/20 overflow-y-auto min-h-0 md:mb-0 mb-2"
                     >
                       {getTabContent()[activeTab]}
                     </div>
@@ -1490,6 +1490,68 @@ export default function MyDietChart() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Fixed Bottom Tab Navigation - Mobile Only, visible on step 2 */}
+      {step === 2 && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-gradient-to-t from-teal-50/95 to-cyan-50/95 backdrop-blur-md border-t border-teal-200/60 shadow-lg"
+          >
+            {/* Tab Navigation */}
+            <div className="flex justify-around px-2 py-2">
+              {[
+                { id: "overview", name: "Overview", icon: FaEye },
+                {
+                  id: "weekly",
+                  name: "7-Day Chart",
+                  icon: FaCalendarAlt,
+                },
+                {
+                  id: "selected",
+                  name: "Selected Foods",
+                  icon: FaList,
+                },
+              ].map((tab, index) => (
+                <motion.button
+                  key={tab.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex flex-col items-center justify-center p-1 rounded-xl transition-all duration-300 min-w-0 flex-1 mx-1 ${
+                    activeTab === tab.id
+                      ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg"
+                      : "text-gray-600 hover:bg-white/50"
+                  }`}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                      activeTab === tab.id ? "bg-white/20" : ""
+                    }`}
+                  >
+                    <tab.icon
+                      className={`text-lg ${
+                        activeTab === tab.id ? "text-white" : "text-teal-600"
+                      }`}
+                    />
+                  </div>
+                  <span
+                    className={`text-xs font-medium mt-1 truncate ${
+                      activeTab === tab.id ? "text-white" : "text-gray-600"
+                    }`}
+                  >
+                    {tab.name}
+                  </span>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

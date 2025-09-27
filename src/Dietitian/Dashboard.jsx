@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import React, { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
@@ -55,105 +55,12 @@ import {
   FaFlag,
   FaHistory,
   FaClipboardList,
+  FaTimes,
+  FaClipboard,
 } from "react-icons/fa";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
-
-const ayurvedicColors = [
-  "#A0D9D9",
-  "#7BC4C4",
-  "#5BAFAF",
-  "#4A9B9B",
-  "#3A8787",
-  "#2A7373",
-  "#1A5F5F",
-  "#0A4B4B",
-];
-
-// Enhanced Ayurvedic Particle System
-const AyurvedicParticleSystem = ({ count = 1 }) => {
-  const particlesRef = useRef([]);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const particles = particlesRef.current;
-    const container = containerRef.current;
-
-    if (!container) return;
-
-    // Create enhanced Ayurvedic particles
-    particles.forEach((particle, index) => {
-      if (particle) {
-        const isSymbol = index % 4 === 0; // Every 4th particle is a symbol
-
-        const color =
-          ayurvedicColors[Math.floor(Math.random() * ayurvedicColors.length)];
-
-        gsap.set(particle, {
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          scale: isSymbol
-            ? Math.random() * 1.2 + 1.0
-            : Math.random() * 0.8 + 0.6,
-          opacity: Math.random() * 0.9 + 0.4,
-          rotation: Math.random() * 360,
-        });
-
-        // Enhanced floating animation
-        gsap.to(particle, {
-          x: `+=${(Math.random() - 0.5) * 200}`,
-          y: `+=${(Math.random() - 0.5) * 200}`,
-          duration: Math.random() * 4 + 4,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
-
-        // Rotation animation
-        gsap.to(particle, {
-          rotation: "+=360",
-          duration: Math.random() * 6 + 5,
-          ease: "none",
-          repeat: -1,
-        });
-
-        // Scale pulsing for symbols
-        if (isSymbol) {
-          gsap.to(particle, {
-            scale: "+=0.3",
-            duration: Math.random() * 0.8 + 0.6,
-            ease: "sine.inOut",
-            repeat: -1,
-            yoyo: true,
-          });
-        }
-
-        particle.className = "absolute w-2 h-2 rounded-full ayurvedic-dot";
-        particle.style.backgroundColor = color;
-      }
-    });
-  }, []);
-
-  return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 pointer-events-none overflow-hidden"
-    >
-      {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          ref={(el) => (particlesRef.current[i] = el)}
-          className="absolute"
-          style={{
-            filter: "blur(0.3px)",
-            willChange: "transform",
-          }}
-        />
-      ))}
-    </div>
-  );
-};
 
 // Tab Configuration
 const TABS = [
@@ -168,12 +75,6 @@ const TABS = [
     name: "Patients",
     icon: FaUsers,
     color: "#7BC4C4",
-  },
-  {
-    id: "plans",
-    name: "Diet Plans",
-    icon: FaClipboardList,
-    color: "#5BAFAF",
   },
   {
     id: "analytics",
@@ -251,7 +152,7 @@ const SAMPLE_PLANS = [
   },
 ];
 
-// richer patient dataset
+// Enhanced patient dataset with detailed information
 const FAKE_PATIENTS = [
   {
     id: "p1",
@@ -262,10 +163,49 @@ const FAKE_PATIENTS = [
     bmi: 21.8,
     adherence: 78,
     lastVisit: "2025-09-05",
+    nextVisit: new Date().toISOString().split("T")[0], // Today
     goal: "Increase iron & maintain weight",
     notes:
       "Mild iron deficiency. Prefers vegetarian meals. Allergic to shellfish.",
     flags: ["iron-deficiency"],
+    // Detailed patient information based on AddPatient.jsx structure
+    basic: {
+      patientName: "Asha Rao",
+      age: 34,
+      gender: "female",
+      contactNumber: "98450XXXX",
+      date: "2025-09-05",
+    },
+    anthro: {
+      height: "165",
+      weight: "59",
+      bmi: "21.8",
+      waist: "78",
+    },
+    vitals: {
+      pulseRate: "72",
+      bloodPressure: "110/70",
+      waterIntake: "2-3",
+      mealFrequency: "3",
+    },
+    lifestyle: {
+      cuisinePreference: "Indian",
+      dietaryHabits: "Vegetarian",
+      physicalActivities: "moderate",
+      addictionHabits: ["Tea"],
+      smokingFrequency: "",
+      rasa: "sweet",
+      dosha: "Vata",
+      vikruti: "",
+      sleepHours: "7",
+      exerciseFrequency: "3-4 times/week",
+      stressLevel: "moderate",
+    },
+    medical: {
+      medicalHistory: "Mild iron deficiency anemia",
+      bowelMovements: "regular",
+      allergies: "Shellfish allergy",
+    },
     history: [
       { date: "2025-09-05", planId: "vata-friendly", note: "Initial plan" },
       { date: "2025-08-20", planId: "balanced", note: "2-week review" },
@@ -280,9 +220,47 @@ const FAKE_PATIENTS = [
     bmi: 29.2,
     adherence: 45,
     lastVisit: "2025-08-30",
+    nextVisit: new Date().toISOString().split("T")[0], // Today
     goal: "Weight loss 6 kg",
     notes: "Active runner. Wants lower carbs evening.",
     flags: ["overweight"],
+    basic: {
+      patientName: "Rahul Mehta",
+      age: 42,
+      gender: "male",
+      contactNumber: "99000XXXX",
+      date: "2025-08-30",
+    },
+    anthro: {
+      height: "175",
+      weight: "89",
+      bmi: "29.2",
+      waist: "95",
+    },
+    vitals: {
+      pulseRate: "68",
+      bloodPressure: "130/85",
+      waterIntake: "3-4",
+      mealFrequency: "3",
+    },
+    lifestyle: {
+      cuisinePreference: "Indian",
+      dietaryHabits: "Non-vegetarian",
+      physicalActivities: "active",
+      addictionHabits: ["Coffee"],
+      smokingFrequency: "",
+      rasa: "salty",
+      dosha: "Kapha",
+      vikruti: "",
+      sleepHours: "6",
+      exerciseFrequency: "daily",
+      stressLevel: "high",
+    },
+    medical: {
+      medicalHistory: "Pre-diabetes, family history of diabetes",
+      bowelMovements: "regular",
+      allergies: "None",
+    },
     history: [
       { date: "2025-08-30", planId: "light-kapha", note: "Weight-loss plan" },
       { date: "2025-08-10", planId: "balanced", note: "Baseline" },
@@ -297,9 +275,47 @@ const FAKE_PATIENTS = [
     bmi: 23.4,
     adherence: 92,
     lastVisit: "2025-09-10",
+    nextVisit: new Date().toISOString().split("T")[0], // Today
     goal: "Prenatal nutrition, increase calories",
     notes: "Pregnancy — needs calorie increase and iron-rich foods.",
     flags: ["pregnancy"],
+    basic: {
+      patientName: "Sana Khan",
+      age: 28,
+      gender: "female",
+      contactNumber: "98111XXXX",
+      date: "2025-09-10",
+    },
+    anthro: {
+      height: "160",
+      weight: "60",
+      bmi: "23.4",
+      waist: "82",
+    },
+    vitals: {
+      pulseRate: "75",
+      bloodPressure: "105/65",
+      waterIntake: "2-3",
+      mealFrequency: "4+",
+    },
+    lifestyle: {
+      cuisinePreference: "Indian",
+      dietaryHabits: "Vegetarian",
+      physicalActivities: "light",
+      addictionHabits: [],
+      smokingFrequency: "",
+      rasa: "sweet",
+      dosha: "Pitta",
+      vikruti: "",
+      sleepHours: "8",
+      exerciseFrequency: "1-2 times/week",
+      stressLevel: "low",
+    },
+    medical: {
+      medicalHistory: "Pregnancy - 24 weeks",
+      bowelMovements: "regular",
+      allergies: "None",
+    },
     history: [
       { date: "2025-09-10", planId: "balanced", note: "Prenatal adjustments" },
     ],
@@ -313,9 +329,49 @@ const FAKE_PATIENTS = [
     bmi: 26.1,
     adherence: 60,
     lastVisit: "2025-09-01",
+    nextVisit: new Date(Date.now() + 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0], // Tomorrow
     goal: "Lower BP and reduce sodium",
     notes: "Hypertension controlled with meds. Monitor salt intake.",
     flags: ["hypertension"],
+    basic: {
+      patientName: "Vikram Patel",
+      age: 51,
+      gender: "male",
+      contactNumber: "97777XXXX",
+      date: "2025-09-01",
+    },
+    anthro: {
+      height: "170",
+      weight: "75",
+      bmi: "26.1",
+      waist: "88",
+    },
+    vitals: {
+      pulseRate: "70",
+      bloodPressure: "140/90",
+      waterIntake: "1-2",
+      mealFrequency: "3",
+    },
+    lifestyle: {
+      cuisinePreference: "Indian",
+      dietaryHabits: "Non-vegetarian",
+      physicalActivities: "moderate",
+      addictionHabits: ["Tea", "Alcohol"],
+      smokingFrequency: "",
+      rasa: "salty",
+      dosha: "Kapha",
+      vikruti: "",
+      sleepHours: "6",
+      exerciseFrequency: "3-4 times/week",
+      stressLevel: "high",
+    },
+    medical: {
+      medicalHistory: "Hypertension, on medication",
+      bowelMovements: "regular",
+      allergies: "None",
+    },
     history: [
       { date: "2025-09-01", planId: "balanced", note: "Salt-reduction plan" },
       { date: "2025-07-10", planId: "light-kapha", note: "Initial" },
@@ -330,9 +386,49 @@ const FAKE_PATIENTS = [
     bmi: 19.2,
     adherence: 85,
     lastVisit: "2025-09-02",
+    nextVisit: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0], // Day after tomorrow
     goal: "Improve energy, address fatigue",
     notes: "Low energy mornings; prefers warm breakfasts.",
     flags: ["fatigue"],
+    basic: {
+      patientName: "Meera Iyer",
+      age: 46,
+      gender: "female",
+      contactNumber: "96666XXXX",
+      date: "2025-09-02",
+    },
+    anthro: {
+      height: "158",
+      weight: "48",
+      bmi: "19.2",
+      waist: "72",
+    },
+    vitals: {
+      pulseRate: "65",
+      bloodPressure: "100/60",
+      waterIntake: "2-3",
+      mealFrequency: "3",
+    },
+    lifestyle: {
+      cuisinePreference: "Indian",
+      dietaryHabits: "Vegetarian",
+      physicalActivities: "light",
+      addictionHabits: ["Tea"],
+      smokingFrequency: "",
+      rasa: "sweet",
+      dosha: "Vata",
+      vikruti: "",
+      sleepHours: "7",
+      exerciseFrequency: "1-2 times/week",
+      stressLevel: "moderate",
+    },
+    medical: {
+      medicalHistory: "Low energy, fatigue, iron deficiency",
+      bowelMovements: "irregular",
+      allergies: "None",
+    },
     history: [
       {
         date: "2025-09-02",
@@ -351,14 +447,356 @@ const FAKE_PATIENTS = [
     bmi: 24.8,
     adherence: 70,
     lastVisit: "2025-08-25",
+    nextVisit: new Date().toISOString().split("T")[0], // Today
     goal: "Muscle gain, protein focus",
     notes: "Gym regular. Wants high-protein meals.",
     flags: ["muscle-gain"],
+    basic: {
+      patientName: "Arjun Singh",
+      age: 38,
+      gender: "male",
+      contactNumber: "95555XXXX",
+      date: "2025-08-25",
+    },
+    anthro: {
+      height: "180",
+      weight: "80",
+      bmi: "24.8",
+      waist: "85",
+    },
+    vitals: {
+      pulseRate: "62",
+      bloodPressure: "115/75",
+      waterIntake: "3-4",
+      mealFrequency: "4+",
+    },
+    lifestyle: {
+      cuisinePreference: "Indian",
+      dietaryHabits: "Non-vegetarian",
+      physicalActivities: "active",
+      addictionHabits: ["Protein supplements"],
+      smokingFrequency: "",
+      rasa: "salty",
+      dosha: "Pitta",
+      vikruti: "",
+      sleepHours: "7",
+      exerciseFrequency: "daily",
+      stressLevel: "low",
+    },
+    medical: {
+      medicalHistory: "No significant medical history",
+      bowelMovements: "regular",
+      allergies: "None",
+    },
     history: [
       { date: "2025-08-25", planId: "balanced", note: "Protein-focused plan" },
     ],
   },
 ];
+
+// Diet Plan Popup Component
+const DietPlanPopup = ({ patient, isOpen, onClose }) => {
+  if (!isOpen || !patient) return null;
+
+  const currentPlan =
+    SAMPLE_PLANS.find(
+      (plan) =>
+        patient.history &&
+        patient.history.length > 0 &&
+        patient.history[patient.history.length - 1].planId === plan.id
+    ) || SAMPLE_PLANS[0];
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.8, opacity: 0 }}
+          transition={{ type: "spring", duration: 0.5 }}
+          className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                  <FaClipboard className="text-2xl" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">
+                    {patient.name}'s Diet Plan
+                  </h2>
+                  <p className="text-teal-100">
+                    Current Plan: {currentPlan.name}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+              >
+                <FaTimes className="text-xl" />
+              </button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+            {/* Patient Details */}
+            <div className="mb-8">
+              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <FaUser className="text-teal-600" />
+                Patient Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-700 mb-2">
+                    Basic Info
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <span className="font-medium">Age:</span>{" "}
+                      {patient.basic?.age} years
+                    </p>
+                    <p>
+                      <span className="font-medium">Gender:</span>{" "}
+                      {patient.basic?.gender}
+                    </p>
+                    <p>
+                      <span className="font-medium">Contact:</span>{" "}
+                      {patient.basic?.contactNumber}
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-700 mb-2">
+                    Anthropometrics
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <span className="font-medium">Height:</span>{" "}
+                      {patient.anthro?.height} cm
+                    </p>
+                    <p>
+                      <span className="font-medium">Weight:</span>{" "}
+                      {patient.anthro?.weight} kg
+                    </p>
+                    <p>
+                      <span className="font-medium">BMI:</span>{" "}
+                      {patient.anthro?.bmi}
+                    </p>
+                    <p>
+                      <span className="font-medium">Waist:</span>{" "}
+                      {patient.anthro?.waist} cm
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-700 mb-2">Vitals</h4>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <span className="font-medium">BP:</span>{" "}
+                      {patient.vitals?.bloodPressure}
+                    </p>
+                    <p>
+                      <span className="font-medium">Pulse:</span>{" "}
+                      {patient.vitals?.pulseRate} bpm
+                    </p>
+                    <p>
+                      <span className="font-medium">Water:</span>{" "}
+                      {patient.vitals?.waterIntake} L/day
+                    </p>
+                    <p>
+                      <span className="font-medium">Meals:</span>{" "}
+                      {patient.vitals?.mealFrequency}/day
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-700 mb-2">
+                    Lifestyle
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <span className="font-medium">Diet:</span>{" "}
+                      {patient.lifestyle?.dietaryHabits}
+                    </p>
+                    <p>
+                      <span className="font-medium">Activity:</span>{" "}
+                      {patient.lifestyle?.physicalActivities}
+                    </p>
+                    <p>
+                      <span className="font-medium">Dosha:</span>{" "}
+                      {patient.lifestyle?.dosha}
+                    </p>
+                    <p>
+                      <span className="font-medium">Sleep:</span>{" "}
+                      {patient.lifestyle?.sleepHours} hrs
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-700 mb-2">Medical</h4>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <span className="font-medium">History:</span>{" "}
+                      {patient.medical?.medicalHistory}
+                    </p>
+                    <p>
+                      <span className="font-medium">Bowel:</span>{" "}
+                      {patient.medical?.bowelMovements}
+                    </p>
+                    <p>
+                      <span className="font-medium">Allergies:</span>{" "}
+                      {patient.medical?.allergies}
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold text-gray-700 mb-2">
+                    Goals & Notes
+                  </h4>
+                  <div className="space-y-1 text-sm">
+                    <p>
+                      <span className="font-medium">Goal:</span> {patient.goal}
+                    </p>
+                    <p>
+                      <span className="font-medium">Adherence:</span>{" "}
+                      {patient.adherence}%
+                    </p>
+                    <p>
+                      <span className="font-medium">Last Visit:</span>{" "}
+                      {patient.lastVisit}
+                    </p>
+                    <p>
+                      <span className="font-medium">Next Visit:</span>{" "}
+                      {new Date(patient.nextVisit).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Diet Plan Details */}
+            <div>
+              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <FaClipboardList className="text-teal-600" />
+                Current Diet Plan: {currentPlan.name}
+              </h3>
+              <div className="bg-gradient-to-br from-teal-50 to-cyan-50 p-6 rounded-xl border border-teal-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 className="text-lg font-semibold text-teal-900">
+                      {currentPlan.name}
+                    </h4>
+                    <p className="text-teal-700">{currentPlan.summary}</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-teal-800">
+                      {currentPlan.calories}
+                    </div>
+                    <div className="text-sm text-teal-600">calories/day</div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Object.entries(currentPlan.meals).map(
+                    ([mealType, items]) => (
+                      <div
+                        key={mealType}
+                        className="bg-white/80 p-4 rounded-lg"
+                      >
+                        <h5 className="font-semibold text-gray-800 capitalize mb-2 flex items-center gap-2">
+                          <FaUtensils className="text-teal-600" />
+                          {mealType}
+                        </h5>
+                        <div className="space-y-2">
+                          {items.map((item, idx) => (
+                            <div
+                              key={idx}
+                              className="flex justify-between items-center p-2 bg-gray-50 rounded"
+                            >
+                              <span className="text-gray-700">{item.name}</span>
+                              <span className="text-sm font-medium text-teal-600">
+                                {item.calories} cal
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {currentPlan.tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1 rounded-full text-sm font-medium bg-teal-100 text-teal-800"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Plan History */}
+            {patient.history && patient.history.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <FaHistory className="text-teal-600" />
+                  Plan History
+                </h3>
+                <div className="space-y-3">
+                  {patient.history.map((entry, idx) => (
+                    <div key={idx} className="bg-gray-50 p-4 rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium text-gray-800">
+                            {entry.note}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Plan: {entry.planId}
+                          </p>
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {entry.date}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="bg-gray-50 p-4 flex justify-end gap-3">
+            <button
+              onClick={onClose}
+              className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+            >
+              Close
+            </button>
+            <button className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2">
+              <FaDownload />
+              Export Plan
+            </button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -368,6 +806,8 @@ export default function Dashboard() {
     patients[0]?.id || null
   );
   const [activeTab, setActiveTab] = useState("overview");
+  const [showDietPlan, setShowDietPlan] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -381,6 +821,25 @@ export default function Dashboard() {
     );
   }, [patients, query]);
 
+  // Get today's appointments
+  const todaysPatients = useMemo(() => {
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    return patients.filter((patient) => patient.nextVisit === today);
+  }, [patients]);
+
+  // Get upcoming appointments (next 7 days)
+  const upcomingPatients = useMemo(() => {
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    return patients
+      .filter((patient) => {
+        const visitDate = new Date(patient.nextVisit);
+        return visitDate >= today && visitDate <= nextWeek;
+      })
+      .sort((a, b) => new Date(a.nextVisit) - new Date(b.nextVisit));
+  }, [patients]);
+
   // Tab content functions
   const getTabContent = () => {
     return {
@@ -390,7 +849,7 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-6"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -490,10 +949,134 @@ export default function Dashboard() {
             </motion.div>
           </div>
 
+          {/* Today's Appointments */}
+          {todaysPatients.length > 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.15, delay: 0.25 }}
+              className="bg-gradient-to-br from-teal-50 via-cyan-50/40 to-teal-50/30 p-3 sm:p-4 rounded-xl border border-cyan-200/50 shadow-md"
+            >
+              <h3 className="text-lg sm:text-base font-bold text-cyan-900 mb-3 flex items-center gap-2">
+                <FaCalendarAlt className="text-cyan-600" />
+                Today's Appointments ({todaysPatients.length})
+              </h3>
+              <div className="space-y-2">
+                {todaysPatients.map((patient, index) => (
+                  <motion.div
+                    key={patient.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.15, delay: 0.3 + index * 0.05 }}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 bg-white/60 rounded-lg border border-cyan-100/50 gap-1 sm:gap-0"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-r from-cyan-200 to-teal-100 flex items-center justify-center">
+                        <FaUser className="text-cyan-800 text-md sm:text-lg" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-800 text-md sm:text-lg">
+                          {patient.name}
+                        </h4>
+                        <p className="text-md text-gray-600">
+                          {patient.age} years, {patient.gender}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-left sm:text-right">
+                      <p className="font-medium text-cyan-800 text-md sm:text-lg">
+                        {patient.goal}
+                      </p>
+                      <p className="text-md text-gray-600">
+                        {patient.adherence}% adherence
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.15, delay: 0.25 }}
+              className="bg-gradient-to-br from-gray-50 via-gray-50/40 to-gray-50/30 p-3 sm:p-4 rounded-xl border border-gray-200/50 shadow-md"
+            >
+              <h3 className="text-lg sm:text-base font-bold text-gray-700 mb-3 flex items-center gap-2">
+                <FaCalendarAlt className="text-gray-500" />
+                Today's Appointments (0)
+              </h3>
+              <p className="text-gray-600 text-center py-4">
+                No appointments scheduled for today. Enjoy your day! 😊
+              </p>
+            </motion.div>
+          )}
+
+          {/* Upcoming Appointments */}
+          {upcomingPatients.length > 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.15, delay: 0.3 }}
+              className="bg-gradient-to-br from-blue-50 via-indigo-50/40 to-purple-50/30 p-3 sm:p-4 rounded-xl border border-blue-200/50 shadow-md"
+            >
+              <h3 className="text-lg sm:text-base font-bold text-blue-900 mb-3 flex items-center gap-2">
+                <FaClock className="text-blue-600" />
+                Upcoming Appointments (Next 7 Days)
+              </h3>
+              <div className="space-y-2">
+                {upcomingPatients.slice(0, 5).map((patient, index) => (
+                  <motion.div
+                    key={patient.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.15, delay: 0.35 + index * 0.05 }}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 bg-white/60 rounded-lg border border-blue-100/50 gap-1 sm:gap-0"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-r from-blue-200 to-indigo-100 flex items-center justify-center">
+                        <FaUser className="text-blue-800 text-md sm:text-lg" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-800 text-md sm:text-lg">
+                          {patient.name}
+                        </h4>
+                        <p className="text-md text-gray-600">
+                          {patient.age} years, {patient.gender}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-left sm:text-right">
+                      <p className="font-medium text-blue-800 text-md sm:text-lg">
+                        {new Date(patient.nextVisit).toLocaleDateString()}
+                      </p>
+                      <p className="text-md text-gray-600">{patient.goal}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.15, delay: 0.3 }}
+              className="bg-gradient-to-br from-gray-50 via-gray-50/40 to-gray-50/30 p-3 sm:p-4 rounded-xl border border-gray-200/50 shadow-md"
+            >
+              <h3 className="text-lg sm:text-base font-bold text-gray-700 mb-3 flex items-center gap-2">
+                <FaClock className="text-gray-500" />
+                Upcoming Appointments (Next 7 Days)
+              </h3>
+              <p className="text-gray-600 text-center py-4">
+                No upcoming appointments in the next 7 days.
+              </p>
+            </motion.div>
+          )}
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.15, delay: 0.25 }}
+            transition={{ duration: 0.15, delay: 0.4 }}
             className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md"
           >
             <h3 className="text-lg sm:text-base font-bold text-teal-900 mb-3">
@@ -560,7 +1143,7 @@ export default function Dashboard() {
             </motion.button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
             {filtered.map((patient, index) => (
               <motion.div
                 key={patient.id}
@@ -568,7 +1151,11 @@ export default function Dashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.15, delay: index * 0.05 }}
                 whileHover={{ y: -3 }}
-                onClick={() => setSelectedPatientId(patient.id)}
+                onClick={() => {
+                  setSelectedPatientId(patient.id);
+                  setSelectedPatient(patient);
+                  setShowDietPlan(true);
+                }}
                 className={`p-3 sm:p-4 rounded-xl border shadow-md cursor-pointer transition-all duration-150 ${
                   selectedPatientId === patient.id
                     ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white border-teal-400"
@@ -674,6 +1261,26 @@ export default function Dashboard() {
                       {patient.lastVisit}
                     </span>
                   </div>
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-md ${
+                        selectedPatientId === patient.id
+                          ? "text-white/80"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      Next Visit:
+                    </span>
+                    <span
+                      className={`font-medium text-md sm:text-lg ${
+                        selectedPatientId === patient.id
+                          ? "text-white"
+                          : "text-purple-800"
+                      }`}
+                    >
+                      {new Date(patient.nextVisit).toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
 
                 <div
@@ -708,80 +1315,13 @@ export default function Dashboard() {
           </div>
         </motion.div>
       ),
-      plans: (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {SAMPLE_PLANS.map((plan, index) => (
-              <motion.div
-                key={plan.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.15, delay: index * 0.05 }}
-                whileHover={{ y: -3 }}
-                className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-3 sm:p-4 rounded-xl border border-teal-200/50 shadow-md hover:shadow-lg transition-all duration-150"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-r from-teal-400 to-cyan-400 flex items-center justify-center">
-                    <FaClipboardList className="text-white text-lg sm:text-base" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg sm:text-base font-medium text-teal-900">
-                      {plan.name}
-                    </h3>
-                    <p className="text-md text-gray-600">
-                      {plan.calories} calories
-                    </p>
-                  </div>
-                </div>
-
-                <p className="text-gray-700 mb-2 text-md sm:text-lg">
-                  {plan.summary}
-                </p>
-
-                <div className="space-y-1 mb-2">
-                  {Object.entries(plan.meals).map(([mealType, items]) => (
-                    <div
-                      key={mealType}
-                      className="bg-white/60 rounded-md p-1.5"
-                    >
-                      <div className="font-medium text-gray-800 capitalize text-md mb-0.5">
-                        {mealType}
-                      </div>
-                      {items.map((item, idx) => (
-                        <div key={idx} className="text-md text-gray-600">
-                          {item.name} ({item.calories} cal)
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap gap-1">
-                  {plan.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="px-1.5 py-0.5 rounded-full text-md font-medium bg-teal-100 text-teal-800"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      ),
       analytics: (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -881,9 +1421,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 overflow-hidden relative">
-      {/* Enhanced Ayurvedic Particle System */}
-      <AyurvedicParticleSystem count={0} />
-
       {/* Dynamic Background Layers */}
       <div className="absolute inset-0 -z-10">
         {BG_LAYERS.map((b, i) => (
@@ -928,123 +1465,165 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Main Content */}
-      <div className="pt-20 sm:pt-20 px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 py-3 sm:py-4">
-        <div className="w-full mx-auto">
-          <div className="flex gap-4 h-full">
-            {/* Creative Sidebar Navigation */}
-            <div className="w-64 flex-shrink-0 fixed">
-              <motion.div
+      {/* Desktop Sidebar Navigation - Hidden on mobile */}
+      <div className="hidden lg:block w-64 mt-20 flex-shrink-0 fixed">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+          className="bg-gradient-to-br from-teal-50/80 to-cyan-50/80 rounded-xl p-4 h-fit border border-teal-200/60 shadow-lg sticky  overflow-hidden"
+        >
+          {/* Sidebar Header */}
+          <div className="text-center mb-6">
+            <div className="w-full h-9 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 flex items-center justify-center mx-auto mb-2 shadow-lg">
+              <FaChartPie className="text-white text-2xl" />
+            </div>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="space-y-2">
+            {TABS.map((tab, index) => (
+              <motion.button
+                key={tab.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                className="bg-gradient-to-br from-teal-50/80 to-cyan-50/80 rounded-xl p-4 h-fit border border-teal-200/60 shadow-lg sticky  overflow-hidden"
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileHover={{ scale: 1.02, x: 3 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setActiveTab(tab.id)}
+                className={`w-full p-4 rounded-xl transition-all duration-300 flex items-start gap-3 group ${
+                  activeTab === tab.id
+                    ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg transform scale-105"
+                    : "bg-white/70 hover:bg-white/90 text-gray-700 hover:shadow-md"
+                }`}
               >
-                {/* Sidebar Header */}
-                <div className="text-center mb-6">
-                  <div className="w-full h-9 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 flex items-center justify-center mx-auto mb-2 shadow-lg">
-                    <FaChartPie className="text-white text-2xl" />
-                  </div>
-                
+                <div
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                    activeTab === tab.id
+                      ? "bg-white/20"
+                      : `bg-gradient-to-r ${
+                          tab.color.includes("#")
+                            ? ""
+                            : "from-teal-400 to-cyan-400"
+                        }`
+                  }`}
+                  style={
+                    activeTab !== tab.id ? { backgroundColor: tab.color } : {}
+                  }
+                >
+                  <tab.icon
+                    className={`text-lg ${
+                      activeTab === tab.id ? "text-white" : "text-white"
+                    }`}
+                  />
                 </div>
-
-                {/* Navigation Tabs */}
-                <div className="space-y-2">
-                  {TABS.map((tab, index) => (
-                    <motion.button
-                      key={tab.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
-                      whileHover={{ scale: 1.02, x: 3 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`w-full p-4 rounded-xl transition-all duration-300 flex items-start gap-3 group ${
-                        activeTab === tab.id
-                          ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg transform scale-105"
-                          : "bg-white/70 hover:bg-white/90 text-gray-700 hover:shadow-md"
-                      }`}
-                    >
-                      <div
-                        className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
-                          activeTab === tab.id
-                            ? "bg-white/20"
-                            : `bg-gradient-to-r ${
-                                tab.color.includes("#")
-                                  ? ""
-                                  : "from-teal-400 to-cyan-400"
-                              }`
-                        }`}
-                        style={
-                          activeTab !== tab.id
-                            ? { backgroundColor: tab.color }
-                            : {}
-                        }
-                      >
-                        <tab.icon
-                          className={`text-lg ${
-                            activeTab === tab.id ? "text-white" : "text-white"
-                          }`}
-                        />
-                      </div>
-                      <div className="flex-1 text-left">
-                        <div
-                          className={`font-semibold text-sm mb-1 ${
-                            activeTab === tab.id
-                              ? "text-white"
-                              : "text-gray-800"
-                          }`}
-                        >
-                          {tab.name}
-                        </div>
-                        <div
-                          className={`text-xs ${
-                            activeTab === tab.id
-                              ? "text-white/80"
-                              : "text-gray-500"
-                          }`}
-                        >
-                          {tab.id === "overview" && "Quick summary"}
-                          {tab.id === "patients" && "Patient management"}
-                          {tab.id === "plans" && "Diet planning"}
-                          {tab.id === "analytics" && "Performance metrics"}
-                        </div>
-                      </div>
-                      {activeTab === tab.id && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="w-2 h-2 bg-white rounded-full self-center"
-                        />
-                      )}
-                    </motion.button>
-                  ))}
-                </div>
-
-                {/* Quick Stats */}
-                <div className="mt-8 p-4 bg-white/60 rounded-lg">
-                  <div className="text-xs font-medium text-gray-600 mb-3">
-                    Quick Stats
+                <div className="flex-1 text-left">
+                  <div
+                    className={`font-semibold text-sm mb-1 ${
+                      activeTab === tab.id ? "text-white" : "text-gray-800"
+                    }`}
+                  >
+                    {tab.name}
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-white/60 p-3 rounded-lg text-center">
-                      <div className="text-lg font-bold text-teal-600">
-                        {patients.length}
-                      </div>
-                      <div className="text-xs text-gray-600">Patients</div>
-                    </div>
-                    <div className="bg-white/60 p-3 rounded-lg text-center">
-                      <div className="text-lg font-bold text-cyan-600">4</div>
-                      <div className="text-xs text-gray-600">Plans</div>
-                    </div>
+                  <div
+                    className={`text-xs ${
+                      activeTab === tab.id ? "text-white/80" : "text-gray-500"
+                    }`}
+                  >
+                    {tab.id === "overview" && "Quick summary"}
+                    {tab.id === "patients" && "Patient management"}
+                    {tab.id === "analytics" && "Performance metrics"}
                   </div>
                 </div>
+                {activeTab === tab.id && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="w-2 h-2 bg-white rounded-full self-center"
+                  />
+                )}
+              </motion.button>
+            ))}
+          </div>
 
-              </motion.div>
+          {/* Quick Stats */}
+          <div className="mt-8 p-4 bg-white/60 rounded-lg">
+            <div className="text-xs font-medium text-gray-600 mb-3">
+              Quick Stats
             </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-white/60 p-3 rounded-lg text-center">
+                <div className="text-lg font-bold text-teal-600">
+                  {patients.length}
+                </div>
+                <div className="text-xs text-gray-600">Patients</div>
+              </div>
+              <div className="bg-white/60 p-3 rounded-lg text-center">
+                <div className="text-lg font-bold text-cyan-600">4</div>
+                <div className="text-xs text-gray-600">Plans</div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
 
+      {/* Mobile Bottom Navigation - Fixed at bottom */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="bg-gradient-to-t from-teal-50/95 to-cyan-50/95 backdrop-blur-md border-t border-teal-200/60 shadow-lg"
+        >
+          {/* Mobile Navigation Tabs */}
+          <div className="flex justify-around px-2 py-3">
+            {TABS.map((tab, index) => (
+              <motion.button
+                key={tab.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex flex-col items-center justify-center p-3 rounded-xl transition-all duration-300 min-w-0 flex-1 mx-1 ${
+                  activeTab === tab.id
+                    ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg"
+                    : "text-gray-600 hover:bg-white/50"
+                }`}
+              >
+                <div
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                    activeTab === tab.id ? "bg-white/20" : ""
+                  }`}
+                  style={
+                    activeTab !== tab.id ? { backgroundColor: tab.color } : {}
+                  }
+                >
+                  <tab.icon
+                    className={`text-lg ${
+                      activeTab === tab.id ? "text-white" : "text-white"
+                    }`}
+                  />
+                </div>
+                <span
+                  className={`text-xs font-medium mt-1 truncate ${
+                    activeTab === tab.id ? "text-white" : "text-gray-600"
+                  }`}
+                >
+                  {tab.name}
+                </span>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Main Content */}
+      <div className="pt-16 sm:pt-16 lg:pt-20 px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 py-3 sm:py-4 pb-20 lg:pb-4">
+        <div className="w-full mx-auto">
+          <div className="flex gap-4 h-full">
             {/* Main Content Area */}
-            <div className="flex-1 ml-72">
+            <div className="flex-1 lg:ml-56">
               <motion.div
                 key={activeTab}
                 initial={{ opacity: 0, x: 20 }}
@@ -1058,6 +1637,16 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Diet Plan Popup */}
+      <DietPlanPopup
+        patient={selectedPatient}
+        isOpen={showDietPlan}
+        onClose={() => {
+          setShowDietPlan(false);
+          setSelectedPatient(null);
+        }}
+      />
     </div>
   );
 }
