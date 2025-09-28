@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../EnhancedEffects.css";
+import SelectFood from "../components/SelectFood";
 import {
   FaArrowLeft,
   FaUser,
@@ -142,200 +143,222 @@ const AyurvedicParticleSystem = ({ count = 80 }) => {
   );
 };
 
-// Food Categories for Selection
-const FOOD_CATEGORIES = [
-  {
-    id: "grains",
-    name: "Grains & Cereals",
-    icon: FaBreadSlice,
-    color: "#F59E0B",
-    items: [
-      {
-        name: "Basmati Rice",
-        calories: 130,
-        selected: false,
-        recipe: "Cook 1 cup rice with 2 cups water, add ghee and salt",
-      },
-      {
-        name: "Quinoa",
-        calories: 120,
-        selected: false,
-        recipe: "Rinse quinoa, cook 1:2 ratio with water, fluff with fork",
-      },
-      {
-        name: "Oats",
-        calories: 150,
-        selected: false,
-        recipe: "Cook oats with milk, add honey and nuts for flavor",
-      },
-      {
-        name: "Barley",
-        calories: 110,
-        selected: false,
-        recipe: "Soak barley overnight, cook until tender with vegetables",
-      },
-      {
-        name: "Brown Rice",
-        calories: 125,
-        selected: false,
-        recipe:
-          "Cook brown rice 1:2.5 ratio, longer cooking time than white rice",
-      },
-    ],
-  },
-  {
-    id: "proteins",
-    name: "Proteins",
-    icon: FaFish,
-    color: "#10B981",
-    items: [
-      {
-        name: "Paneer",
-        calories: 200,
-        selected: false,
-        recipe: "Cut paneer into cubes, marinate with spices, cook in ghee",
-      },
-      {
-        name: "Lentils",
-        calories: 180,
-        selected: false,
-        recipe: "Soak lentils, cook with turmeric, cumin, and salt",
-      },
-      {
-        name: "Chicken",
-        calories: 250,
-        selected: false,
-        recipe: "Marinate chicken with yogurt and spices, grill or bake",
-      },
-      {
-        name: "Fish",
-        calories: 220,
-        selected: false,
-        recipe: "Season fish with lemon and herbs, pan-fry or bake",
-      },
-      {
-        name: "Eggs",
-        calories: 150,
-        selected: false,
-        recipe: "Boil eggs 6-8 minutes, or scramble with minimal oil",
-      },
-    ],
-  },
-  {
-    id: "vegetables",
-    name: "Vegetables",
-    icon: FaCarrot,
-    color: "#22C55E",
-    items: [
-      {
-        name: "Spinach",
-        calories: 20,
-        selected: false,
-        recipe: "Wash spinach, sauté with garlic and olive oil",
-      },
-      {
-        name: "Broccoli",
-        calories: 30,
-        selected: false,
-        recipe: "Steam broccoli 5-7 minutes, season with lemon and salt",
-      },
-      {
-        name: "Carrots",
-        calories: 25,
-        selected: false,
-        recipe: "Roast carrots with honey and herbs at 400°F for 20 minutes",
-      },
-      {
-        name: "Cucumber",
-        calories: 15,
-        selected: false,
-        recipe: "Slice cucumber, serve fresh with lemon and mint",
-      },
-      {
-        name: "Bell Peppers",
-        calories: 20,
-        selected: false,
-        recipe: "Roast peppers until charred, peel and slice",
-      },
-    ],
-  },
-  {
-    id: "fruits",
-    name: "Fruits",
-    icon: FaAppleAlt,
-    color: "#EF4444",
-    items: [
-      {
-        name: "Banana",
-        calories: 90,
-        selected: false,
-        recipe: "Peel and eat fresh, or blend into smoothies",
-      },
-      {
-        name: "Apple",
-        calories: 80,
-        selected: false,
-        recipe: "Wash and eat fresh, or bake with cinnamon",
-      },
-      {
-        name: "cyan",
-        calories: 60,
-        selected: false,
-        recipe: "Peel and eat segments, or juice fresh",
-      },
-      {
-        name: "Dates",
-        calories: 120,
-        selected: false,
-        recipe: "Soak dates in warm water, remove pits, eat or blend",
-      },
-      {
-        name: "Pear",
-        calories: 70,
-        selected: false,
-        recipe: "Wash and eat fresh, or poach in wine",
-      },
-    ],
-  },
-  {
-    id: "dairy",
-    name: "Dairy",
-    icon: FaCoffee,
-    color: "#3B82F6",
-    items: [
-      {
-        name: "Milk",
-        calories: 100,
-        selected: false,
-        recipe: "Heat milk gently, add turmeric and honey for golden milk",
-      },
-      {
-        name: "Yogurt",
-        calories: 80,
-        selected: false,
-        recipe: "Serve plain or with fruits and nuts, avoid added sugars",
-      },
-      {
-        name: "Ghee",
-        calories: 200,
-        selected: false,
-        recipe: "Use 1-2 tsp for cooking, adds flavor and healthy fats",
-      },
-      {
-        name: "Cheese",
-        calories: 150,
-        selected: false,
-        recipe: "Use in moderation, pair with fruits or vegetables",
-      },
-      {
-        name: "Buttermilk",
-        calories: 60,
-        selected: false,
-        recipe: "Drink plain or add cumin powder and salt",
-      },
-    ],
-  },
-];
+// Meal-based Food Categories
+const MEAL_CATEGORIES = {
+  breakfast: [
+    {
+      name: "Charishma'S Addictive Methi Theplas",
+      calories: 445,
+      recipe:
+        "Heat a non-stick griddle (tawa) on medium flame. Knead all ingredients thoroughly well in a big bowl. Roll out each round ball to form a 'thepla'. Cook on both sides with oil until golden brown.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Lavana, Katu, Tikta",
+    },
+    {
+      name: "Indians Cookie",
+      calories: 314,
+      recipe:
+        "Melt chocolate, cream butter and sugar, add vanilla and eggs. Stir in melted chocolate, add dry ingredients and nuts. Bake at 350°F for 25 minutes.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Madhura, Lavana",
+    },
+    {
+      name: "Baklava - An Milk Sweet In Sugar Syrup",
+      calories: 553,
+      recipe:
+        "Heat butter, add vermicelli and fry until golden. Layer in tray with milk-semolina mixture and nuts. Bake and pour sugar syrup over it.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Madhura",
+    },
+    {
+      name: "Americanized Daal Baati",
+      calories: 247,
+      recipe:
+        "Mix flour, sooji, baking powder with milk to make dough. Cook dal with spices. Drop dumplings into dal and simmer for 15 minutes.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Amla, Lavana, Katu",
+    },
+    {
+      name: "Scrambled Eggs",
+      calories: 368,
+      recipe:
+        "Beat eggs with chili flakes and pepper. Fry onion until translucent, add turmeric and salt. Add egg mixture and scramble until cooked.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Lavana, Katu",
+    },
+    {
+      name: "Indian Coffee",
+      calories: 65,
+      recipe:
+        "Boil water with cardamom, cinnamon, nutmeg, and clove. Add brewed coffee. Heat milk separately, strain coffee into milk, add sugar.",
+      dosha: "Kapha, Vata",
+      region: "West",
+      rasas: "Madhura, Amla, Katu",
+    },
+    {
+      name: "Chai Latte Muffins",
+      calories: 312,
+      recipe:
+        "Mix dry ingredients, add milk, butter, egg, and vanilla. Stir in white chocolate chips. Top with cream cheese mixture and bake at 375°F.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Lavana",
+    },
+  ],
+  lunch: [
+    {
+      name: "Boka Dushi",
+      calories: 189,
+      recipe:
+        "Marinate chicken with ketjap manis, lime juice, cumin, ginger, sambal oelek, and turmeric. Thread onto skewers and grill 2 minutes each side.",
+      dosha: "Vata, Kapha",
+      region: "West Indian",
+      rasas: "Madhura, Amla, Katu",
+    },
+    {
+      name: "West Rice And Beans",
+      calories: 461,
+      recipe:
+        "Combine broth, beans, coconut milk, jalapeño, thyme, and allspice. Bring to boil, add rice. Simmer until liquid absorbed and rice is tender.",
+      dosha: "Vata, Kapha",
+      region: "West Indian",
+      rasas: "Sweet, Sour",
+    },
+    {
+      name: "Creamy North Fish Curry",
+      calories: 379,
+      recipe:
+        "Heat oil, add mustard seeds. Add onion, garlic, ginger paste with spices. Add water, vinegar, coconut cream. Add fish and cook 5-6 minutes.",
+      dosha: "Vata, Kapha",
+      region: "West Bengal",
+      rasas: "Katu",
+    },
+    {
+      name: "South Fish Curry",
+      calories: 50,
+      recipe:
+        "Mix chili, turmeric, coriander powder with water. Heat oil, add mustard and fenugreek seeds. Add shallots, spice paste, water, and tamarind. Add fish and cook 20-25 minutes.",
+      dosha: "Vata, Kapha",
+      region: "West Bengal",
+      rasas: "Amla, Katu",
+    },
+    {
+      name: "Fish Curry/Chettinad Fish Curry",
+      calories: 1126,
+      recipe:
+        "Apply salt and turmeric to fish. Sauté fennel, fenugreek, onions, garlic. Add tomatoes, spices, water, tamarind. Add coconut milk and fish, cook 5 minutes.",
+      dosha: "Vata, Kapha",
+      region: "West Bengal",
+      rasas: "Amla, Lavana, Katu",
+    },
+    {
+      name: "West Pumpkin Soup",
+      calories: 186,
+      recipe:
+        "Brown onions in butter, add garlic, pumpkin, and broth. Add herbs and simmer 45 minutes. Puree pumpkin, strain liquid, combine with cream and cinnamon.",
+      dosha: "Kapha, Vata",
+      region: "West",
+      rasas: "Sweet, Sour",
+    },
+    {
+      name: "Broccoli With - Yogurt",
+      calories: 105,
+      recipe:
+        "Cook broccoli in salted water 4-5 minutes. Heat oil, add broccoli. Toast cumin, fennel, cardamom, grind. Mix with yogurt and lemon, drizzle over broccoli.",
+      dosha: "Kapha, Pitta",
+      region: "West",
+      rasas: "Amla",
+    },
+    {
+      name: "West Rum Stew Recipe",
+      calories: 370,
+      recipe:
+        "Layer all ingredients in casserole. Combine sauce ingredients, pour over. Heat in 325°F oven for 1-1.5 hours. Add olives and rum before serving.",
+      dosha: "Kapha, Vata",
+      region: "West",
+      rasas: "Sweet, Sour",
+    },
+  ],
+  dinner: [
+    {
+      name: "Rasgulla And/Or Rasmalai",
+      calories: 131,
+      recipe:
+        "Boil milk, add lemon juice to curdle. Strain, knead chenna 7 minutes. Make balls, cook in sugar syrup. For rasmalai, flatten and cook in thickened milk.",
+      dosha: "Vata, Kapha",
+      region: "West Bengal",
+      rasas: "Madhura, Amla",
+    },
+    {
+      name: "West - Channa Wrap",
+      calories: 201,
+      recipe:
+        "Heat oil, cook onions until soft. Add garlic, chili, ginger, spices. Add chickpeas with water, simmer 50-60 minutes until thick. Serve in tortillas.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Lavana, Katu",
+    },
+    {
+      name: "American Sunflower Seed Cakes",
+      calories: 222,
+      recipe:
+        "Simmer sunflower seeds in water for 1 hour. Drain and grind. Mix with cornmeal and maple syrup to form dough. Shape into cakes and fry in hot oil.",
+      dosha: "Kapha, Pitta",
+      region: "West",
+      rasas: "Sweet, Sour",
+    },
+    {
+      name: "Tuna Pita Pockets With An Twist",
+      calories: 162,
+      recipe:
+        "Heat oil, stir fry cumin seeds. Add ground spices, onions, pepper. Add tuna, green chilies, ginger. Cook 5 minutes, add fresh coriander and garam masala.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Lavana, Katu",
+    },
+    {
+      name: "Cornmeal & Berry Dessert",
+      calories: 224,
+      recipe:
+        "Soak cornmeal in water. Melt butter, add cornmeal mixture. Heat 15 minutes until thick. Add juice, berries, nutmeg. Add cream, maple syrup, and eggs.",
+      dosha: "Kapha, Vata",
+      region: "West",
+      rasas: "Madhura",
+    },
+    {
+      name: "Ocean Gazpacho",
+      calories: 104,
+      recipe:
+        "Blend chili powder, ginger, garlic, green chili, sugar, yogurt, lemon juice, mint until smooth. Blend yogurt soup ingredients, chill. Serve garnished with mint chutney.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Madhura, Amla, Lavana, Katu",
+    },
+    {
+      name: "Indian Macaroni And Cheese",
+      calories: 1022,
+      recipe:
+        "Cook macaroni according to package directions. Heat milk to simmer, add cubed cheese. Melt cheese, add macaroni. Let stand 5 minutes to thicken.",
+      dosha: "Kapha",
+      region: "West",
+      rasas: "Sweet",
+    },
+    {
+      name: "West Crispy Pork Bits",
+      calories: 539,
+      recipe:
+        "Cube pork, toss with spices, onion, olive oil, lime juice. Marinate up to 2 days. Roast at 375°F for 1 hour, stirring occasionally until crisp.",
+      dosha: "Vata, Kapha",
+      region: "West",
+      rasas: "Amla, Lavana",
+    },
+  ],
+};
 
 // Diet Plans
 const DIET_PLANS = [
@@ -652,20 +675,15 @@ export default function MyDietChart() {
   const prev = useCallback(() => setStep((s) => Math.max(0, s - 1)), []);
 
   // Toggle food selection
-  const toggleFoodSelection = (categoryId, itemName) => {
+  const toggleFoodSelection = (mealType, itemName) => {
     setSelectedFoods((prev) => {
-      const key = `${categoryId}-${itemName}`;
+      const key = `${mealType}-${itemName}`;
       if (prev.includes(key)) {
         return prev.filter((food) => food !== key);
       } else {
         return [...prev, key];
       }
     });
-  };
-
-  // Check if food is selected
-  const isFoodSelected = (categoryId, itemName) => {
-    return selectedFoods.includes(`${categoryId}-${itemName}`);
   };
 
   // Tab content components
@@ -876,32 +894,45 @@ export default function MyDietChart() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-              {FOOD_CATEGORIES.map((category) => {
-                const categoryFoods = selectedFoods.filter((food) =>
-                  food.startsWith(`${category.id}-`)
+              {Object.entries(MEAL_CATEGORIES).map(([mealType, items]) => {
+                const mealFoods = selectedFoods.filter((food) =>
+                  food.startsWith(`${mealType}-`)
                 );
-                if (categoryFoods.length === 0) return null;
+                if (mealFoods.length === 0) return null;
+
+                const mealIcons = {
+                  breakfast: FaCoffee,
+                  lunch: FaUtensils,
+                  dinner: FaAppleAlt,
+                };
+                const mealColors = {
+                  breakfast: "#F59E0B",
+                  lunch: "#10B981",
+                  dinner: "#6366F1",
+                };
+
+                const MealIcon = mealIcons[mealType];
 
                 return (
                   <div
-                    key={category.id}
+                    key={mealType}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 p-2 sm:p-3 rounded-md border-l-2 border-teal-200/50"
                   >
                     <div className="flex items-center gap-1 sm:gap-1.5 mb-2">
-                      <category.icon
+                      <MealIcon
                         className="text-sm sm:text-lg"
-                        style={{ color: category.color }}
+                        style={{ color: mealColors[mealType] }}
                       />
-                      <h4 className="text-sm sm:text-base md:text-lg font-medium text-teal-900">
-                        {category.name}
+                      <h4 className="text-sm sm:text-base md:text-lg font-medium text-teal-900 capitalize">
+                        {mealType}
                       </h4>
                     </div>
                     <div className="space-y-1.5">
-                      {categoryFoods.map((foodKey) => {
+                      {mealFoods.map((foodKey) => {
                         const itemName = foodKey.split("-").slice(1).join("-");
-                        const item = category.items.find(
+                        const item = items.find(
                           (item) => item.name === itemName
                         );
                         return (
@@ -978,7 +1009,7 @@ export default function MyDietChart() {
 
       {/* Full Screen Container */}
       <div className="h-screen w-screen flex items-center justify-center pt-12 sm:pt-16 pb-2 sm:pb-4">
-        <div className="w-full max-w-7xl h-full flex flex-col">
+        <div className="w-full max-w-8xl h-full flex flex-col">
           <AnimatePresence mode="">
             <section
               key={step}
@@ -1001,8 +1032,8 @@ export default function MyDietChart() {
               </div>
 
               {/* Content */}
-              <div
-                initial={step === 0 ? { opacity: 0, y: 30 } : false}
+              <motion.div
+                initial={step === 0 ? { opacity: 0, y: 30 } : undefined}
                 animate={step === 0 ? { opacity: 1, y: 0 } : {}}
                 transition={step === 0 ? { duration: 0.5, delay: 0.2 } : {}}
                 className="flex-1 overflow-y-auto min-h-0"
@@ -1274,7 +1305,7 @@ export default function MyDietChart() {
 
                     {/* Action Button */}
                     <div className="text-center">
-                      <button
+                      <motion.button
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={next}
@@ -1284,81 +1315,18 @@ export default function MyDietChart() {
                         <span className="truncate">
                           Generate Personalized Diet Chart
                         </span>
-                      </button>
+                      </motion.button>
                     </div>
                   </motion.div>
                 )}
 
                 {step === 1 && (
-                  <div className="max-w-6xl mx-auto">
-                    <div className="space-y-3 sm:space-y-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-2">
-                        {FOOD_CATEGORIES.map((category, index) => (
-                          <div
-                            key={category.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.1 }}
-                            className="bg-gradient-to-br from-white via-teal-50/40 to-cyan-50/30 px-2 sm:px-3 py-2 rounded-md border border-teal-200/50 shadow-md"
-                          >
-                            <div className="flex items-center gap-1 sm:gap-1.5 mb-2">
-                              <category.icon
-                                className="text-sm sm:text-lg"
-                                style={{ color: category.color }}
-                              />
-                              <h3 className="text-xs sm:text-sm md:text-lg font-medium text-teal-900 truncate">
-                                {category.name}
-                              </h3>
-                            </div>
-                            <div className="space-y-1 sm:space-y-1.5">
-                              {category.items.map((item) => (
-                                <div
-                                  key={item.name}
-                                  initial={{ opacity: 0, y: 10 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  className={`rounded-md border-t-2 transition-all duration-150 ${
-                                    isFoodSelected(category.id, item.name)
-                                      ? "bg-gradient-to-r from-teal-600 to-cyan-600 text-white border-teal-500"
-                                      : "bg-white/60 hover:bg-teal-50 text-gray-800 border-teal-200"
-                                  }`}
-                                >
-                                  <button
-                                    whileHover={{ scale: 1.01 }}
-                                    whileTap={{ scale: 0.99 }}
-                                    onClick={() =>
-                                      toggleFoodSelection(
-                                        category.id,
-                                        item.name
-                                      )
-                                    }
-                                    className="w-full p-1.5 sm:p-2 text-left flex items-center justify-between min-h-[44px] sm:min-h-[48px]"
-                                  >
-                                    <div className="flex-1 min-w-0">
-                                      <div className="font-medium text-xs sm:text-sm md:text-lg truncate">
-                                        {item.name}
-                                      </div>
-                                      <div className="text-xs sm:text-sm md:text-lg opacity-75">
-                                        {item.calories} cal
-                                      </div>
-                                    </div>
-                                    <div className="flex items-center gap-1 ml-2">
-                                      {isFoodSelected(
-                                        category.id,
-                                        item.name
-                                      ) ? (
-                                        <FaMinus className="text-xs sm:text-sm md:text-lg" />
-                                      ) : (
-                                        <FaPlus className="text-xs sm:text-sm md:text-lg" />
-                                      )}
-                                    </div>
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                  <div className="max-w-7xl mx-auto">
+                    {/* Enhanced Food Selection Component */}
+                    <SelectFood
+                      selectedFoods={selectedFoods}
+                      onToggleFoodSelection={toggleFoodSelection}
+                    />
                   </div>
                 )}
 
@@ -1413,11 +1381,11 @@ export default function MyDietChart() {
                     </div>
                   </div>
                 )}
-              </div>
+              </motion.div>
 
               {/* Navigation */}
-              <div className="flex items-center justify-between flex-shrink-0 gap-2 sm:gap-4">
-                <button
+              <div className="flex items-center justify-between flex-shrink-0 gap-2 sm:gap-4 relative z-10">
+                <motion.button
                   whileHover={{
                     scale: step === 0 ? 1 : 1.05,
                     y: step === 0 ? 0 : -2,
@@ -1429,10 +1397,9 @@ export default function MyDietChart() {
                 >
                   <FaChevronLeft className="text-xs sm:text-sm" />
                   <span className="hidden sm:inline">Previous</span>
-                  <span className="sm:hidden">Prev</span>
-                </button>
+                </motion.button>
 
-                <div className="flex items-center gap-1 sm:gap-1.5">
+                <div className=" hidden md:flex items-center gap-1 sm:gap-1.5">
                   {STEPS.map((s, i) => (
                     <button
                       key={s.id}
@@ -1460,18 +1427,18 @@ export default function MyDietChart() {
                 </div>
 
                 {step < STEPS.length - 1 ? (
-                  <button
+                  <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={next}
                     className="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-md bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 text-white text-xs sm:text-sm md:text-lg shadow-md transition-all duration-100 flex items-center gap-1 sm:gap-1.5 border border-teal-400 min-h-[40px] sm:min-h-[44px]"
                   >
                     <span className="hidden sm:inline">Next</span>
-                    <span className="sm:hidden">Next</span>
+
                     <FaChevronRight className="text-xs sm:text-sm" />
-                  </button>
+                  </motion.button>
                 ) : (
-                  <button
+                  <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
@@ -1483,7 +1450,7 @@ export default function MyDietChart() {
                     <FaDownload className="text-xs sm:text-sm" />
                     <span className="hidden sm:inline">Download Report</span>
                     <span className="sm:hidden">Download</span>
-                  </button>
+                  </motion.button>
                 )}
               </div>
             </section>
