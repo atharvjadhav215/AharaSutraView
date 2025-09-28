@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -77,6 +77,12 @@ const TABS = [
     color: "#7BC4C4",
   },
   {
+    id: "calendar",
+    name: "Calendar",
+    icon: FaCalendarAlt,
+    color: "#5B9B9B",
+  },
+  {
     id: "analytics",
     name: "Analytics",
     icon: FaChartLine,
@@ -105,6 +111,11 @@ const BG_LAYERS = [
     id: 3,
     gradient:
       "radial-gradient( circle at 60% 40%, rgba(74,155,155,0.10), transparent 18% ), linear-gradient(120deg,#E8F5F5,#E0F2F2)",
+  },
+  {
+    id: 4,
+    gradient:
+      "radial-gradient( circle at 50% 50%, rgba(91,155,155,0.12), transparent 20% ), linear-gradient(60deg,#E0F2F2,#D8EFEF)",
   },
 ];
 
@@ -809,6 +820,22 @@ export default function Dashboard() {
   const [showDietPlan, setShowDietPlan] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
 
+  // Calendar state
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendarView, setCalendarView] = useState("month"); // month, week, day
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
+  // Handle window resize for mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return patients;
@@ -839,6 +866,80 @@ export default function Dashboard() {
       })
       .sort((a, b) => new Date(a.nextVisit) - new Date(b.nextVisit));
   }, [patients]);
+
+  // Calendar helper functions
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(year, month, day));
+    }
+
+    return days;
+  };
+
+  const getAppointmentsForDate = (date) => {
+    if (!date) return [];
+    const dateStr = date.toISOString().split("T")[0];
+    return patients.filter((patient) => patient.nextVisit === dateStr);
+  };
+
+  const getDietPlansForDate = (date) => {
+    if (!date) return [];
+    const dateStr = date.toISOString().split("T")[0];
+    return patients.filter((patient) => {
+      return (
+        patient.history &&
+        patient.history.some((entry) => entry.date === dateStr)
+      );
+    });
+  };
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const navigateMonth = (direction) => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setMonth(prev.getMonth() + direction);
+      return newDate;
+    });
+  };
+
+  const navigateWeek = (direction) => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setDate(prev.getDate() + direction * 7);
+      return newDate;
+    });
+  };
+
+  const navigateDay = (direction) => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      newDate.setDate(prev.getDate() + direction);
+      return newDate;
+    });
+  };
 
   // Tab content functions
   const getTabContent = () => {
@@ -1315,6 +1416,416 @@ export default function Dashboard() {
           </div>
         </motion.div>
       ),
+      calendar: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-4"
+        >
+          {/* Calendar Header */}
+          <div className="flex flex-col gap-3 mb-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-teal-900">
+                {currentDate.toLocaleDateString("en-US", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </h2>
+            </div>
+            <div className="flex items-center justify-between">
+              {/* View Toggle - Mobile Optimized */}
+              <div className="flex items-center justify-center">
+                <div className="flex bg-gray-100 rounded-lg p-1 w-full max-w-xs">
+                  {["month", "week", "day"].map((view) => (
+                    <button
+                      key={view}
+                      onClick={() => setCalendarView(view)}
+                      className={`flex-1 px-2 py-2 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                        calendarView === view
+                          ? "bg-teal-600 text-white shadow-sm"
+                          : "text-gray-600 hover:text-gray-800"
+                      }`}
+                    >
+                      <span className="hidden sm:inline">
+                        {view.charAt(0).toUpperCase() + view.slice(1)}
+                      </span>
+                      <span className="sm:hidden">
+                        {view.charAt(0).toUpperCase()}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Calendar Navigation - Mobile Optimized */}
+              <div className="flex items-center justify-center mb-4">
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      if (calendarView === "month") navigateMonth(-1);
+                      else if (calendarView === "week") navigateWeek(-1);
+                      else navigateDay(-1);
+                    }}
+                    className="p-2 sm:p-3 rounded-lg bg-teal-100 hover:bg-teal-200 text-teal-700 transition-colors"
+                  >
+                    <FaChevronLeft className="text-sm sm:text-base" />
+                  </motion.button>
+
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setCurrentDate(new Date())}
+                    className="px-3 sm:px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 transition-colors text-xs sm:text-sm font-medium"
+                  >
+                    Today
+                  </motion.button>
+
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      if (calendarView === "month") navigateMonth(1);
+                      else if (calendarView === "week") navigateWeek(1);
+                      else navigateDay(1);
+                    }}
+                    className="p-2 sm:p-3 rounded-lg bg-teal-100 hover:bg-teal-200 text-teal-700 transition-colors"
+                  >
+                    <FaChevronRight className="text-sm sm:text-base" />
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Calendar Content */}
+          {calendarView === "month" && (
+            <div className="bg-white rounded-xl border border-teal-200 overflow-hidden">
+              {/* Calendar Header - Mobile Optimized */}
+              <div className="grid grid-cols-7 bg-teal-50 border-b border-teal-200">
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                  (day) => (
+                    <div
+                      key={day}
+                      className="p-2 sm:p-3 text-center text-xs sm:text-sm font-semibold text-teal-800"
+                    >
+                      <span className="hidden sm:inline">{day}</span>
+                      <span className="sm:hidden">{day.charAt(0)}</span>
+                    </div>
+                  )
+                )}
+              </div>
+
+              {/* Calendar Grid - Mobile Optimized */}
+              <div className="grid grid-cols-7">
+                {getDaysInMonth(currentDate).map((date, index) => {
+                  const appointments = getAppointmentsForDate(date);
+                  const dietPlans = getDietPlansForDate(date);
+                  const isToday =
+                    date && date.toDateString() === new Date().toDateString();
+                  const isSelected =
+                    date && date.toDateString() === selectedDate.toDateString();
+
+                  return (
+                    <motion.div
+                      key={index}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => date && setSelectedDate(date)}
+                      className={`min-h-[40px] sm:min-h-[50px] md:min-h-[70px] p-1 sm:p-2 border-r border-b border-teal-100 cursor-pointer transition-all ${
+                        !date
+                          ? "bg-gray-50"
+                          : isSelected
+                          ? "bg-teal-100 border-teal-300"
+                          : isToday
+                          ? "bg-cyan-50 border-cyan-200"
+                          : "bg-white hover:bg-teal-50"
+                      }`}
+                    >
+                      {date && (
+                        <>
+                          <div
+                            className={`text-xs sm:text-sm font-medium mb-1 ${
+                              isToday ? "text-cyan-800" : "text-gray-700"
+                            }`}
+                          >
+                            {date.getDate()}
+                          </div>
+
+                          {/* Appointments - Mobile Optimized */}
+                          {appointments.length > 0 && (
+                            <div className="space-y-0.5 sm:space-y-1">
+                              {appointments
+                                .slice(0, isMobile ? 1 : 2)
+                                .map((patient, idx) => (
+                                  <div
+                                    key={idx}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedPatient(patient);
+                                      setShowDietPlan(true);
+                                    }}
+                                    className="text-xs bg-teal-200 text-teal-800 px-1 sm:px-2 py-0.5 sm:py-1 rounded cursor-pointer hover:bg-teal-300 transition-colors truncate"
+                                    title={patient.name}
+                                  >
+                                    <FaUser className="inline mr-1 text-xs" />
+                                    <span className="hidden sm:inline">
+                                      {patient.name}
+                                    </span>
+                                    <span className="sm:hidden">
+                                      {patient.name.split(" ")[0]}
+                                    </span>
+                                  </div>
+                                ))}
+                              {appointments.length > (isMobile ? 1 : 2) && (
+                                <div className="text-xs text-teal-600 font-medium">
+                                  +{appointments.length - (isMobile ? 1 : 2)}{" "}
+                                  more
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Diet Plans - Mobile Optimized */}
+                          {dietPlans.length > 0 && (
+                            <div className="mt-0.5 sm:mt-1">
+                              <div className="text-xs bg-green-200 text-green-800 px-1 sm:px-2 py-0.5 sm:py-1 rounded">
+                                <FaClipboardList className="inline mr-1 text-xs" />
+                                <span className="hidden sm:inline">
+                                  {dietPlans.length} plan
+                                  {dietPlans.length > 1 ? "s" : ""}
+                                </span>
+                                <span className="sm:hidden">
+                                  {dietPlans.length}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {calendarView === "week" && (
+            <div className="bg-white rounded-xl border border-teal-200 overflow-hidden">
+              {/* Week Header - Mobile Optimized */}
+              <div className="grid grid-cols-7 bg-teal-50 border-b border-teal-200">
+                {Array.from({ length: 7 }, (_, i) => {
+                  const date = new Date(currentDate);
+                  date.setDate(
+                    currentDate.getDate() - currentDate.getDay() + i
+                  );
+                  return (
+                    <div
+                      key={i}
+                      className="p-2 sm:p-3 text-center border-r border-teal-200 last:border-r-0"
+                    >
+                      <div className="text-xs sm:text-sm font-semibold text-teal-800">
+                        <span className="hidden sm:inline">
+                          {date.toLocaleDateString("en-US", {
+                            weekday: "short",
+                          })}
+                        </span>
+                        <span className="sm:hidden">
+                          {date.toLocaleDateString("en-US", {
+                            weekday: "narrow",
+                          })}
+                        </span>
+                      </div>
+                      <div
+                        className={`text-sm sm:text-lg font-bold ${
+                          date.toDateString() === new Date().toDateString()
+                            ? "text-cyan-800"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        {date.getDate()}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Week Content - Mobile Optimized */}
+              <div className="grid grid-cols-7 min-h-[300px] sm:min-h-[400px]">
+                {Array.from({ length: 7 }, (_, i) => {
+                  const date = new Date(currentDate);
+                  date.setDate(
+                    currentDate.getDate() - currentDate.getDay() + i
+                  );
+                  const appointments = getAppointmentsForDate(date);
+                  const dietPlans = getDietPlansForDate(date);
+
+                  return (
+                    <div
+                      key={i}
+                      className="p-1 sm:p-3 border-r border-teal-100 last:border-r-0"
+                    >
+                      <div className="space-y-1 sm:space-y-2">
+                        {appointments.map((patient, idx) => (
+                          <motion.div
+                            key={idx}
+                            whileHover={{ scale: 1.02 }}
+                            onClick={() => {
+                              setSelectedPatient(patient);
+                              setShowDietPlan(true);
+                            }}
+                            className="p-1 sm:p-2 bg-teal-100 rounded-lg cursor-pointer hover:bg-teal-200 transition-colors"
+                          >
+                            <div className="text-xs sm:text-sm font-medium text-teal-800 truncate">
+                              <span className="hidden sm:inline">
+                                {patient.name}
+                              </span>
+                              <span className="sm:hidden">
+                                {patient.name.split(" ")[0]}
+                              </span>
+                            </div>
+                            <div className="text-xs text-teal-600 hidden sm:block">
+                              {patient.goal}
+                            </div>
+                          </motion.div>
+                        ))}
+
+                        {dietPlans.map((patient, idx) => (
+                          <motion.div
+                            key={`plan-${idx}`}
+                            whileHover={{ scale: 1.02 }}
+                            className="p-1 sm:p-2 bg-green-100 rounded-lg"
+                          >
+                            <div className="text-xs text-green-800">
+                              <FaClipboardList className="inline mr-1" />
+                              <span className="hidden sm:inline">
+                                Diet Plan Update
+                              </span>
+                              <span className="sm:hidden">Plan</span>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {calendarView === "day" && (
+            <div className="bg-white rounded-xl border border-teal-200 overflow-hidden">
+              {/* Day Header - Mobile Optimized */}
+              <div className="bg-teal-50 p-3 sm:p-4 border-b border-teal-200">
+                <h3 className="text-base sm:text-lg font-bold text-teal-900">
+                  {formatDate(currentDate)}
+                </h3>
+              </div>
+
+              {/* Day Content - Mobile Optimized */}
+              <div className="p-3 sm:p-4">
+                <div className="space-y-3 sm:space-y-4">
+                  {/* Appointments */}
+                  {getAppointmentsForDate(currentDate).length > 0 ? (
+                    <div>
+                      <h4 className="text-sm sm:text-md font-semibold text-teal-800 mb-2 sm:mb-3 flex items-center gap-2">
+                        <FaCalendarAlt className="text-teal-600 text-sm sm:text-base" />
+                        <span className="hidden sm:inline">
+                          Appointments (
+                          {getAppointmentsForDate(currentDate).length})
+                        </span>
+                        <span className="sm:hidden">
+                          Appts ({getAppointmentsForDate(currentDate).length})
+                        </span>
+                      </h4>
+                      <div className="space-y-2 sm:space-y-3">
+                        {getAppointmentsForDate(currentDate).map(
+                          (patient, idx) => (
+                            <motion.div
+                              key={idx}
+                              whileHover={{ scale: 1.02 }}
+                              onClick={() => {
+                                setSelectedPatient(patient);
+                                setShowDietPlan(true);
+                              }}
+                              className="p-3 sm:p-4 bg-teal-50 rounded-lg border border-teal-200 cursor-pointer hover:bg-teal-100 transition-colors"
+                            >
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                <div className="flex-1">
+                                  <h5 className="font-semibold text-teal-900 text-sm sm:text-base">
+                                    {patient.name}
+                                  </h5>
+                                  <p className="text-xs sm:text-sm text-teal-700">
+                                    {patient.goal}
+                                  </p>
+                                  <p className="text-xs text-gray-600">
+                                    {patient.age} years, {patient.gender} • BMI:{" "}
+                                    {patient.bmi}
+                                  </p>
+                                </div>
+                                <div className="text-left sm:text-right">
+                                  <div className="text-xs sm:text-sm font-medium text-teal-800">
+                                    {patient.adherence}% adherence
+                                  </div>
+                                  <div className="text-xs text-gray-600">
+                                    Last: {patient.lastVisit}
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-6 sm:py-8 text-gray-500">
+                      <FaCalendarAlt className="text-3xl sm:text-4xl mb-2 mx-auto text-gray-300" />
+                      <p className="text-sm sm:text-base">
+                        No appointments scheduled for this day
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Diet Plans */}
+                  {getDietPlansForDate(currentDate).length > 0 && (
+                    <div>
+                      <h4 className="text-sm sm:text-md font-semibold text-green-800 mb-2 sm:mb-3 flex items-center gap-2">
+                        <FaClipboardList className="text-green-600 text-sm sm:text-base" />
+                        <span className="hidden sm:inline">
+                          Diet Plan Updates (
+                          {getDietPlansForDate(currentDate).length})
+                        </span>
+                        <span className="sm:hidden">
+                          Plans ({getDietPlansForDate(currentDate).length})
+                        </span>
+                      </h4>
+                      <div className="space-y-2">
+                        {getDietPlansForDate(currentDate).map(
+                          (patient, idx) => (
+                            <div
+                              key={idx}
+                              className="p-2 sm:p-3 bg-green-50 rounded-lg border border-green-200"
+                            >
+                              <div className="text-xs sm:text-sm font-medium text-green-900">
+                                {patient.name}
+                              </div>
+                              <div className="text-xs text-green-700">
+                                Plan updated on{" "}
+                                {currentDate.toLocaleDateString()}
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      ),
       analytics: (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -1532,6 +2043,7 @@ export default function Dashboard() {
                   >
                     {tab.id === "overview" && "Quick summary"}
                     {tab.id === "patients" && "Patient management"}
+                    {tab.id === "calendar" && "Appointments & plans"}
                     {tab.id === "analytics" && "Performance metrics"}
                   </div>
                 </div>

@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../EnhancedEffects.css";
 import SelectFood from "../components/SelectFood";
+import { SAMPLE_FOOD_DATA } from "../components/Food.jsx";
 import {
   FaArrowLeft,
   FaUser,
@@ -23,6 +24,8 @@ import {
   FaSeedling,
   FaChevronRight,
   FaChevronLeft,
+  FaChevronDown,
+  FaChevronUp,
   FaHome,
   FaLanguage,
   FaRedo,
@@ -143,224 +146,41 @@ const AyurvedicParticleSystem = ({ count = 80 }) => {
   );
 };
 
-// Meal-based Food Categories
+// Meal-based Food Categories (using data from Food.jsx)
 const MEAL_CATEGORIES = {
-  breakfast: [
-    {
-      name: "Charishma'S Addictive Methi Theplas",
-      calories: 445,
-      recipe:
-        "Heat a non-stick griddle (tawa) on medium flame. Knead all ingredients thoroughly well in a big bowl. Roll out each round ball to form a 'thepla'. Cook on both sides with oil until golden brown.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Lavana, Katu, Tikta",
-    },
-    {
-      name: "Indians Cookie",
-      calories: 314,
-      recipe:
-        "Melt chocolate, cream butter and sugar, add vanilla and eggs. Stir in melted chocolate, add dry ingredients and nuts. Bake at 350°F for 25 minutes.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Madhura, Lavana",
-    },
-    {
-      name: "Baklava - An Milk Sweet In Sugar Syrup",
-      calories: 553,
-      recipe:
-        "Heat butter, add vermicelli and fry until golden. Layer in tray with milk-semolina mixture and nuts. Bake and pour sugar syrup over it.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Madhura",
-    },
-    {
-      name: "Americanized Daal Baati",
-      calories: 247,
-      recipe:
-        "Mix flour, sooji, baking powder with milk to make dough. Cook dal with spices. Drop dumplings into dal and simmer for 15 minutes.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Amla, Lavana, Katu",
-    },
-    {
-      name: "Scrambled Eggs",
-      calories: 368,
-      recipe:
-        "Beat eggs with chili flakes and pepper. Fry onion until translucent, add turmeric and salt. Add egg mixture and scramble until cooked.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Lavana, Katu",
-    },
-    {
-      name: "Indian Coffee",
-      calories: 65,
-      recipe:
-        "Boil water with cardamom, cinnamon, nutmeg, and clove. Add brewed coffee. Heat milk separately, strain coffee into milk, add sugar.",
-      dosha: "Kapha, Vata",
-      region: "West",
-      rasas: "Madhura, Amla, Katu",
-    },
-    {
-      name: "Chai Latte Muffins",
-      calories: 312,
-      recipe:
-        "Mix dry ingredients, add milk, butter, egg, and vanilla. Stir in white chocolate chips. Top with cream cheese mixture and bake at 375°F.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Lavana",
-    },
-  ],
-  lunch: [
-    {
-      name: "Boka Dushi",
-      calories: 189,
-      recipe:
-        "Marinate chicken with ketjap manis, lime juice, cumin, ginger, sambal oelek, and turmeric. Thread onto skewers and grill 2 minutes each side.",
-      dosha: "Vata, Kapha",
-      region: "West Indian",
-      rasas: "Madhura, Amla, Katu",
-    },
-    {
-      name: "West Rice And Beans",
-      calories: 461,
-      recipe:
-        "Combine broth, beans, coconut milk, jalapeño, thyme, and allspice. Bring to boil, add rice. Simmer until liquid absorbed and rice is tender.",
-      dosha: "Vata, Kapha",
-      region: "West Indian",
-      rasas: "Sweet, Sour",
-    },
-    {
-      name: "Creamy North Fish Curry",
-      calories: 379,
-      recipe:
-        "Heat oil, add mustard seeds. Add onion, garlic, ginger paste with spices. Add water, vinegar, coconut cream. Add fish and cook 5-6 minutes.",
-      dosha: "Vata, Kapha",
-      region: "West Bengal",
-      rasas: "Katu",
-    },
-    {
-      name: "South Fish Curry",
-      calories: 50,
-      recipe:
-        "Mix chili, turmeric, coriander powder with water. Heat oil, add mustard and fenugreek seeds. Add shallots, spice paste, water, and tamarind. Add fish and cook 20-25 minutes.",
-      dosha: "Vata, Kapha",
-      region: "West Bengal",
-      rasas: "Amla, Katu",
-    },
-    {
-      name: "Fish Curry/Chettinad Fish Curry",
-      calories: 1126,
-      recipe:
-        "Apply salt and turmeric to fish. Sauté fennel, fenugreek, onions, garlic. Add tomatoes, spices, water, tamarind. Add coconut milk and fish, cook 5 minutes.",
-      dosha: "Vata, Kapha",
-      region: "West Bengal",
-      rasas: "Amla, Lavana, Katu",
-    },
-    {
-      name: "West Pumpkin Soup",
-      calories: 186,
-      recipe:
-        "Brown onions in butter, add garlic, pumpkin, and broth. Add herbs and simmer 45 minutes. Puree pumpkin, strain liquid, combine with cream and cinnamon.",
-      dosha: "Kapha, Vata",
-      region: "West",
-      rasas: "Sweet, Sour",
-    },
-    {
-      name: "Broccoli With - Yogurt",
-      calories: 105,
-      recipe:
-        "Cook broccoli in salted water 4-5 minutes. Heat oil, add broccoli. Toast cumin, fennel, cardamom, grind. Mix with yogurt and lemon, drizzle over broccoli.",
-      dosha: "Kapha, Pitta",
-      region: "West",
-      rasas: "Amla",
-    },
-    {
-      name: "West Rum Stew Recipe",
-      calories: 370,
-      recipe:
-        "Layer all ingredients in casserole. Combine sauce ingredients, pour over. Heat in 325°F oven for 1-1.5 hours. Add olives and rum before serving.",
-      dosha: "Kapha, Vata",
-      region: "West",
-      rasas: "Sweet, Sour",
-    },
-  ],
-  dinner: [
-    {
-      name: "Rasgulla And/Or Rasmalai",
-      calories: 131,
-      recipe:
-        "Boil milk, add lemon juice to curdle. Strain, knead chenna 7 minutes. Make balls, cook in sugar syrup. For rasmalai, flatten and cook in thickened milk.",
-      dosha: "Vata, Kapha",
-      region: "West Bengal",
-      rasas: "Madhura, Amla",
-    },
-    {
-      name: "West - Channa Wrap",
-      calories: 201,
-      recipe:
-        "Heat oil, cook onions until soft. Add garlic, chili, ginger, spices. Add chickpeas with water, simmer 50-60 minutes until thick. Serve in tortillas.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Lavana, Katu",
-    },
-    {
-      name: "American Sunflower Seed Cakes",
-      calories: 222,
-      recipe:
-        "Simmer sunflower seeds in water for 1 hour. Drain and grind. Mix with cornmeal and maple syrup to form dough. Shape into cakes and fry in hot oil.",
-      dosha: "Kapha, Pitta",
-      region: "West",
-      rasas: "Sweet, Sour",
-    },
-    {
-      name: "Tuna Pita Pockets With An Twist",
-      calories: 162,
-      recipe:
-        "Heat oil, stir fry cumin seeds. Add ground spices, onions, pepper. Add tuna, green chilies, ginger. Cook 5 minutes, add fresh coriander and garam masala.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Lavana, Katu",
-    },
-    {
-      name: "Cornmeal & Berry Dessert",
-      calories: 224,
-      recipe:
-        "Soak cornmeal in water. Melt butter, add cornmeal mixture. Heat 15 minutes until thick. Add juice, berries, nutmeg. Add cream, maple syrup, and eggs.",
-      dosha: "Kapha, Vata",
-      region: "West",
-      rasas: "Madhura",
-    },
-    {
-      name: "Ocean Gazpacho",
-      calories: 104,
-      recipe:
-        "Blend chili powder, ginger, garlic, green chili, sugar, yogurt, lemon juice, mint until smooth. Blend yogurt soup ingredients, chill. Serve garnished with mint chutney.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Madhura, Amla, Lavana, Katu",
-    },
-    {
-      name: "Indian Macaroni And Cheese",
-      calories: 1022,
-      recipe:
-        "Cook macaroni according to package directions. Heat milk to simmer, add cubed cheese. Melt cheese, add macaroni. Let stand 5 minutes to thicken.",
-      dosha: "Kapha",
-      region: "West",
-      rasas: "Sweet",
-    },
-    {
-      name: "West Crispy Pork Bits",
-      calories: 539,
-      recipe:
-        "Cube pork, toss with spices, onion, olive oil, lime juice. Marinate up to 2 days. Roast at 375°F for 1 hour, stirring occasionally until crisp.",
-      dosha: "Vata, Kapha",
-      region: "West",
-      rasas: "Amla, Lavana",
-    },
-  ],
+  breakfast: SAMPLE_FOOD_DATA.Breakfast.map((food) => ({
+    name: food.Recipe_Name,
+    calories: parseFloat(food.Calories),
+    recipe: food.Instructions
+      ? food.Instructions.split("'").join("").replace(/\[|\]/g, "")
+      : food.Description,
+    dosha: food.Dosha,
+    region: food.Region,
+    rasas: food.Rasas,
+  })),
+  lunch: SAMPLE_FOOD_DATA.Lunch.map((food) => ({
+    name: food.Recipe_Name,
+    calories: parseFloat(food.Calories),
+    recipe: food.Instructions
+      ? food.Instructions.split("'").join("").replace(/\[|\]/g, "")
+      : food.Description,
+    dosha: food.Dosha,
+    region: food.Region,
+    rasas: food.Rasas,
+  })),
+  dinner: SAMPLE_FOOD_DATA.Dinner.map((food) => ({
+    name: food.Recipe_Name,
+    calories: parseFloat(food.Calories),
+    recipe: food.Instructions
+      ? food.Instructions.split("'").join("").replace(/\[|\]/g, "")
+      : food.Description,
+    dosha: food.Dosha,
+    region: food.Region,
+    rasas: food.Rasas,
+  })),
 };
 
-// Diet Plans
+// Diet Plans (using data from Food.jsx)
 const DIET_PLANS = [
   {
     id: "cooling-pitta",
@@ -369,147 +189,39 @@ const DIET_PLANS = [
     icon: FaLeaf,
     color: "#10B981",
     meals: {
-      breakfast: [
-        {
-          name: "Rice Porridge",
-          calories: 300,
-          recipe: "Cook rice with milk, add cardamom and jaggery",
-        },
-      ],
-      lunch: [
-        {
-          name: "Steamed Veg + Rice",
-          calories: 520,
-          recipe: "Steam vegetables, serve with basmati rice and ghee",
-        },
-      ],
-      snack: [
-        {
-          name: "Coconut Water + Dates",
-          calories: 140,
-          recipe: "Fresh coconut water with 2-3 dates",
-        },
-      ],
-      dinner: [
-        {
-          name: "Paneer & Greens",
-          calories: 400,
-          recipe: "Sauté paneer with spinach, add mild spices",
-        },
-      ],
-    },
-  },
-  {
-    id: "iron-rich",
-    name: "Iron-Focused Plan",
-    description:
-      "Lentils, greens and energy-dense snacks to support iron needs.",
-    icon: FaHeartbeat,
-    color: "#F59E0B",
-    meals: {
-      breakfast: [
-        {
-          name: "Ragi Porridge with Dates",
-          calories: 340,
-          recipe: "Cook ragi flour with milk, add chopped dates and nuts",
-        },
-      ],
-      lunch: [
-        {
-          name: "Spinach Dal + Rice",
-          calories: 600,
-          recipe: "Cook dal with spinach, serve with rice and ghee",
-        },
-      ],
-      snack: [
-        {
-          name: "Almond-Date Smoothie",
-          calories: 220,
-          recipe: "Blend almonds, dates, and milk until smooth",
-        },
-      ],
-      dinner: [
-        {
-          name: "Lentil Stew with Veg",
-          calories: 420,
-          recipe: "Cook lentils with vegetables and mild spices",
-        },
-      ],
-    },
-  },
-  {
-    id: "balanced-active",
-    name: "Balanced Active Plan",
-    description:
-      "Higher protein and balanced carbs for active users / muscle goals.",
-    icon: FaDumbbell,
-    color: "#6366F1",
-    meals: {
-      breakfast: [
-        {
-          name: "Oats + Milk + Banana",
-          calories: 360,
-          recipe: "Cook oats with milk, add sliced banana and honey",
-        },
-      ],
-      lunch: [
-        {
-          name: "Quinoa Salad + Chicken/Paneer",
-          calories: 600,
-          recipe: "Mix quinoa with vegetables, add grilled protein",
-        },
-      ],
-      snack: [
-        {
-          name: "Greek Yogurt + Nuts",
-          calories: 200,
-          recipe: "Top Greek yogurt with mixed nuts and berries",
-        },
-      ],
-      dinner: [
-        {
-          name: "Grilled Veg + Protein",
-          calories: 420,
-          recipe: "Grill vegetables and protein with herbs",
-        },
-      ],
-    },
-  },
-  {
-    id: "light-digestive",
-    name: "Light Digestive Plan",
-    description: "Easy-to-digest, warm meals for sensitive digestion.",
-    icon: FaSeedling,
-    color: "#06B6D4",
-    meals: {
-      breakfast: [
-        {
-          name: "Rice Porridge with Ghee",
-          calories: 320,
-          recipe: "Cook rice with water, add ghee and mild spices",
-        },
-      ],
-      lunch: [
-        {
-          name: "Kitchari / Moong Dal Stew",
-          calories: 480,
-          recipe: "Cook rice and moong dal together with turmeric",
-        },
-      ],
-      snack: [
-        {
-          name: "Warm Apple",
-          calories: 110,
-          recipe: "Bake apple with cinnamon until soft",
-        },
-      ],
-      dinner: [
-        {
-          name: "Light Kitchari",
-          calories: 380,
-          recipe: "Simple rice and dal with minimal spices",
-        },
-      ],
+      breakfast: SAMPLE_FOOD_DATA.Breakfast.filter(
+        (food) => food.Dosha && food.Dosha.includes("Pitta")
+      )
+        .slice(0, 2)
+        .map((food) => ({
+          name: food.Recipe_Name,
+          calories: parseFloat(food.Calories),
+          recipe: food.Instructions
+            ? food.Instructions.split("'").join("").replace(/\[|\]/g, "")
+            : food.Description,
+        })),
+      lunch: SAMPLE_FOOD_DATA.Lunch.filter(
+        (food) => food.Dosha && food.Dosha.includes("Pitta")
+      )
+        .slice(0, 2)
+        .map((food) => ({
+          name: food.Recipe_Name,
+          calories: parseFloat(food.Calories),
+          recipe: food.Instructions
+            ? food.Instructions.split("'").join("").replace(/\[|\]/g, "")
+            : food.Description,
+        })),
+      dinner: SAMPLE_FOOD_DATA.Dinner.filter(
+        (food) => food.Dosha && food.Dosha.includes("Vata")
+      )
+        .slice(0, 2)
+        .map((food) => ({
+          name: food.Recipe_Name,
+          calories: parseFloat(food.Calories),
+          recipe: food.Instructions
+            ? food.Instructions.split("'").join("").replace(/\[|\]/g, "")
+            : food.Description,
+        })),
     },
   },
 ];
@@ -575,43 +287,27 @@ const generate7DayChart = (selectedPlan) => {
 
   // Enhanced meals with recipes
   const enhancedMeals = {
-    breakfast: [
-      {
-        name: "Oatmeal with fruits",
-        calories: 300,
-        recipe:
-          "Cook 1/2 cup oats with 1 cup milk, add honey and fresh berries",
-      },
-      {
-        name: "Green tea",
-        calories: 5,
-        recipe: "Steep green tea leaves in hot water for 3-4 minutes",
-      },
-    ],
-    lunch: [
-      {
-        name: "Quinoa salad",
-        calories: 400,
-        recipe: "Cook quinoa, mix with cucumber, tomatoes, olive oil and lemon",
-      },
-      {
-        name: "Vegetable soup",
-        calories: 150,
-        recipe: "Simmer mixed vegetables in vegetable broth with herbs",
-      },
-    ],
-    dinner: [
-      {
-        name: "Grilled chicken",
-        calories: 350,
-        recipe: "Marinate chicken with herbs, grill for 6-8 minutes each side",
-      },
-      {
-        name: "Steamed vegetables",
-        calories: 100,
-        recipe: "Steam broccoli, carrots, and bell peppers for 5-7 minutes",
-      },
-    ],
+    breakfast: SAMPLE_FOOD_DATA.Breakfast.slice(0, 4).map((food) => ({
+      name: food.Recipe_Name,
+      calories: parseFloat(food.Calories),
+      recipe: food.Instructions
+        ? food.Instructions.split("'").join("").replace(/\[|\]/g, "")
+        : food.Description,
+    })),
+    lunch: SAMPLE_FOOD_DATA.Lunch.slice(0, 4).map((food) => ({
+      name: food.Recipe_Name,
+      calories: parseFloat(food.Calories),
+      recipe: food.Instructions
+        ? food.Instructions.split("'").join("").replace(/\[|\]/g, "")
+        : food.Description,
+    })),
+    dinner: SAMPLE_FOOD_DATA.Dinner.slice(0, 4).map((food) => ({
+      name: food.Recipe_Name,
+      calories: parseFloat(food.Calories),
+      recipe: food.Instructions
+        ? food.Instructions.split("'").join("").replace(/\[|\]/g, "")
+        : food.Description,
+    })),
   };
 
   return days.map((day) => ({
@@ -630,6 +326,7 @@ export default function MyDietChart() {
   const [selectedPlanId] = useState(DIET_PLANS[0].id);
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedDay, setSelectedDay] = useState("Monday");
+  const [expandedRecipes, setExpandedRecipes] = useState({});
 
   // Mock patient data for ML model filtering
   const patientData = {
@@ -711,7 +408,7 @@ export default function MyDietChart() {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
             {Object.entries(currentPlan.meals).map(([mealType, items]) => (
               <div
                 key={mealType}
@@ -746,8 +443,34 @@ export default function MyDietChart() {
                         </span>
                       </div>
                       {item.recipe && (
-                        <div className="text-xs sm:text-sm md:text-lg text-gray-700 p-2 rounded-md border-l-2 border-teal-400">
-                          <strong>Recipe:</strong> {item.recipe}
+                        <div>
+                          <button
+                            onClick={() => {
+                              const key = `${mealType}-${index}`;
+                              setExpandedRecipes((prev) => ({
+                                ...prev,
+                                [key]: !prev[key],
+                              }));
+                            }}
+                            className="text-xs sm:text-sm text-teal-600 hover:text-teal-800 font-medium mb-1 flex items-center gap-1"
+                          >
+                            {expandedRecipes[`${mealType}-${index}`] ? (
+                              <>
+                                <FaChevronUp className="text-xs" />
+                                Hide Recipe
+                              </>
+                            ) : (
+                              <>
+                                <FaChevronDown className="text-xs" />
+                                View Recipe
+                              </>
+                            )}
+                          </button>
+                          {expandedRecipes[`${mealType}-${index}`] && (
+                            <div className="text-xs sm:text-sm text-gray-700 p-2 rounded-md border-l-2 border-teal-400 bg-teal-50/50">
+                              <strong>Recipe:</strong> {item.recipe}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -894,21 +617,21 @@ export default function MyDietChart() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-              {Object.entries(MEAL_CATEGORIES).map(([mealType, items]) => {
+              {Object.entries(SAMPLE_FOOD_DATA).map(([mealType, items]) => {
                 const mealFoods = selectedFoods.filter((food) =>
                   food.startsWith(`${mealType}-`)
                 );
                 if (mealFoods.length === 0) return null;
 
                 const mealIcons = {
-                  breakfast: FaCoffee,
-                  lunch: FaUtensils,
-                  dinner: FaAppleAlt,
+                  Breakfast: FaCoffee,
+                  Lunch: FaUtensils,
+                  Dinner: FaAppleAlt,
                 };
                 const mealColors = {
-                  breakfast: "#F59E0B",
-                  lunch: "#10B981",
-                  dinner: "#6366F1",
+                  Breakfast: "#F59E0B",
+                  Lunch: "#10B981",
+                  Dinner: "#6366F1",
                 };
 
                 const MealIcon = mealIcons[mealType];
@@ -933,7 +656,7 @@ export default function MyDietChart() {
                       {mealFoods.map((foodKey) => {
                         const itemName = foodKey.split("-").slice(1).join("-");
                         const item = items.find(
-                          (item) => item.name === itemName
+                          (item) => item.Recipe_Name === itemName
                         );
                         return (
                           <div
@@ -944,7 +667,7 @@ export default function MyDietChart() {
                               {itemName}
                             </span>
                             <span className="text-teal-700 font-medium text-xs sm:text-sm md:text-lg">
-                              {item?.calories} cal
+                              {item?.Calories} cal
                             </span>
                           </div>
                         );
