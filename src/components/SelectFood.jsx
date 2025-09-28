@@ -992,7 +992,7 @@ const SelectFood = ({ selectedFoods, onToggleFoodSelection }) => {
 
       {/* Nutrition Analysis Panel */}
       {showNutritionPanel && nutritionData.foodCount > 0 && (
-        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-[60] bg-white rounded-lg shadow-xl border border-gray-200 w-64 md:max-h-96 h-96  overflow-y-auto">
+        <div className="fixed right-4 top-[240px] -translate-y-1/2 z-[60] bg-white rounded-lg shadow-xl border border-gray-200 w-64 md:max-h-96 h-96  overflow-y-auto">
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
