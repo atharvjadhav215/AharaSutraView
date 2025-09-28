@@ -24,6 +24,10 @@ import {
   FaFilter,
   FaChevronDown,
   FaChevronUp,
+  FaChartBar,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaInfoCircle,
 } from "react-icons/fa";
 import { SAMPLE_FOOD_DATA } from "./Food.jsx";
 // Sample food data with comprehensive nutritional information
@@ -303,7 +307,6 @@ const FoodDetailPopup = ({ food, isOpen, onClose, onSelect, isSelected }) => {
             {/* Footer */}
             <div className="bg-gray-50 px-3 md:px-6 py-2 shadow-2xl shadow-black">
               <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-0">
-              
                 <button
                   onClick={onSelect}
                   className={`px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 text-sm md:text-base ${
@@ -350,6 +353,7 @@ const SelectFood = ({ selectedFoods, onToggleFoodSelection }) => {
     mealCategory: [],
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [showNutritionPanel, setShowNutritionPanel] = useState(false);
 
   const allFoods = useMemo(() => Object.values(SAMPLE_FOOD_DATA).flat(), []);
   const foods = useMemo(
@@ -471,6 +475,114 @@ const SelectFood = ({ selectedFoods, onToggleFoodSelection }) => {
   const hasActiveFilters =
     searchQuery ||
     Object.values(selectedFilters).some((filters) => filters.length > 0);
+
+  // Calculate nutrition data for selected foods
+  const nutritionData = useMemo(() => {
+    if (!selectedFoods || selectedFoods.length === 0) {
+      return {
+        totalCalories: 0,
+        totalProtein: 0,
+        totalCarbs: 0,
+        totalFat: 0,
+        totalFiber: 0,
+        totalSugar: 0,
+        totalSodium: 0,
+        totalCholesterol: 0,
+        totalSaturatedFat: 0,
+        foodCount: 0,
+      };
+    }
+
+    let totals = {
+      totalCalories: 0,
+      totalProtein: 0,
+      totalCarbs: 0,
+      totalFat: 0,
+      totalFiber: 0,
+      totalSugar: 0,
+      totalSodium: 0,
+      totalCholesterol: 0,
+      totalSaturatedFat: 0,
+      foodCount: selectedFoods.length,
+    };
+
+    selectedFoods.forEach((foodKey) => {
+      const [mealType, foodName] = foodKey.split("-");
+      const mealData = SAMPLE_FOOD_DATA[mealType];
+      if (mealData) {
+        const food = mealData.find((item) => item.Recipe_Name === foodName);
+        if (food) {
+          totals.totalCalories += parseFloat(food.Calories) || 0;
+          totals.totalProtein += parseFloat(food.Protein_g) || 0;
+          totals.totalCarbs += parseFloat(food.Carbohydrates_g) || 0;
+          totals.totalFat += parseFloat(food.Fat_g) || 0;
+          totals.totalFiber += parseFloat(food.Fiber_g) || 0;
+          totals.totalSugar += parseFloat(food.Sugar_g) || 0;
+          totals.totalSodium += parseFloat(food.Sodium_mg) || 0;
+          totals.totalCholesterol += parseFloat(food.Cholesterol_mg) || 0;
+          totals.totalSaturatedFat += parseFloat(food.Saturated_Fat_g) || 0;
+        }
+      }
+    });
+
+    return totals;
+  }, [selectedFoods]);
+
+  // Daily recommendations
+  const dailyRecommendations = {
+    calories: 2000,
+    protein: 50,
+    carbs: 250,
+    fat: 67,
+    fiber: 25,
+    sugar: 50,
+    sodium: 2300,
+    cholesterol: 300,
+    saturatedFat: 20,
+  };
+
+  // Calculate percentages
+  const percentages = {
+    calories:
+      (nutritionData.totalCalories / dailyRecommendations.calories) * 100,
+    protein: (nutritionData.totalProtein / dailyRecommendations.protein) * 100,
+    carbs: (nutritionData.totalCarbs / dailyRecommendations.carbs) * 100,
+    fat: (nutritionData.totalFat / dailyRecommendations.fat) * 100,
+    fiber: (nutritionData.totalFiber / dailyRecommendations.fiber) * 100,
+    sugar: (nutritionData.totalSugar / dailyRecommendations.sugar) * 100,
+    sodium: (nutritionData.totalSodium / dailyRecommendations.sodium) * 100,
+    cholesterol:
+      (nutritionData.totalCholesterol / dailyRecommendations.cholesterol) * 100,
+    saturatedFat:
+      (nutritionData.totalSaturatedFat / dailyRecommendations.saturatedFat) *
+      100,
+  };
+
+  // Get status color and icon
+  const getStatusInfo = (percentage) => {
+    if (percentage >= 80 && percentage <= 120) {
+      return {
+        color: "text-green-600",
+        bgColor: "bg-green-100",
+        icon: FaCheckCircle,
+        text: "Optimal",
+      };
+    } else if (percentage < 80) {
+      return {
+        color: "text-yellow-600",
+        bgColor: "bg-yellow-100",
+        icon: FaExclamationTriangle,
+        text: "Low",
+      };
+    } else {
+      return {
+        color: "text-red-600",
+        bgColor: "bg-red-100",
+        icon: FaExclamationTriangle,
+        text: "High",
+      };
+    }
+  };
 
   const getMealIcon = (mealType) => {
     const icons = {
@@ -863,6 +975,166 @@ const SelectFood = ({ selectedFoods, onToggleFoodSelection }) => {
           </div>
         </div>
       </div>
+
+      {/* Floating Nutrition Analysis Button */}
+      {nutritionData.foodCount > 0 && (
+        <button
+          onClick={() => setShowNutritionPanel(!showNutritionPanel)}
+          className="fixed right-4 top-1/20 md:top-1/16 -translate-y-1/2 z-[60] bg-teal-500 hover:bg-teal-600 text-white p-3 rounded-full shadow-lg transition-all duration-200 flex items-center gap-2"
+          style={{ zIndex: 60, position: "fixed" }}
+        >
+          <FaChartBar className="text-lg" />
+          <span className="hidden md:inline text-sm font-medium">
+            {nutritionData.foodCount} items
+          </span>
+        </button>
+      )}
+
+      {/* Nutrition Analysis Panel */}
+      {showNutritionPanel && nutritionData.foodCount > 0 && (
+        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-[60] bg-white rounded-lg shadow-xl border border-gray-200 w-64 md:max-h-96 h-96  overflow-y-auto">
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <FaChartBar className="text-teal-600 text-lg" />
+                <h3 className="font-semibold text-gray-800">
+                  Nutrition Analysis
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowNutritionPanel(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <FaTimes className="text-sm" />
+              </button>
+            </div>
+
+            <div className="text-xs text-gray-500 mb-4">
+              {nutritionData.foodCount} items selected
+            </div>
+
+            <div className="space-y-3">
+              {/* Calories */}
+              <div className="bg-red-50 p-3 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <FaFire className="text-red-600 text-sm" />
+                    <span className="text-sm font-medium">Calories</span>
+                  </div>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      getStatusInfo(percentages.calories).bgColor
+                    }`}
+                  >
+                    {getStatusInfo(percentages.calories).text}
+                  </span>
+                </div>
+                <div className="text-lg font-bold text-gray-900">
+                  {nutritionData.totalCalories.toFixed(0)}
+                  <span className="text-sm text-gray-500 ml-1">kcal</span>
+                </div>
+                <div className="text-xs text-gray-600">
+                  {percentages.calories.toFixed(0)}% of daily
+                </div>
+              </div>
+
+              {/* Protein */}
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <FaWeight className="text-blue-600 text-sm" />
+                    <span className="text-sm font-medium">Protein</span>
+                  </div>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      getStatusInfo(percentages.protein).bgColor
+                    }`}
+                  >
+                    {getStatusInfo(percentages.protein).text}
+                  </span>
+                </div>
+                <div className="text-lg font-bold text-gray-900">
+                  {nutritionData.totalProtein.toFixed(1)}
+                  <span className="text-sm text-gray-500 ml-1">g</span>
+                </div>
+                <div className="text-xs text-gray-600">
+                  {percentages.protein.toFixed(0)}% of daily
+                </div>
+              </div>
+
+              {/* Carbs */}
+              <div className="bg-green-50 p-3 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <FaCarrot className="text-green-600 text-sm" />
+                    <span className="text-sm font-medium">Carbs</span>
+                  </div>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      getStatusInfo(percentages.carbs).bgColor
+                    }`}
+                  >
+                    {getStatusInfo(percentages.carbs).text}
+                  </span>
+                </div>
+                <div className="text-lg font-bold text-gray-900">
+                  {nutritionData.totalCarbs.toFixed(1)}
+                  <span className="text-sm text-gray-500 ml-1">g</span>
+                </div>
+                <div className="text-xs text-gray-600">
+                  {percentages.carbs.toFixed(0)}% of daily
+                </div>
+              </div>
+
+              {/* Fat */}
+              <div className="bg-yellow-50 p-3 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <FaHeart className="text-yellow-600 text-sm" />
+                    <span className="text-sm font-medium">Fat</span>
+                  </div>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      getStatusInfo(percentages.fat).bgColor
+                    }`}
+                  >
+                    {getStatusInfo(percentages.fat).text}
+                  </span>
+                </div>
+                <div className="text-lg font-bold text-gray-900">
+                  {nutritionData.totalFat.toFixed(1)}
+                  <span className="text-sm text-gray-500 ml-1">g</span>
+                </div>
+                <div className="text-xs text-gray-600">
+                  {percentages.fat.toFixed(0)}% of daily
+                </div>
+              </div>
+
+              {/* Additional nutrients */}
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-purple-50 p-2 rounded-lg text-center">
+                  <div className="text-sm font-semibold text-gray-900">
+                    {nutritionData.totalFiber.toFixed(1)}g
+                  </div>
+                  <div className="text-xs text-gray-600">Fiber</div>
+                </div>
+                <div className="bg-orange-50 p-2 rounded-lg text-center">
+                  <div className="text-sm font-semibold text-gray-900">
+                    {nutritionData.totalSodium.toFixed(0)}mg
+                  </div>
+                  <div className="text-xs text-gray-600">Sodium</div>
+                </div>
+                <div className="bg-pink-50 p-2 rounded-lg text-center">
+                  <div className="text-sm font-semibold text-gray-900">
+                    {nutritionData.totalSugar.toFixed(1)}g
+                  </div>
+                  <div className="text-xs text-gray-600">Sugar</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
