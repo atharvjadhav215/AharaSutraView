@@ -78,7 +78,7 @@ const Navbar = () => {
     <>
       {/* Main Navbar */}
       <nav className="fixed top-0 md:w-[800px] w-[300px] left-0 mx-auto mt-2 rounded-2xl right-0 z-50 bg-white shadow-lg">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:pl-8 ">
           <div className="flex justify-between items-center md:h-12 h-8 md:mt-0 mt-1">
             {/* Logo with Home Text Animation */}
             <motion.div
@@ -134,28 +134,19 @@ const Navbar = () => {
               {/* Prototype Role Switch Button */}
               <motion.button
                 onClick={handleRoleSwitch}
-                className="px-4 py-2 text-sm bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium flex items-center gap-2"
+                className="px-1 py-2 text-xs bg-gradient-to-r from-gray-400 to-gray-300 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium flex items-center gap-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 title="🚀 PROTOTYPE ONLY - Switch between User & Dietitian roles for testing"
               >
                 <FaExchangeAlt className="w-3 h-3" />
-                <span className="relative">
-                  {isUserRole ? (
-                    <>
-                      Switch to Dietitian
-                      <span className="absolute -top-6 left-0 text-xs bg-orange-100 text-orange-800 px-1 rounded opacity-0 hover:opacity-100 transition-opacity whitespace-nowrap">
-                        PROTOTYPE
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      Switch to User
-                      <span className="absolute -top-6 left-0 text-xs bg-orange-100 text-orange-800 px-1 rounded opacity-0 hover:opacity-100 transition-opacity whitespace-nowrap">
-                        PROTOTYPE
-                      </span>
-                    </>
-                  )}
+                <span className="relative group">
+                  <span className="group-hover:hidden">
+                    {isUserRole ? "Switch to Dietitian" : "Switch to User"}
+                  </span>
+                  <span className="hidden group-hover:inline text-xs  text-white tracking-tighter rounded ">
+                    PROTOTYPE ONLY
+                  </span>
                 </span>
               </motion.button>
             </div>
@@ -282,26 +273,26 @@ const Navbar = () => {
                       handleRoleSwitch();
                       setIsMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 hover:from-orange-100 hover:to-red-100 transition-all duration-200 group"
+                    className="w-full flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-cyan-50 to-teal-50 border border-cyan-200 hover:from-cyan-100 hover:to-teal-100 transition-all duration-200 group"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: navButtons.length * 0.1 }}
                   >
-                    <span className="text-2xl group-hover:scale-110 transition-transform duration-200 text-orange-600">
+                    <span className="text-2xl group-hover:scale-110 transition-transform duration-200 text-cyan-600">
                       <FaExchangeAlt />
                     </span>
                     <div className="text-left flex-1">
-                      <span className="text-orange-800 font-medium block">
+                      <span className="text-cyan-800 font-medium block">
                         {isUserRole ? "Switch to Dietitian" : "Switch to User"}
                       </span>
-                      <span className="text-xs text-orange-600 font-medium block mt-1">
-                        🚀 PROTOTYPE ONLY
+                      <span className="text-xs text-cyan-600 font-medium block mt-1">
+                        PROTOTYPE ONLY
                       </span>
                     </div>
                     <svg
-                      className="w-5 h-5 text-orange-600 group-hover:translate-x-1 transition-transform duration-200"
+                      className="w-5 h-5 text-cyan-600 group-hover:translate-x-1 transition-transform duration-200"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"

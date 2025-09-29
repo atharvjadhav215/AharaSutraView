@@ -80,13 +80,23 @@ export default function Onboarding() {
           </div>
 
           {/* Footer */}
-          <div className="mt-8 md:mt-8 sm:mt-6 flex justify-center">
+          <div className="mt-8 md:mt-8 sm:mt-6 flex flex-col items-center gap-3">
             <button
               type="button"
               onClick={() => navigate("/login")}
               className="px-6 py-2 md:px-6 md:py-2 sm:px-4 sm:py-2 rounded-lg bg-transparent text-gray-600 border border-teal-200 hover:bg-teal-50 hover:border-teal-400 transition-all duration-200 text-sm md:text-sm sm:text-xs"
             >
               ← Back to Login
+            </button>
+
+            {/* Prototype Admin Button */}
+            <button
+              type="button"
+              onClick={() => navigate("/admin")}
+              className="px-4 py-1.5 rounded-lg bg-gray-200 text-gray-700 border border-gray-200 hover:bg-gray-200 hover:border-gray-300 transition-all duration-200 text-xs font-medium opacity-70"
+              title="Prototype Admin Access"
+            >
+              Admin (Prototype)
             </button>
           </div>
         </div>
