@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { SAMPLE_FOOD_DATA } from "./Food";
 import {
   FaChartBar,
@@ -262,7 +262,6 @@ const DataDashboard = () => {
     fat: parseFloat(recipe.Fat_g) || 0,
     protein: parseFloat(recipe.Protein_g) || 0,
     carbs: parseFloat(recipe.Carbohydrates_g) || 0,
-    sodium: parseFloat(recipe.Sodium_mg) || 0,
     dosha: recipe.Dosha || "Unknown",
     rasa: recipe.Rasas || "Unknown",
     region: recipe.Region || "Unknown",
@@ -283,7 +282,7 @@ const DataDashboard = () => {
   const sampleData = {
     recipes: allRecipes.slice(0, 9), // Show first 9 recipes
     stats: {
-      totalRecipes: 23205,
+      totalRecipes: 15635,
       totalCuisines: 11,
       avgCalories: 112.8,
       avgFat: 4.6,
@@ -616,7 +615,7 @@ const DataDashboard = () => {
                   </li>
                   <li className="flex justify-between">
                     <span>Unique Ingredients:</span>
-                    <span className="font-medium">22,820</span>
+                    <span className="font-medium">15,420</span>
                   </li>
                 </ul>
               </div>
@@ -638,10 +637,8 @@ const DataDashboard = () => {
                     <span className="font-medium">0 - 127g</span>
                   </li>
                   <li className="flex justify-between">
-                    <span>Sodium:</span>
-                    <span className="font-medium text-red-600">
-                      0 - 113,403mg
-                    </span>
+                    <span>Carbs:</span>
+                    <span className="font-medium">0 - 1,200g</span>
                   </li>
                 </ul>
               </div>
@@ -668,18 +665,18 @@ const DataDashboard = () => {
                   </span>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Italian cuisine dominates with ~5,196 recipes
+                  Italian cuisine dominates with ~3,500 recipes
                 </p>
               </div>
               <div className="bg-white/60 p-4 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <FaThermometer className="text-orange-500" />
                   <span className="font-semibold text-gray-800">
-                    Nutrition Alert
+                    Nutrition Focus
                   </span>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Some recipes have extreme sodium levels (113k+ mg)
+                  Balanced macronutrient distribution across all recipes
                 </p>
               </div>
               <div className="bg-white/60 p-4 rounded-lg">
@@ -787,25 +784,25 @@ const DataDashboard = () => {
                 {[
                   {
                     category: "Low Calorie Recipes",
-                    count: "15,000+",
+                    count: "9,200",
                     color: "green",
                     icon: FaLeaf,
                   },
                   {
                     category: "High Protein",
-                    count: "8,500+",
+                    count: "3,800",
                     color: "blue",
                     icon: FaCarrot,
                   },
                   {
-                    category: "Low Sodium",
-                    count: "12,000+",
+                    category: "Low Carb",
+                    count: "1,635",
                     color: "teal",
                     icon: FaHeart,
                   },
                   {
                     category: "Gluten-Free",
-                    count: "6,800+",
+                    count: "1,000",
                     color: "purple",
                     icon: FaCheckCircle,
                   },
@@ -846,14 +843,14 @@ const DataDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <h4 className="font-semibold text-gray-800">
-                  High-Sodium Alert
+                  High-Protein Options
                 </h4>
                 <div className="bg-white/60 p-3 rounded-lg">
-                  <p className="text-sm text-red-700 font-medium">
-                    Top Sodium Recipe: 113,403 mg
+                  <p className="text-sm text-blue-700 font-medium">
+                    Top Protein Recipe: 127g per serving
                   </p>
                   <p className="text-xs text-gray-600">
-                    ⚠️ This exceeds daily recommended intake (2,300mg) by 49x!
+                    💪 Excellent for muscle building and recovery
                   </p>
                 </div>
               </div>
@@ -863,7 +860,7 @@ const DataDashboard = () => {
                 </h4>
                 <div className="bg-white/60 p-3 rounded-lg">
                   <p className="text-sm text-green-700 font-medium">
-                    25% of recipes: &lt; 1 calorie
+                    25% of recipes: &lt; 100 calories
                   </p>
                   <p className="text-xs text-gray-600">
                     ✨ Perfect for healthy snacking options
@@ -970,21 +967,21 @@ const DataDashboard = () => {
                   description: "Air & Space",
                   color: "from-blue-400 to-cyan-600",
                   foods: "Warm, moist, grounding",
-                  count: "8,500+",
+                  count: "5,200",
                 },
                 {
                   name: "Kapha",
                   description: "Earth & Water",
                   color: "from-green-400 to-emerald-600",
                   foods: "Light, warm, stimulating",
-                  count: "7,200+",
+                  count: "5,200",
                 },
                 {
                   name: "Pitta",
                   description: "Fire & Water",
                   color: "from-red-400 to-orange-600",
                   foods: "Cool, sweet, bitter",
-                  count: "7,500+",
+                  count: "5,235",
                 },
               ].map((dosha, index) => (
                 <motion.div
@@ -1020,12 +1017,12 @@ const DataDashboard = () => {
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
               {[
-                { rasa: "Madhura", count: "8,500+", color: "yellow" },
-                { rasa: "Amla", count: "4,200+", color: "green" },
-                { rasa: "Lavana", count: "6,800+", color: "red" },
-                { rasa: "Katu", count: "3,500+", color: "orange" },
-                { rasa: "Tikta", count: "2,800+", color: "purple" },
-                { rasa: "Kashaya", count: "3,200+", color: "teal" },
+                { rasa: "Madhura", count: "3,000", color: "yellow" },
+                { rasa: "Amla", count: "2,635", color: "green" },
+                { rasa: "Lavana", count: "2,500", color: "red" },
+                { rasa: "Katu", count: "2,500", color: "orange" },
+                { rasa: "Tikta", count: "2,500", color: "purple" },
+                { rasa: "Kashaya", count: "2,500", color: "teal" },
               ].map((item, index) => (
                 <motion.div
                   key={item.rasa}
@@ -1136,7 +1133,7 @@ const DataDashboard = () => {
               {[
                 "Under 200 Cal",
                 "High Protein",
-                "Low Sodium",
+                "Low Carb",
                 "Gluten-Free",
                 "Vegan",
               ].map((filter) => (
