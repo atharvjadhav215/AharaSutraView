@@ -189,11 +189,7 @@ const DocumentModal = ({ document, isOpen, onClose }) => {
             <IoClose className="text-2xl" />
           </button>
 
-          {/* Document Info */}
-          <div className="absolute bottom-6 left-6 bg-black/50 hover:bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm transition-colors z-10">
-            <h3 className="font-bold text-lg">{document.title}</h3>
-            <p className="text-white/80 text-sm">{document.description}</p>
-          </div>
+       
         </motion.div>
       </motion.div>
     </AnimatePresence>
