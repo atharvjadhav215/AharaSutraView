@@ -1436,8 +1436,6 @@ export default function DietChart() {
 
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 text-gray-800 relative">
-     
-
       {/* Dynamic Background Layers */}
       <div className="absolute inset-0 -z-10">
         {BG_LAYERS.map((b) => (
@@ -1578,6 +1576,17 @@ export default function DietChart() {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
+                    // Create a download link for the PDF report
+                    const link = document.createElement("a");
+                    link.href = "/src/assets/Document/Report.pdf";
+                    link.download = "Diet_Chart_Report.pdf";
+                    link.target = "_blank";
+
+                    // Append to body, click, and remove
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
                     alert("Diet chart exported successfully!");
                   }}
                   className="px-4 md:px-6 py-2 md:py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-xs md:text-sm shadow-lg transition-all duration-200 flex items-center gap-1 md:gap-2 border-2 border-green-400"

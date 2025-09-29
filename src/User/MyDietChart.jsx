@@ -1167,6 +1167,17 @@ export default function MyDietChart() {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
+                      // Create a download link for the PDF report
+                      const link = document.createElement("a");
+                      link.href = "/src/assets/Document/Report.pdf";
+                      link.download = "Diet_Chart_Report.pdf";
+                      link.target = "_blank";
+
+                      // Append to body, click, and remove
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+
                       setSuccessMessage(
                         "Diet chart report downloaded and assigned to patient successfully!"
                       );
