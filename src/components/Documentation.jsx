@@ -1,254 +1,456 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaProjectDiagram,
+  FaFileImage,
+  FaFilePdf,
+  FaFilter,
+  FaSearch,
+  FaDownload,
+  FaExpand,
+  FaLayerGroup,
+  FaSitemap,
+  FaClipboardList,
+  FaFileAlt,
+  FaCogs,
+  FaShieldAlt,
+  FaExternalLinkAlt,
+  FaChartLine,
+} from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
+import Navbar from "../components/Navbar";
 
-const sections = [
+// Import all documentation assets
+import architectureImg from "../assets/Document/Architecture_Diagram.png";
+import ayurImg from "../assets/Document/Ayur.png";
+import flowDiagramImg from "../assets/Document/Flow_diagram.png";
+import useCaseImg from "../assets/Document/UseCase.png";
+import AdminImg from "../assets/Document/Admin_Sequence_Diagram.png";
+import DietitianImg from "../assets/Document/Dietitian_Sequence_Diagram.png";
+import PatientImg from "../assets/Document/Patient_Sequence_Diagram.png";
+
+// Individual diagrams - each as separate section
+const DOCUMENTATION_SECTIONS = [
   {
-    id: "usecase",
+    id: "architecture",
+    title: "System Architecture",
+    icon: FaProjectDiagram,
+    description: "System architecture overview and component relationships",
+    color: "#3B82F6",
+    src: architectureImg,
+    type: "image",
+  },
+  {
+    id: "flow-diagram",
+    title: "Application Flow Diagram",
+    icon: FaLayerGroup,
+    description: "Complete application flow and user navigation paths",
+    color: "#10B981",
+    src: flowDiagramImg,
+    type: "image",
+  },
+  {
+    id: "use-case",
     title: "Use Case Diagram",
-    icon: "👥",
-    src: "/assets/usecase.png",
-    color: "from-white to-white",
-    bgColor: "bg-white",
-    textColor: "text-gray-800",
+    icon: FaProjectDiagram,
+    description: "User interactions and system use cases",
+    color: "#10B981",
+    src: useCaseImg,
+    type: "image",
+  },
+
+  {
+    id: "admin-sequence",
+    title: "Admin Sequence Diagram",
+    icon: FaSitemap,
+    description: "Admin panel interactions and workflows",
+    color: "#8B5CF6",
+    src: AdminImg,
+    type: "image",
   },
   {
-    id: "flow",
-    title: "Flow Chart",
-    icon: "🔄",
-    src: "/assets/flowchart.png",
-    color: "from-white to-white",
-    bgColor: "bg-white",
-    textColor: "text-gray-800",
+    id: "dietitian-sequence",
+    title: "Dietitian Sequence Diagram",
+    icon: FaSitemap,
+    description: "Dietitian dashboard and patient management flows",
+    color: "#8B5CF6",
+    src: DietitianImg,
+    type: "image",
   },
   {
-    id: "er",
-    title: "ER Diagram",
-    icon: "🗄️",
-    src: "/assets/er.png",
-    color: "from-white to-white",
-    bgColor: "bg-white",
-    textColor: "text-gray-800",
+    id: "patient-sequence",
+    title: "Patient Sequence Diagram",
+    icon: FaSitemap,
+    description: "Patient portal interactions and diet chart access",
+    color: "#8B5CF6",
+    src: PatientImg,
+    type: "image",
   },
   {
-    id: "prototype",
-    title: "Prototype Video",
-    icon: "🎬",
-    src: "/assets/prototype.mp4",
-    color: "from-white to-white",
-    bgColor: "bg-white",
-    textColor: "text-gray-800",
-    isVideo: true,
+    id: "sample-report",
+    title: "Nutrition Report",
+    icon: FaClipboardList,
+    description: "Analysis and personalized recommendations",
+    color: "#F59E0B",
+    src: "/src/assets/Document/Sample_Report.pdf",
+    type: "pdf",
+  },
+  {
+    id: "tech-report",
+    title: "Technology Report",
+    icon: FaClipboardList,
+    description: "Technical justification and technology stack documentation",
+    color: "#F59E0B",
+    src: "/src/assets/Document/Technology Justification Report.pdf",
+    type: "pdf",
   },
 ];
 
-const Documentation = () => {
-  const [mounted, setMounted] = useState(false);
-  const [lightbox, setLightbox] = useState(null);
-  const [hoveredSection, setHoveredSection] = useState(null);
-  const [isAnimating, setIsAnimating] = useState(false);
+// Background Layers similar to Dashboard
+const BG_LAYERS = [
+  {
+    id: 0,
+    gradient:
+      "radial-gradient( circle at 10% 20%, rgba(59,130,246,0.14), transparent 20% ), linear-gradient(45deg,#EBF8FF,#E0F2FF)",
+  },
+  {
+    id: 1,
+    gradient:
+      "radial-gradient( circle at 80% 10%, rgba(16,185,129,0.12), transparent 18% ), linear-gradient(135deg,#ECFDF5,#D1FAE5)",
+  },
+  {
+    id: 2,
+    gradient:
+      "radial-gradient( circle at 30% 80%, rgba(139,92,246,0.10), transparent 18% ), linear-gradient(90deg,#F3E8FF,#EDE9FE)",
+  },
+  {
+    id: 3,
+    gradient:
+      "radial-gradient( circle at 60% 40%, rgba(245,158,11,0.10), transparent 18% ), linear-gradient(120deg,#FFFBEB,#FEF3C7)",
+  },
+];
 
-  useEffect(() => {
-    setMounted(true);
-    // Add entrance animation delay
-    setTimeout(() => setIsAnimating(true), 100);
-  }, []);
-
-  const openLightbox = (type, src, title) => {
-    setLightbox({ type, src, title });
-    document.body.style.overflow = "hidden";
-  };
-
-  const closeLightbox = () => {
-    setLightbox(null);
-    document.body.style.overflow = "unset";
-  };
+// Document Modal Component
+const DocumentModal = ({ document, isOpen, onClose }) => {
+  if (!isOpen || !document) return null;
 
   return (
-    <div
-      className={`h-[910px] bg-gradient-to-l from-white to-[#f1eacf]  transition-all duration-1000 ${
-        mounted ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      {/* Main Content */}
-      <main className="relative z-10 pt-24 px-8 ">
-        <div className="w-full mx-auto">
-          {/* Four Main Sections Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            {sections.map((section, index) => (
-              <div
-                key={section.id}
-                className={`transform transition-all duration-700 delay-${
-                  index * 200
-                } ${
-                  isAnimating
-                    ? "translate-y-0 opacity-100"
-                    : "translate-y-12 opacity-0"
-                }`}
-                onMouseEnter={() => setHoveredSection(section.id)}
-                onMouseLeave={() => setHoveredSection(null)}
-              >
-                <div
-                  className={`relative group cursor-pointer h-96 rounded-3xl overflow-hidden shadow-lg transition-all duration-700 hover:scale-105 hover:shadow-2xl border-2 border-gray-100 hover:border-blue-200 ${
-                    hoveredSection === section.id
-                      ? "scale-105 shadow-2xl border-blue-200"
-                      : "scale-100"
-                  }`}
-                >
-                  {/* Pure White Background */}
-                  <div className="absolute inset-0 bg-white"></div>
-
-                  {/* Creative Hover Effects */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
-                    {/* Floating Particles */}
-                    <div className="absolute top-4 left-4 w-2 h-2 bg-blue-400 rounded-full animate-bounce delay-100"></div>
-                    <div className="absolute top-8 right-8 w-1 h-1 bg-purple-400 rounded-full animate-bounce delay-300"></div>
-                    <div className="absolute bottom-6 left-6 w-1.5 h-1.5 bg-green-400 rounded-full animate-bounce delay-500"></div>
-                    <div className="absolute bottom-4 right-4 w-2 h-2 bg-pink-400 rounded-full animate-bounce delay-700"></div>
-
-                    {/* Rotating Border */}
-                    <div className="absolute inset-0 border-2 border-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl animate-spin-slow opacity-30"></div>
-
-                    {/* Pulsing Glow */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-100/50 via-purple-100/50 to-pink-100/50 rounded-3xl animate-pulse-glow"></div>
-                  </div>
-
-                  {/* Content */}
-                  <div
-                    className="relative z-10 h-full flex items-center justify-center p-8 text-gray-800 cursor-pointer"
-                    onClick={() =>
-                      openLightbox(
-                        section.isVideo ? "video" : "img",
-                        section.src,
-                        section.title
-                      )
-                    }
-                  >
-                    {/* Only Title with Creative Animations */}
-                    <h2 className="text-4xl md:text-4xl font-bold text-center leading-tight transform transition-all duration-700 group-hover:scale-110 group-hover:text-blue-600 group-hover:drop-shadow-lg group-hover:animate-wiggle text-teal-800">
-                      {section.title}
-                    </h2>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-
-      {/* Enhanced Full-Screen Modal */}
-      {lightbox && (
-        <div
-          onClick={closeLightbox}
-          className="fixed inset-0 bg-white/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300"
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-white z-50 flex items-center justify-center"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="w-screen h-screen flex items-center justify-center relative"
+          onClick={(e) => e.stopPropagation()}
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative max-w-8xl w-full max-h-[120vh] bg-transparent rounded-2xl overflow-hidden"
-          >
-            {/* Close Button */}
-            <button
-              onClick={closeLightbox}
-              className="absolute right-4 top-4 z-20 bg-black/50 backdrop-blur-sm rounded-full p-3 shadow-lg hover:bg-black/30 cursor-pointer transition-all duration-200"
-            >
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-
-            {/* Content */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-              {lightbox.type === "img" ? (
-                <img
-                  src={lightbox.src}
-                  alt={lightbox.title}
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBmb3VuZDwvdGV4dD48L3N2Zz4=";
-                  }}
-                  className="w-full h-[80vh] p-6 object-contain rounded-xl shadow-2xl"
-                />
-              ) : (
-                <video
-                  controls
-                  autoPlay
-                  className="w-full h-[70vh] bg-black rounded-xl shadow-2xl"
-                  poster="/assets/video-poster.png"
-                >
-                  <source src={lightbox.src} type="video/mp4" />
-                  Your browser does not support video playback.
-                </video>
-              )}
-
-              {/* Title */}
-              <div className="mt-4 text-center">
-                <h3 className="text-2xl font-bold text-black mb-2">
-                  {lightbox.title}
+          {document.type === "image" ? (
+            <img
+              src={document.src}
+              alt={document.title}
+              className="max-w-full max-h-full object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <div className="w-screen h-screen flex items-center justify-center bg-gray-100">
+              <div className="text-center">
+                <FaFilePdf className="text-8xl text-red-600 mx-auto mb-6" />
+                <h3 className="text-3xl font-bold text-gray-800 mb-4">
+                  {document.title}
                 </h3>
-                <p className="text-black/70">
-                  {lightbox.type === "video"
-                    ? "Click outside to close"
-                    : "Click outside to close"}
+                <p className="text-lg text-gray-600 mb-6">
+                  {document.description}
                 </p>
+                <a
+                  href={document.src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-4 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors inline-flex items-center gap-3 mx-auto text-lg"
+                >
+                  <FaDownload />
+                  Open PDF Document
+                </a>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* Custom Animations */}
-      <style>{`
-        @keyframes wiggle {
-          0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(2deg); }
-          75% { transform: rotate(-2deg); }
-        }
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-          50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
-        }
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(50px) scale(0.8);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes float-up {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-        @keyframes rainbow-border {
-          0% { border-color: #3b82f6; }
-          25% { border-color: #8b5cf6; }
-          50% { border-color: #ec4899; }
-          75% { border-color: #10b981; }
-          100% { border-color: #3b82f6; }
-        }
-        .animate-wiggle { animation: wiggle 0.5s ease-in-out infinite; }
-        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-        .animate-slide-in-up { animation: slideInUp 1s ease-out forwards; }
-        .animate-spin-slow { animation: spin-slow 3s linear infinite; }
-        .animate-float-up { animation: float-up 3s ease-in-out infinite; }
-        .animate-rainbow-border { animation: rainbow-border 2s linear infinite; }
-      `}</style>
-    </div>
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 w-12 h-12 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center transition-colors z-10"
+          >
+            <IoClose className="text-2xl" />
+          </button>
+
+          {/* Document Info */}
+          <div className="absolute bottom-6 left-6 bg-black/50 hover:bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm transition-colors z-10">
+            <h3 className="font-bold text-lg">{document.title}</h3>
+            <p className="text-white/80 text-sm">{document.description}</p>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
-export default Documentation;
+export default function Documentation() {
+  const [activeSection, setActiveSection] = useState("architecture");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState("all");
+  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Filter documents based on search and type
+  const filteredDocuments = useMemo(() => {
+    let docs = DOCUMENTATION_SECTIONS;
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      docs = docs.filter(
+        (doc) =>
+          doc.title.toLowerCase().includes(query) ||
+          doc.description.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply type filter
+    if (filterType !== "all") {
+      docs = docs.filter((doc) => doc.type === filterType);
+    }
+
+    return docs;
+  }, [searchQuery, filterType]);
+
+  const handleDocumentClick = (document) => {
+    setSelectedDocument(document);
+    setIsModalOpen(true);
+  };
+
+  const currentDocument = DOCUMENTATION_SECTIONS.find(
+    (s) => s.id === activeSection
+  );
+
+  return (
+    <div className="w-screen bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50 text-gray-800 overflow-hidden relative">
+      {/* Navbar */}
+      <Navbar />
+      <div className="mt-12 md:mt-16 px-3 sm:px-4 md:px-6 py-3 sm:py-4 h-[calc(100vh-4rem)]">
+        <div className="w-full mx-auto max-w-7xl h-full">
+          <div className="flex flex-col lg:flex-row md:gap-6 gap-1 h-full">
+            {/* Sidebar - Individual Sections */}
+            <div className="lg:w-80 shrink-0">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white/80 backdrop-blur-lg rounded-2xl p-2  lg:h-full flex lg:flex-col"
+              >
+                <div className="flex flex-col gap-2">
+                  {/* Data Dashboard Button */}
+                  <motion.a
+                    href="https://aharasutra-view-rgt3.vercel.app/data-dashboard"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.0, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="w-full p-2 mb-0 md:mb-2 rounded-xl  bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                      <FaChartLine className="text-lg text-white" />
+                    </div>
+                    <div className="flex-1 lg:flex-1">
+                      <div className="font-bold text-sm lg:text-sm">
+                        Data Dashboard
+                      </div>
+                      <div className="text-emerald-100 text-xs">
+                        Analytics & Insights
+                      </div>
+                    </div>
+                    <FaExternalLinkAlt className="text-sm opacity-80" />
+                  </motion.a>
+
+                  {/* Mobile: Simple Dropdown Selector */}
+                  <div className="lg:hidden ">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Choose Document Type
+                    </label>
+                    <select
+                      value={activeSection}
+                      onChange={(e) => setActiveSection(e.target.value)}
+                      className="w-full p-3 rounded-lg border-2 border-gray-300 bg-white text-gray-700 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm appearance-none"
+                    >
+                      {filteredDocuments.map((section) => (
+                        <option key={section.id} value={section.id}>
+                          📄 {section.title} ({section.type.toUpperCase()})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Desktop: Vertical list for documents */}
+                <div className="hidden lg:flex flex-col space-y-2 flex-1 overflow-y-auto">
+                  {filteredDocuments.map((section) => (
+                    <motion.button
+                      key={section.id}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setActiveSection(section.id)}
+                      className={`w-full p-2 rounded-xl transition-all duration-300 flex items-center gap-3 text-left group ${
+                        activeSection === section.id
+                          ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                          : "bg-white/60 hover:bg-white/80 text-gray-700 hover:shadow-md"
+                      }`}
+                    >
+                      <div
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
+                          activeSection === section.id
+                            ? "bg-white/20"
+                            : "bg-gradient-to-r from-blue-400 to-purple-400"
+                        }`}
+                        style={
+                          activeSection !== section.id
+                            ? { backgroundColor: section.color }
+                            : {}
+                        }
+                      >
+                        <section.icon className="text-lg text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-sm">
+                          {section.title}
+                        </div>
+                        <div
+                          className={`text-xs opacity-80 ${
+                            activeSection === section.id
+                              ? "text-white/80"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          {section.type.toUpperCase()}
+                        </div>
+                      </div>
+                      {activeSection === section.id && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="w-2 h-2 bg-white rounded-full"
+                        />
+                      )}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Main Content - Single Document View */}
+            <div className="flex-1 min-h-0">
+              <motion.div
+                key={activeSection}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 h-full flex flex-col"
+              >
+                {/* Section Header */}
+                <div className="p-4 sm:p-6 pb-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="w-8 h-8 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: currentDocument?.color }}
+                    >
+                      {currentDocument &&
+                        React.createElement(currentDocument.icon, {
+                          className: "text-white text-lg",
+                        })}
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800">
+                      {currentDocument?.title}
+                    </h2>
+                  </div>
+                  <p className="text-gray-600">
+                    {currentDocument?.description}
+                  </p>
+                </div>
+
+                {/* Document Content */}
+                {currentDocument ? (
+                  <div className="flex-1 flex items-center justify-center h-[calc(100vh-300px)] lg:h-[calc(100vh-300px)]">
+                    {currentDocument.type === "image" ? (
+                      <div className="w-full h-full flex items-center justify-center relative overflow-hidden lg:overflow-visible">
+                        <img
+                          src={currentDocument.src}
+                          alt={currentDocument.title}
+                          className="w-full h-full max-h-[38vh] lg:max-h-full lg:max-w-full  object-contain cursor-pointer hover:scale-[1.02] transition-transform duration-200"
+                          onClick={() => handleDocumentClick(currentDocument)}
+                        />
+                        <button
+                          onClick={() => handleDocumentClick(currentDocument)}
+                          className="absolute bottom-4 right-4 px-4 py-2 bg-blue-600/90 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 backdrop-blur-sm  sm:flex lg:flex"
+                        >
+                          <FaExpand />
+                          Full Size
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center p-4 lg:p-0">
+                        <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-xl p-4 lg:p-8 text-center max-w-md w-full">
+                          <FaFilePdf className="text-4xl lg:text-6xl text-red-600 mx-auto mb-3 lg:mb-4" />
+                          <h3 className="text-lg lg:text-xl font-bold text-gray-800 mb-2">
+                            {currentDocument.title}
+                          </h3>
+                          <p className="text-sm lg:text-base text-gray-600 mb-4">
+                            {currentDocument.description}
+                          </p>
+                          <a
+                            href={currentDocument.src}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 lg:px-6 py-2 lg:py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors inline-flex items-center gap-2 text-sm lg:text-base"
+                          >
+                            <FaDownload />
+                            <span className="hidden sm:inline">
+                              Open PDF Document
+                            </span>
+                            <span className="sm:hidden">Open PDF</span>
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <FaFileAlt className="text-6xl text-gray-300 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-gray-600 mb-2">
+                      No Document Selected
+                    </h3>
+                    <p className="text-gray-500">
+                      Select a document from the sidebar to view it here.
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Document Modal */}
+      <DocumentModal
+        document={selectedDocument}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedDocument(null);
+        }}
+      />
+    </div>
+  );
+}
