@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   FaProjectDiagram,
   FaFileImage,
@@ -22,12 +22,13 @@ import Navbar from "../components/Navbar";
 
 // Import all documentation assets
 import architectureImg from "../assets/Document/Architecture_Diagram.png";
-import ayurImg from "../assets/Document/Ayur.png";
 import flowDiagramImg from "../assets/Document/Flow_diagram.png";
 import useCaseImg from "../assets/Document/UseCase.png";
 import AdminImg from "../assets/Document/Admin_Sequence_Diagram.png";
 import DietitianImg from "../assets/Document/Dietitian_Sequence_Diagram.png";
 import PatientImg from "../assets/Document/Patient_Sequence_Diagram.png";
+import sampleReportPdf from "../assets/Document/Sample_Report.pdf";
+import techReportPdf from "../assets/Document/Technology Justification Report.pdf";
 
 // Individual diagrams - each as separate section
 const DOCUMENTATION_SECTIONS = [
@@ -92,7 +93,7 @@ const DOCUMENTATION_SECTIONS = [
     icon: FaClipboardList,
     description: "Analysis and personalized recommendations",
     color: "#F59E0B",
-    src: "/src/assets/Document/Sample_Report.pdf",
+    src: sampleReportPdf,
     type: "pdf",
   },
   {
@@ -101,7 +102,7 @@ const DOCUMENTATION_SECTIONS = [
     icon: FaClipboardList,
     description: "Technical justification and technology stack documentation",
     color: "#F59E0B",
-    src: "/src/assets/Document/Technology Justification Report.pdf",
+    src: techReportPdf,
     type: "pdf",
   },
 ];
@@ -188,8 +189,6 @@ const DocumentModal = ({ document, isOpen, onClose }) => {
           >
             <IoClose className="text-2xl" />
           </button>
-
-       
         </motion.div>
       </motion.div>
     </AnimatePresence>
@@ -198,32 +197,11 @@ const DocumentModal = ({ document, isOpen, onClose }) => {
 
 export default function Documentation() {
   const [activeSection, setActiveSection] = useState("architecture");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState("all");
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Filter documents based on search and type
-  const filteredDocuments = useMemo(() => {
-    let docs = DOCUMENTATION_SECTIONS;
-
-    // Apply search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      docs = docs.filter(
-        (doc) =>
-          doc.title.toLowerCase().includes(query) ||
-          doc.description.toLowerCase().includes(query)
-      );
-    }
-
-    // Apply type filter
-    if (filterType !== "all") {
-      docs = docs.filter((doc) => doc.type === filterType);
-    }
-
-    return docs;
-  }, [searchQuery, filterType]);
+  // Get all documents
+  const filteredDocuments = DOCUMENTATION_SECTIONS;
 
   const handleDocumentClick = (document) => {
     setSelectedDocument(document);
