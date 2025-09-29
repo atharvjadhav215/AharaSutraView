@@ -19,6 +19,19 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Routes where navbar should show only logo with no functionality
+  const restrictedRoutes = [
+    "/login",
+    "/onboarding",
+    "/documentation",
+    "/data-dashboard",
+    "/check-info",
+    "/admin",
+  ];
+
+  // Check if current route is restricted
+  const isRestrictedRoute = restrictedRoutes.includes(location.pathname);
+
   // Determine user role based on current route
   const isUserRole =
     location.pathname === "/uhome" ||
@@ -32,8 +45,11 @@ const Navbar = () => {
     location.pathname === "/dashboard" ||
     location.pathname === "/my-diet-chart";
 
-  // Handle logo click → navigate to role-based home
+  // Handle logo click → navigate to role-based home (disabled on restricted routes)
   const handleLogoClick = () => {
+    if (isRestrictedRoute) {
+      return; // Do nothing on restricted routes
+    }
     if (isUserRole) {
       navigate("/uhome");
     } else if (isDietitianRole) {
@@ -82,9 +98,11 @@ const Navbar = () => {
           <div className="flex justify-between items-center md:h-12 h-8 md:mt-0 mt-1">
             {/* Logo with Home Text Animation */}
             <motion.div
-              className="flex-1 flex justify-start items-center relative cursor-pointer"
+              className={`flex-1 flex justify-start items-center relative ${
+                isRestrictedRoute ? "" : "cursor-pointer"
+              }`}
               onClick={handleLogoClick}
-              whileHover="hover"
+              whileHover={isRestrictedRoute ? {} : "hover"}
               initial="initial"
             >
               {/* Logo */}
@@ -94,7 +112,7 @@ const Navbar = () => {
                 className="h-10 w-auto object-cover"
                 variants={{
                   initial: { opacity: 1 },
-                  hover: { opacity: 0 },
+                  hover: { opacity: isRestrictedRoute ? 1 : 0 },
                 }}
                 transition={{ duration: 0.3 }}
               />
@@ -104,7 +122,7 @@ const Navbar = () => {
                 className="absolute flex items-center gap-2 left-0"
                 variants={{
                   initial: { opacity: 0 },
-                  hover: { opacity: 1 },
+                  hover: { opacity: isRestrictedRoute ? 0 : 1 },
                 }}
                 transition={{ duration: 0.3 }}
               >
@@ -120,77 +138,81 @@ const Navbar = () => {
             </motion.div>
 
             {/* Desktop Navigation Buttons */}
-            <div className="hidden md:flex gap-4">
-              {navButtons.map((button, index) => (
-                <button
-                  key={index}
-                  onClick={() => navigate(button.path)}
-                  className="px-4 py-2 text-sm bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium"
-                >
-                  {button.label}
-                </button>
-              ))}
+            {!isRestrictedRoute && (
+              <div className="hidden md:flex gap-4">
+                {navButtons.map((button, index) => (
+                  <button
+                    key={index}
+                    onClick={() => navigate(button.path)}
+                    className="px-4 py-2 text-sm bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium"
+                  >
+                    {button.label}
+                  </button>
+                ))}
 
-              {/* Prototype Role Switch Button */}
-              <motion.button
-                onClick={handleRoleSwitch}
-                className="px-1 py-2 text-xs bg-gradient-to-r from-gray-400 to-gray-300 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium flex items-center gap-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                title="🚀 PROTOTYPE ONLY - Switch between User & Dietitian roles for testing"
-              >
-                <FaExchangeAlt className="w-3 h-3" />
-                <span className="relative group">
-                  <span className="group-hover:hidden">
-                    {isUserRole ? "Switch to Dietitian" : "Switch to User"}
+                {/* Prototype Role Switch Button */}
+                <motion.button
+                  onClick={handleRoleSwitch}
+                  className="px-1 py-2 text-xs bg-gradient-to-r from-gray-400 to-gray-300 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium flex items-center gap-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  title="🚀 PROTOTYPE ONLY - Switch between User & Dietitian roles for testing"
+                >
+                  <FaExchangeAlt className="w-3 h-3" />
+                  <span className="relative group">
+                    <span className="group-hover:hidden">
+                      {isUserRole ? "Switch to Dietitian" : "Switch to User"}
+                    </span>
+                    <span className="hidden group-hover:inline text-xs  text-white tracking-tighter rounded ">
+                      PROTOTYPE ONLY
+                    </span>
                   </span>
-                  <span className="hidden group-hover:inline text-xs  text-white tracking-tighter rounded ">
-                    PROTOTYPE ONLY
-                  </span>
-                </span>
-              </motion.button>
-            </div>
+                </motion.button>
+              </div>
+            )}
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <motion.button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 mb-1 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg"
-                whileTap={{ scale: 0.95 }}
-                animate={{ rotate: isMenuOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <svg
-                  className="w-3 h-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            {!isRestrictedRoute && (
+              <div className="md:hidden">
+                <motion.button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="p-2 mb-1 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg"
+                  whileTap={{ scale: 0.95 }}
+                  animate={{ rotate: isMenuOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  {isMenuOpen ? (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  ) : (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  )}
-                </svg>
-              </motion.button>
-            </div>
+                  <svg
+                    className="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    {isMenuOpen ? (
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    ) : (
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 6h16M4 12h16M4 18h16"
+                      />
+                    )}
+                  </svg>
+                </motion.button>
+              </div>
+            )}
           </div>
         </div>
       </nav>
 
       {/* Mobile Menu Card */}
       <AnimatePresence>
-        {isMenuOpen && (
+        {!isRestrictedRoute && isMenuOpen && (
           <>
             {/* Backdrop */}
             <motion.div
