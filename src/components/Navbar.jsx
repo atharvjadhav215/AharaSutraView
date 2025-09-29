@@ -7,6 +7,10 @@ import {
   FaUserPlus,
   FaTachometerAlt,
   FaHome,
+  FaExchangeAlt,
+  FaFlask,
+  FaUserMd,
+  FaUsers,
 } from "react-icons/fa";
 import image1 from "../assets/image1.png";
 
@@ -36,6 +40,15 @@ const Navbar = () => {
       navigate("/dhome");
     } else {
       navigate("/"); // fallback (like landing page or login)
+    }
+  };
+
+  // Handle prototype role switching
+  const handleRoleSwitch = () => {
+    if (isUserRole) {
+      navigate("/dhome"); // Switch to Dietitian interface
+    } else if (isDietitianRole) {
+      navigate("/uhome"); // Switch to User interface
     }
   };
 
@@ -117,6 +130,34 @@ const Navbar = () => {
                   {button.label}
                 </button>
               ))}
+
+              {/* Prototype Role Switch Button */}
+              <motion.button
+                onClick={handleRoleSwitch}
+                className="px-4 py-2 text-sm bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium flex items-center gap-2"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                title="🚀 PROTOTYPE ONLY - Switch between User & Dietitian roles for testing"
+              >
+                <FaExchangeAlt className="w-3 h-3" />
+                <span className="relative">
+                  {isUserRole ? (
+                    <>
+                      Switch to Dietitian
+                      <span className="absolute -top-6 left-0 text-xs bg-orange-100 text-orange-800 px-1 rounded opacity-0 hover:opacity-100 transition-opacity whitespace-nowrap">
+                        PROTOTYPE
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      Switch to User
+                      <span className="absolute -top-6 left-0 text-xs bg-orange-100 text-orange-800 px-1 rounded opacity-0 hover:opacity-100 transition-opacity whitespace-nowrap">
+                        PROTOTYPE
+                      </span>
+                    </>
+                  )}
+                </span>
+              </motion.button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -234,6 +275,45 @@ const Navbar = () => {
                       </svg>
                     </motion.button>
                   ))}
+
+                  {/* Prototype Role Switch Button */}
+                  <motion.button
+                    onClick={() => {
+                      handleRoleSwitch();
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 hover:from-orange-100 hover:to-red-100 transition-all duration-200 group"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: navButtons.length * 0.1 }}
+                  >
+                    <span className="text-2xl group-hover:scale-110 transition-transform duration-200 text-orange-600">
+                      <FaExchangeAlt />
+                    </span>
+                    <div className="text-left flex-1">
+                      <span className="text-orange-800 font-medium block">
+                        {isUserRole ? "Switch to Dietitian" : "Switch to User"}
+                      </span>
+                      <span className="text-xs text-orange-600 font-medium block mt-1">
+                        🚀 PROTOTYPE ONLY
+                      </span>
+                    </div>
+                    <svg
+                      className="w-5 h-5 text-orange-600 group-hover:translate-x-1 transition-transform duration-200"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </motion.button>
                 </div>
 
                 {/* Menu Footer */}
