@@ -1,417 +1,421 @@
 import React, { useState } from "react";
-import {
-  FaEye,
-  FaCheck,
-  FaTimes,
-  FaSearch,
-  FaFilter,
-  FaUserMd,
-  FaIdCard,
-  FaFileAlt,
-} from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import "../EnhancedEffects.css";
 
 const Admin = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
-
-  // Mock data for dietitian requests
   const [requests, setRequests] = useState([
     {
       id: 1,
       name: "Dr. Priya Sharma",
-      email: "priya.sharma@email.com",
-      phone: "+91 98765 43210",
-      specialization: "Clinical Nutrition",
-      experience: "5 years",
+      hospitalName: "Apollo Hospital",
+      location: "Mumbai, Maharashtra",
+      licensePhoto:
+        "https://plus.unsplash.com/premium_photo-1661777193045-49f1bbaafd95?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bGljZW5zZXxlbnwwfHwwfHx8MA%3D%3D",
+      panCard:
+        "https://plus.unsplash.com/premium_photo-1755994149244-d7887690b774?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGFuQ2FyZHxlbnwwfHwwfHx8MA%3D%3D",
+      idPhoto:
+        "https://images.unsplash.com/photo-1649660289281-b6da5dacc12c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aWQlMjBzaXhlJTIwcGhvdG98ZW58MHx8MHx8fDA%3D",
       status: "pending",
       submittedDate: "2024-01-15",
-      documents: {
-        license:
-          "https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Medical+License",
-        panCard:
-          "https://via.placeholder.com/400x300/2196F3/FFFFFF?text=PAN+Card",
-        idPhoto:
-          "https://via.placeholder.com/400x300/FF9800/FFFFFF?text=ID+Photo",
-      },
+      email: "priya.sharma@apollo.com",
+      phone: "+91 98765 43210",
     },
     {
       id: 2,
       name: "Dr. Rajesh Kumar",
-      email: "rajesh.kumar@email.com",
-      phone: "+91 87654 32109",
-      specialization: "Sports Nutrition",
-      experience: "8 years",
+      hospitalName: "Fortis Healthcare",
+      location: "Delhi, NCR",
+      licensePhoto:
+        "https://plus.unsplash.com/premium_photo-1661777193045-49f1bbaafd95?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bGljZW5zZXxlbnwwfHwwfHx8MA%3D%3D",
+      panCard:
+        "https://plus.unsplash.com/premium_photo-1755994149244-d7887690b774?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGFuQ2FyZHxlbnwwfHwwfHx8MA%3D%3D",
+      idPhoto:
+        "https://images.unsplash.com/photo-1649660289281-b6da5dacc12c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aWQlMjBzaXhlJTIwcGhvdG98ZW58MHx8MHx8fDA%3D",
       status: "pending",
       submittedDate: "2024-01-14",
-      documents: {
-        license:
-          "https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Medical+License",
-        panCard:
-          "https://via.placeholder.com/400x300/2196F3/FFFFFF?text=PAN+Card",
-        idPhoto:
-          "https://via.placeholder.com/400x300/FF9800/FFFFFF?text=ID+Photo",
-      },
+      email: "rajesh.kumar@fortis.com",
+      phone: "+91 87654 32109",
     },
     {
       id: 3,
       name: "Dr. Anjali Patel",
-      email: "anjali.patel@email.com",
-      phone: "+91 76543 21098",
-      specialization: "Pediatric Nutrition",
-      experience: "3 years",
+      hospitalName: "Max Hospital",
+      location: "Bangalore, Karnataka",
+      licensePhoto:
+        "https://plus.unsplash.com/premium_photo-1661777193045-49f1bbaafd95?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bGljZW5zZXxlbnwwfHwwfHx8MA%3D%3D",
+      panCard:
+        "https://plus.unsplash.com/premium_photo-1755994149244-d7887690b774?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGFuQ2FyZHxlbnwwfHwwfHx8MA%3D%3D",
+      idPhoto:
+        "https://images.unsplash.com/photo-1649660289281-b6da5dacc12c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aWQlMjBzaXhlJTIwcGhvdG98ZW58MHx8MHx8fDA%3D",
       status: "approved",
-      submittedDate: "2024-01-13",
-      documents: {
-        license:
-          "https://via.placeholder.com/400x300/4CAF50/FFFFFF?text=Medical+License",
-        panCard:
-          "https://via.placeholder.com/400x300/2196F3/FFFFFF?text=PAN+Card",
-        idPhoto:
-          "https://via.placeholder.com/400x300/FF9800/FFFFFF?text=ID+Photo",
-      },
+      submittedDate: "2024-01-10",
+      email: "anjali.patel@max.com",
+      phone: "+91 76543 21098",
     },
   ]);
 
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [filter, setFilter] = useState("all");
+
+  const filteredRequests = requests.filter((request) => {
+    if (filter === "all") return true;
+    return request.status === filter;
+  });
+
   const handleApprove = (id) => {
-    setRequests(
-      requests.map((req) =>
-        req.id === id ? { ...req, status: "approved" } : req
-      )
+    setRequests((prev) =>
+      prev.map((req) => (req.id === id ? { ...req, status: "approved" } : req))
     );
   };
 
   const handleReject = (id) => {
-    setRequests(
-      requests.map((req) =>
-        req.id === id ? { ...req, status: "rejected" } : req
-      )
+    setRequests((prev) =>
+      prev.map((req) => (req.id === id ? { ...req, status: "rejected" } : req))
     );
   };
 
-  const openImageModal = (imageUrl, title) => {
-    setSelectedImage({ url: imageUrl, title });
+  const openDocument = (request, docType) => {
+    setSelectedRequest(request);
+    setSelectedDocument(docType);
+    setIsFullscreen(true);
   };
 
-  const closeImageModal = () => {
-    setSelectedImage(null);
+  const closeFullscreen = () => {
+    setIsFullscreen(false);
+    setSelectedDocument(null);
+    setSelectedRequest(null);
   };
-
-  const filteredRequests = requests.filter((request) => {
-    const matchesSearch =
-      request.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.specialization.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesFilter =
-      filterStatus === "all" || request.status === filterStatus;
-
-    return matchesSearch && matchesFilter;
-  });
 
   const getStatusColor = (status) => {
     switch (status) {
       case "approved":
-        return "bg-green-100 text-green-800";
+        return "text-green-600 bg-green-100";
       case "rejected":
-        return "bg-red-100 text-red-800";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "text-red-600 bg-red-100";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "text-yellow-600 bg-yellow-100";
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case "approved":
+        return "✓";
+      case "rejected":
+        return "✗";
+      default:
+        return "⏳";
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 pt-16">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Dietitian Verification
-          </h1>
-          <p className="text-gray-600">
-            Review and approve dietitian registration requests
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-cyan-50 to-white p-6">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8 mt-16"
+      >
+        <h1 className="text-4xl font-bold gradient-text-enhanced epunda-slab-bold mb-2">
+          Admin Dashboard
+        </h1>
+        <p className="text-gray-600 epunda-slab-regular">
+          Review and manage dietitian registration requests
+        </p>
+      </motion.div>
 
-        {/* Search and Filter */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search by name, email, or specialization..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <FaFilter className="text-gray-400" />
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      {/* Stats Cards */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
+      >
+        {[
+          {
+            label: "Total Requests",
+            value: requests.length,
+            color: "bg-blue-500",
+          },
+          {
+            label: "Pending",
+            value: requests.filter((r) => r.status === "pending").length,
+            color: "bg-yellow-500",
+          },
+          {
+            label: "Approved",
+            value: requests.filter((r) => r.status === "approved").length,
+            color: "bg-green-500",
+          },
+          {
+            label: "Rejected",
+            value: requests.filter((r) => r.status === "rejected").length,
+            color: "bg-red-500",
+          },
+        ].map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1 + index * 0.1 }}
+            className="bg-white rounded-xl shadow-floating p-6 card-enhanced"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 epunda-slab-regular text-sm">
+                  {stat.label}
+                </p>
+                <p className="text-3xl font-bold counter epunda-slab-bold">
+                  {stat.value}
+                </p>
+              </div>
+              <div
+                className={`w-12 h-12 rounded-full ${stat.color} flex items-center justify-center`}
               >
-                <option value="all">All Requests</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-              </select>
+                <span className="text-white text-xl font-bold">
+                  {stat.value}
+                </span>
+              </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        ))}
+      </motion.div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center">
-              <div className="p-3 bg-yellow-100 rounded-full">
-                <FaUserMd className="text-yellow-600 text-xl" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Pending</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {requests.filter((r) => r.status === "pending").length}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center">
-              <div className="p-3 bg-green-100 rounded-full">
-                <FaCheck className="text-green-600 text-xl" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Approved</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {requests.filter((r) => r.status === "approved").length}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center">
-              <div className="p-3 bg-red-100 rounded-full">
-                <FaTimes className="text-red-600 text-xl" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Rejected</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {requests.filter((r) => r.status === "rejected").length}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Requests Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredRequests.map((request) => (
-            <div
-              key={request.id}
-              className="bg-white rounded-lg shadow-sm overflow-hidden"
+      {/* Filter Tabs */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mb-6"
+      >
+        <div className="flex space-x-4 bg-white rounded-xl p-2 shadow-floating">
+          {[
+            { key: "all", label: "All Requests" },
+            { key: "pending", label: "Pending" },
+            { key: "approved", label: "Approved" },
+            { key: "rejected", label: "Rejected" },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setFilter(tab.key)}
+              className={`px-6 py-3 rounded-lg epunda-slab-medium transition-all duration-200 ${
+                filter === tab.key
+                  ? "bg-olive-green text-gray-600 shadow-lg"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
             >
-              {/* Header */}
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {request.name}
-                  </h3>
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                      request.status
-                    )}`}
-                  >
-                    {request.status.charAt(0).toUpperCase() +
-                      request.status.slice(1)}
-                  </span>
-                </div>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p>
-                    <strong>Email:</strong> {request.email}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {request.phone}
-                  </p>
-                  <p>
-                    <strong>Specialization:</strong> {request.specialization}
-                  </p>
-                  <p>
-                    <strong>Experience:</strong> {request.experience}
-                  </p>
-                  <p>
-                    <strong>Submitted:</strong> {request.submittedDate}
-                  </p>
-                </div>
-              </div>
-
-              {/* Documents */}
-              <div className="p-6">
-                <h4 className="text-md font-medium text-gray-900 mb-4">
-                  Verification Documents
-                </h4>
-                <div className="grid grid-cols-1 gap-4">
-                  {/* License */}
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center">
-                        <FaFileAlt className="text-blue-600 mr-2" />
-                        <span className="font-medium text-gray-900">
-                          Medical License
-                        </span>
-                      </div>
-                      <button
-                        onClick={() =>
-                          openImageModal(
-                            request.documents.license,
-                            "Medical License"
-                          )
-                        }
-                        className="text-blue-600 hover:text-blue-800 flex items-center"
-                      >
-                        <FaEye className="mr-1" />
-                        View
-                      </button>
-                    </div>
-                    <img
-                      src={request.documents.license}
-                      alt="Medical License"
-                      className="w-full h-32 object-cover rounded cursor-pointer hover:opacity-80"
-                      onClick={() =>
-                        openImageModal(
-                          request.documents.license,
-                          "Medical License"
-                        )
-                      }
-                    />
-                  </div>
-
-                  {/* PAN Card */}
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center">
-                        <FaIdCard className="text-green-600 mr-2" />
-                        <span className="font-medium text-gray-900">
-                          PAN Card
-                        </span>
-                      </div>
-                      <button
-                        onClick={() =>
-                          openImageModal(request.documents.panCard, "PAN Card")
-                        }
-                        className="text-blue-600 hover:text-blue-800 flex items-center"
-                      >
-                        <FaEye className="mr-1" />
-                        View
-                      </button>
-                    </div>
-                    <img
-                      src={request.documents.panCard}
-                      alt="PAN Card"
-                      className="w-full h-32 object-cover rounded cursor-pointer hover:opacity-80"
-                      onClick={() =>
-                        openImageModal(request.documents.panCard, "PAN Card")
-                      }
-                    />
-                  </div>
-
-                  {/* ID Photo */}
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center">
-                        <FaUserMd className="text-purple-600 mr-2" />
-                        <span className="font-medium text-gray-900">
-                          ID Photo
-                        </span>
-                      </div>
-                      <button
-                        onClick={() =>
-                          openImageModal(request.documents.idPhoto, "ID Photo")
-                        }
-                        className="text-blue-600 hover:text-blue-800 flex items-center"
-                      >
-                        <FaEye className="mr-1" />
-                        View
-                      </button>
-                    </div>
-                    <img
-                      src={request.documents.idPhoto}
-                      alt="ID Photo"
-                      className="w-full h-32 object-cover rounded cursor-pointer hover:opacity-80"
-                      onClick={() =>
-                        openImageModal(request.documents.idPhoto, "ID Photo")
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Actions */}
-              {request.status === "pending" && (
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => handleApprove(request.id)}
-                      className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center"
-                    >
-                      <FaCheck className="mr-2" />
-                      Approve
-                    </button>
-                    <button
-                      onClick={() => handleReject(request.id)}
-                      className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center"
-                    >
-                      <FaTimes className="mr-2" />
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+              {tab.label}
+            </button>
           ))}
         </div>
+      </motion.div>
 
-        {filteredRequests.length === 0 && (
-          <div className="text-center py-12">
-            <FaUserMd className="mx-auto text-gray-400 text-6xl mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No requests found
-            </h3>
-            <p className="text-gray-600">
-              Try adjusting your search or filter criteria.
-            </p>
-          </div>
+      {/* Requests List */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="space-y-6"
+      >
+        <AnimatePresence>
+          {filteredRequests.map((request, index) => (
+            <motion.div
+              key={request.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white rounded-xl shadow-floating p-6 card-enhanced"
+            >
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                {/* Basic Info */}
+                <div className="flex-1">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800 epunda-slab-semibold mb-1">
+                        {request.name}
+                      </h3>
+                      <p className="text-gray-600 epunda-slab-regular mb-1">
+                        {request.hospitalName}
+                      </p>
+                      <p className="text-gray-500 epunda-slab-regular text-sm">
+                        📍 {request.location}
+                      </p>
+                    </div>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium epunda-slab-medium ${getStatusColor(
+                        request.status
+                      )}`}
+                    >
+                      {getStatusIcon(request.status)}{" "}
+                      {request.status.charAt(0).toUpperCase() +
+                        request.status.slice(1)}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                      <p className="text-sm text-gray-500 epunda-slab-regular">
+                        Email
+                      </p>
+                      <p className="text-gray-800 epunda-slab-medium text-sm">
+                        {request.email}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 epunda-slab-regular">
+                        Phone
+                      </p>
+                      <p className="text-gray-800 epunda-slab-medium text-sm">
+                        {request.phone}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 epunda-slab-regular">
+                        Submitted
+                      </p>
+                      <p className="text-gray-800 epunda-slab-medium text-sm">
+                        {request.submittedDate}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Document View Buttons */}
+                  <div className="flex flex-wrap gap-3">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => openDocument(request, "licensePhoto")}
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg epunda-slab-medium btn-enhanced-state transition-all duration-200 text-sm"
+                    >
+                      📄 View License
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => openDocument(request, "panCard")}
+                      className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg epunda-slab-medium btn-enhanced-state transition-all duration-200 text-sm"
+                    >
+                      🆔 View PAN Card
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => openDocument(request, "idPhoto")}
+                      className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg epunda-slab-medium btn-enhanced-state transition-all duration-200 text-sm"
+                    >
+                      🖼️ View ID Photo
+                    </motion.button>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                {request.status === "pending" && (
+                  <div className="flex flex-col space-y-3 lg:min-w-[200px]">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleApprove(request.id)}
+                      className="w-full bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg epunda-slab-medium btn-enhanced-state transition-all duration-200"
+                    >
+                      ✓ Approve
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleReject(request.id)}
+                      className="w-full bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg epunda-slab-medium btn-enhanced-state transition-all duration-200"
+                    >
+                      ✗ Reject
+                    </motion.button>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Fullscreen Document Viewer */}
+      <AnimatePresence>
+        {isFullscreen && selectedRequest && selectedDocument && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+            onClick={closeFullscreen}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="bg-white rounded-xl max-w-4xl max-h-[90vh] overflow-hidden shadow-3d"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 epunda-slab-semibold">
+                    {selectedRequest.name} -{" "}
+                    {selectedDocument
+                      .replace(/([A-Z])/g, " $1")
+                      .replace(/^./, (str) => str.toUpperCase())}
+                  </h3>
+                  <p className="text-gray-600 epunda-slab-regular">
+                    {selectedRequest.hospitalName} • {selectedRequest.location}
+                  </p>
+                </div>
+                <button
+                  onClick={closeFullscreen}
+                  className="text-gray-500 hover:text-gray-700 text-2xl font-bold w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-all"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Document */}
+              <div className="p-6">
+                <img
+                  src={selectedRequest[selectedDocument]}
+                  alt={selectedDocument}
+                  className="w-full h-auto max-h-[60vh] object-contain rounded-lg shadow-lg"
+                />
+              </div>
+
+              {/* Footer Actions */}
+              {selectedRequest.status === "pending" && (
+                <div className="flex justify-center space-x-4 p-6 border-t bg-gray-50">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      handleApprove(selectedRequest.id);
+                      closeFullscreen();
+                    }}
+                    className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg epunda-slab-medium btn-enhanced-state transition-all duration-200"
+                  >
+                    ✓ Approve Request
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      handleReject(selectedRequest.id);
+                      closeFullscreen();
+                    }}
+                    className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-lg epunda-slab-medium btn-enhanced-state transition-all duration-200"
+                  >
+                    ✗ Reject Request
+                  </motion.button>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
         )}
-      </div>
-
-      {/* Image Modal */}
-      {selectedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-4xl max-h-full overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {selectedImage.title}
-              </h3>
-              <button
-                onClick={closeImageModal}
-                className="text-gray-400 hover:text-gray-600 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-            <div className="p-4">
-              <img
-                src={selectedImage.url}
-                alt={selectedImage.title}
-                className="max-w-full max-h-[70vh] object-contain mx-auto"
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      </AnimatePresence>
     </div>
   );
 };

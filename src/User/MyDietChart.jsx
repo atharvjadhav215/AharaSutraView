@@ -327,6 +327,8 @@ export default function MyDietChart() {
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedDay, setSelectedDay] = useState("Monday");
   const [expandedRecipes, setExpandedRecipes] = useState({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Mock patient data for ML model filtering
   const patientData = {
@@ -731,7 +733,7 @@ export default function MyDietChart() {
       </div>
 
       {/* Full Screen Container */}
-      <div className="h-screen w-screen flex items-center justify-center pt-12 sm:pt-16 pb-2 sm:pb-4">
+      <div className="h-screen w-screen flex items-center justify-center pt-12 sm:pt-16 sm:pb-4 md:pb-4 pb-16">
         <div className="w-full max-w-8xl h-full flex flex-col">
           <AnimatePresence mode="">
             <section
@@ -1107,7 +1109,7 @@ export default function MyDietChart() {
               </motion.div>
 
               {/* Navigation */}
-              <div className="flex items-center justify-between flex-shrink-0 gap-2 sm:gap-4 relative z-10">
+              <div className="flex items-center justify-between flex-shrink-0 gap-2 sm:gap-4 relative z-10 mb-4 md:mb-0">
                 <motion.button
                   whileHover={{
                     scale: step === 0 ? 1 : 1.05,
@@ -1165,8 +1167,15 @@ export default function MyDietChart() {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
-                      // Export or share functionality
-                      alert("Diet chart exported successfully!");
+                      setSuccessMessage(
+                        "Diet chart report downloaded and assigned to patient successfully!"
+                      );
+                      setShowSuccessModal(true);
+
+                      // Auto close modal after 2 seconds
+                      setTimeout(() => {
+                        setShowSuccessModal(false);
+                      }, 2000);
                     }}
                     className="px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-md bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-xs sm:text-sm md:text-lg shadow-md transition-all duration-100 flex items-center gap-1 sm:gap-1.5 border border-green-400 min-h-[40px] sm:min-h-[44px]"
                   >
@@ -1183,7 +1192,10 @@ export default function MyDietChart() {
 
       {/* Fixed Bottom Tab Navigation - Mobile Only, visible on step 2 */}
       {step === 2 && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
+        <div
+          className="md:hidden fixed bottom-0 left-0 right-0 z-50"
+          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        >
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1242,6 +1254,74 @@ export default function MyDietChart() {
           </motion.div>
         </div>
       )}
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {showSuccessModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center"
+          >
+            {/* Backdrop Blur */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/30 backdrop-blur-md"
+              onClick={() => setShowSuccessModal(false)}
+            />
+
+            {/* Modal Content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 50 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative bg-white rounded-2xl p-8 mx-4 max-w-md w-full shadow-2xl border border-teal-200/20"
+            >
+              {/* Success Icon */}
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", damping: 15 }}
+                className="flex justify-center mb-6"
+              >
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center shadow-lg">
+                  <FaCheck className="text-white text-2xl" />
+                </div>
+              </motion.div>
+
+              {/* Success Message */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-center"
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  Success!
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {successMessage}
+                </p>
+              </motion.div>
+
+              {/* Close Button */}
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                onClick={() => setShowSuccessModal(false)}
+                className="mt-6 w-full px-6 py-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-200"
+              >
+                Continue
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

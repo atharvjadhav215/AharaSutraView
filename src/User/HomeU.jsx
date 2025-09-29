@@ -625,7 +625,7 @@ export default function HomePage() {
             />
 
             <motion.h2
-              className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-extrabold text-white mb-2 sm:mb-3 relative z-10 drop-shadow-lg"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-white mb-2 sm:mb-3 relative z-10 drop-shadow-lg"
               initial={{ x: -50, opacity: 0, rotateX: -20 }}
               animate={{ x: 0, opacity: 1, rotateX: 0 }}
               transition={{
@@ -639,7 +639,7 @@ export default function HomePage() {
               {data.title}
             </motion.h2>
             <motion.p
-              className="text-white/90 text-sm sm:text-base md:text-lg lg:text-xl mb-3 sm:mb-4 relative z-10 drop-shadow-md"
+              className="text-white/90 text-md sm:text-md md:text-xl lg:text-2xl mb-3 sm:mb-4 relative z-10 drop-shadow-md"
               initial={{ x: -40, opacity: 0, rotateX: -15 }}
               animate={{ x: 0, opacity: 1, rotateX: 0 }}
               transition={{
@@ -687,7 +687,7 @@ export default function HomePage() {
                       delay: i * 0.3,
                     }}
                   />
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/95 drop-shadow-sm">
+                  <p className="text-md sm:text-md md:text-xl lg:text-2xl text-white/95 drop-shadow-sm">
                     {b}
                   </p>
                 </motion.div>
@@ -807,6 +807,7 @@ export default function HomePage() {
       </div>
     );
   };
+
 
   return (
     <div
