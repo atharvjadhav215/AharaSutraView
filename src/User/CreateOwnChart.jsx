@@ -572,17 +572,32 @@ export default function CreateOwnChart() {
   // keyboard navigation and accessibility
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "ArrowRight" && !loading) next();
-      if (e.key === "ArrowLeft" && !loading) prev();
+      // Don't interfere with input fields, textareas, or select elements
       if (
-        e.key === "Enter" &&
-        e.target.tagName !== "INPUT" &&
-        e.target.tagName !== "TEXTAREA"
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "TEXTAREA" ||
+        e.target.tagName === "SELECT" ||
+        e.target.isContentEditable ||
+        e.target.closest('[contenteditable="true"]')
       ) {
+        return;
+      }
+
+      if (e.key === "ArrowRight" && !loading) {
+        e.preventDefault();
+        next();
+      }
+      if (e.key === "ArrowLeft" && !loading) {
+        e.preventDefault();
+        prev();
+      }
+      if (e.key === "Enter") {
+        e.preventDefault();
         if (step < translatedSteps.length - 1) next();
         else finish();
       }
       if (e.key === "Escape") {
+        e.preventDefault();
         // Close any modals or go back
         if (step > 0) prev();
       }
@@ -593,10 +608,20 @@ export default function CreateOwnChart() {
 
   // Focus management for accessibility
   useEffect(() => {
-    // Focus on the main content area when step changes
-    const mainContent = document.querySelector('[role="main"]');
-    if (mainContent) {
-      mainContent.focus();
+    // Only focus on main content if no input is currently focused
+    const activeElement = document.activeElement;
+    const isInputFocused =
+      activeElement &&
+      (activeElement.tagName === "INPUT" ||
+        activeElement.tagName === "TEXTAREA" ||
+        activeElement.tagName === "SELECT");
+
+    // Only focus main content if no input is currently focused
+    if (!isInputFocused) {
+      const mainContent = document.querySelector('[role="main"]');
+      if (mainContent) {
+        mainContent.focus();
+      }
     }
 
     // Announce step change to screen readers
@@ -611,7 +636,9 @@ export default function CreateOwnChart() {
 
     // Remove announcement after a short delay
     setTimeout(() => {
-      document.body.removeChild(announcement);
+      if (document.body.contains(announcement)) {
+        document.body.removeChild(announcement);
+      }
     }, 1000);
   }, [step, translatedSteps]);
 
@@ -837,6 +864,7 @@ export default function CreateOwnChart() {
                               if (errors.name)
                                 setErrors((prev) => ({ ...prev, name: null }));
                             }}
+                            onFocus={(e) => e.target.select()}
                             className={`w-full p-3 sm:p-4 border-2 rounded-lg text-sm sm:text-lg focus:ring-2 transition-all duration-200 ${
                               errors.name
                                 ? "border-red-500 focus:border-red-500 focus:ring-red-200"
@@ -847,6 +875,7 @@ export default function CreateOwnChart() {
                             aria-describedby={
                               errors.name ? "name-error" : undefined
                             }
+                            autoComplete="off"
                           />
                           {errors.name && (
                             <motion.p
@@ -872,6 +901,7 @@ export default function CreateOwnChart() {
                               if (errors.age)
                                 setErrors((prev) => ({ ...prev, age: null }));
                             }}
+                            onFocus={(e) => e.target.select()}
                             type="number"
                             className={`w-full p-3 sm:p-4 border-2 rounded-lg text-sm sm:text-lg focus:ring-2 transition-all duration-200 ${
                               errors.age
@@ -883,6 +913,7 @@ export default function CreateOwnChart() {
                             aria-describedby={
                               errors.age ? "age-error" : undefined
                             }
+                            autoComplete="off"
                           />
                           {errors.age && (
                             <motion.p
@@ -911,6 +942,7 @@ export default function CreateOwnChart() {
                                   gender: null,
                                 }));
                             }}
+                            onFocus={(e) => e.target.focus()}
                             className={`w-full p-3 sm:p-4 border-2 rounded-lg text-sm sm:text-lg focus:ring-2 transition-all duration-200 ${
                               errors.gender
                                 ? "border-red-500 focus:border-red-500 focus:ring-red-200"
@@ -920,6 +952,7 @@ export default function CreateOwnChart() {
                             aria-describedby={
                               errors.gender ? "gender-error" : undefined
                             }
+                            autoComplete="off"
                           >
                             <option value="">
                               {getTranslation("select", language)}
@@ -972,6 +1005,7 @@ export default function CreateOwnChart() {
                                   height: null,
                                 }));
                             }}
+                            onFocus={(e) => e.target.select()}
                             type="number"
                             className={`w-full p-3 sm:p-4 border rounded-lg text-base sm:text-lg md:text-xl focus:ring-2 transition-all duration-100 ${
                               errors.height
@@ -983,6 +1017,7 @@ export default function CreateOwnChart() {
                             aria-describedby={
                               errors.height ? "height-error" : undefined
                             }
+                            autoComplete="off"
                           />
                           {errors.height && (
                             <motion.p
@@ -1010,6 +1045,7 @@ export default function CreateOwnChart() {
                                   weight: null,
                                 }));
                             }}
+                            onFocus={(e) => e.target.select()}
                             type="number"
                             step="0.1"
                             className={`w-full p-3 sm:p-4 border rounded-lg text-base sm:text-lg md:text-xl focus:ring-2 transition-all duration-100 ${
@@ -1022,6 +1058,7 @@ export default function CreateOwnChart() {
                             aria-describedby={
                               errors.weight ? "weight-error" : undefined
                             }
+                            autoComplete="off"
                           />
                           {errors.weight && (
                             <motion.p
@@ -1381,7 +1418,6 @@ export default function CreateOwnChart() {
                                             <span className="text-gray-800 font-medium">
                                               {item.name}
                                             </span>
-                                           
                                           </div>
                                         ))}
                                       </div>
