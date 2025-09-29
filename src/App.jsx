@@ -15,6 +15,7 @@ import CreateOwnChart from "./User/CreateOwnChart";
 import Documentation from "./components/Documentation";
 import Admin from "./Admin/Admin";
 import Report from "./User/Report";
+import DataDashboard from "./components/DataDashboard";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="documentation" element={<Documentation />} />
           <Route path="admin" element={<Admin />} />
           <Route path="report" element={<Report />} />
+          <Route path="data-dashboard" element={<DataDashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>
