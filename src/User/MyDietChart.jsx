@@ -1169,7 +1169,7 @@ export default function MyDietChart() {
                     onClick={() => {
                       // Create a download link for the PDF report
                       const link = document.createElement("a");
-                      link.href = "/src/assets/Document/Report.pdf";
+                      link.href = "/Report.pdf";
                       link.download = "Diet_Chart_Report.pdf";
                       link.target = "_blank";
 
