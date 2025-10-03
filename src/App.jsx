@@ -16,6 +16,7 @@ import Documentation from "./components/Documentation";
 import Admin from "./Admin/Admin";
 import Report from "./User/Report";
 import DataDashboard from "./components/DataDashboard";
+import EditProfile from "./User/EditProfile";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="admin" element={<Admin />} />
           <Route path="report" element={<Report />} />
           <Route path="data-dashboard" element={<DataDashboard />} />
+          <Route path="edit-profile" element={<EditProfile />} />
         </Route>
       </Routes>
     </BrowserRouter>

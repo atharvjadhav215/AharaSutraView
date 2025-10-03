@@ -37,7 +37,8 @@ const Navbar = () => {
     location.pathname === "/uhome" ||
     location.pathname === "/create-own-chart" ||
     location.pathname === "/diet-chart" ||
-    location.pathname === "/uprofile";
+    location.pathname === "/uprofile" ||
+    location.pathname === "/edit-profile";
 
   const isDietitianRole =
     location.pathname === "/dhome" ||
