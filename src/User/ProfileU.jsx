@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -59,7 +59,12 @@ import {
   FaCog,
   FaBell,
   FaSignOutAlt,
+  FaPaperPlane,
 } from "react-icons/fa";
+import {
+  analyzeAspectSentiment,
+  ASPECT_CATEGORIES,
+} from "../utils/aspectSentiment";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -180,6 +185,12 @@ const TABS = [
     color: "#5BAFAF",
   },
   {
+    id: "feedback",
+    name: "Feedback",
+    icon: FaStar,
+    color: "#5BAFAF",
+  },
+  {
     id: "settings",
     name: "Settings",
     icon: FaCog,
@@ -210,6 +221,13 @@ const BG_LAYERS = [
       "radial-gradient( circle at 60% 40%, rgba(74,155,155,0.10), transparent 18% ), linear-gradient(120deg,#E8F5F5,#E0F2F2)",
   },
 ];
+
+const FEEDBACK_BADGE_STYLES = {
+  positive: "bg-green-50 text-green-700 border border-green-200",
+  negative: "bg-rose-50 text-rose-700 border border-rose-200",
+  neutral: "bg-amber-50 text-amber-700 border border-amber-200",
+  "not-mentioned": "bg-gray-50 text-gray-500 border border-gray-200",
+};
 
 export default function ProfileU() {
   const navigate = useNavigate();
@@ -314,6 +332,16 @@ export default function ProfileU() {
   const [charts] = useState(hardCharts);
   const [expandedChart, setExpandedChart] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const [feedbackForm, setFeedbackForm] = useState({
+    rating: 4,
+    channel: "App",
+    comment: "",
+  });
+  const [submittedFeedbacks, setSubmittedFeedbacks] = useState([]);
+  const aspectPreview = useMemo(
+    () => analyzeAspectSentiment(feedbackForm.comment),
+    [feedbackForm.comment]
+  );
 
   // Merge hard-coded data with any localStorage data
   const profile = {
@@ -334,237 +362,268 @@ export default function ProfileU() {
     .join("")
     .toUpperCase();
 
+  const pillClasses = (sentiment) =>
+    FEEDBACK_BADGE_STYLES[sentiment] || FEEDBACK_BADGE_STYLES["not-mentioned"];
+
+  const handleFeedbackSubmit = (event) => {
+    event.preventDefault();
+    const trimmed = feedbackForm.comment.trim();
+    if (trimmed.length < 20) {
+      alert("Please share at least 20 characters of feedback.");
+      return;
+    }
+    const analysis = analyzeAspectSentiment(trimmed);
+    const entry = {
+      id: `local-${Date.now()}`,
+      rating: feedbackForm.rating,
+      channel: feedbackForm.channel,
+      comment: trimmed,
+      analysis,
+      date: new Date().toISOString().split("T")[0],
+    };
+    setSubmittedFeedbacks((prev) => [entry, ...prev].slice(0, 3));
+    setFeedbackForm((prev) => ({
+      ...prev,
+      rating: 4,
+      comment: "",
+    }));
+  };
+
   // Tab content functions
   const getTabContent = () => {
     return {
       overview: (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
-        >
-          {/* Enhanced Profile Header */}
+        <>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-            className="bg-white/90 backdrop-blur-sm p-4 md:p-6 rounded-lg border border-gray-200/60 shadow-xl mb-6"
+            className="space-y-6"
           >
-            <div
-              className={`flex ${
-                isMobile
-                  ? "flex-col items-center text-center gap-4"
-                  : "items-center gap-6"
-              }`}
+            {/* Enhanced Profile Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="bg-white/90 backdrop-blur-sm p-4 md:p-6 rounded-lg border border-gray-200/60 shadow-xl mb-6"
             >
-              <div className="relative">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 via-cyan-400 to-blue-400 flex items-center justify-center shadow-lg">
-                  <span className="text-white text-xl font-bold">
-                    {initials}
-                  </span>
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-2 border-white flex items-center justify-center">
-                  <FaCheck className="text-white text-xs" />
-                </div>
-              </div>
-              <div className={`${isMobile ? "w-full" : "flex-1"}`}>
-                <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1">
-                  {profile.name}
-                </h2>
-                <p className="text-sm text-gray-600 mb-2">{profile.username}</p>
-                <p className="text-sm text-gray-700 bg-gray-50/80 p-2 rounded-lg">
-                  {profile.notes}
-                </p>
-              </div>
               <div
                 className={`flex ${
-                  isMobile ? "flex-col w-full gap-2" : "gap-3"
+                  isMobile
+                    ? "flex-col items-center text-center gap-4"
+                    : "items-center gap-6"
                 }`}
               >
-                <motion.button
-                  whileHover={{ y: -2, scale: 1.02 }}
-                  whileTap={{ y: 0, scale: 0.98 }}
-                  onClick={() => navigate("/edit-profile")}
-                  className={`${
-                    isMobile ? "w-full" : ""
-                  } px-4 py-2 rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2`}
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 via-cyan-400 to-blue-400 flex items-center justify-center shadow-lg">
+                    <span className="text-white text-xl font-bold">
+                      {initials}
+                    </span>
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-2 border-white flex items-center justify-center">
+                    <FaCheck className="text-white text-xs" />
+                  </div>
+                </div>
+                <div className={`${isMobile ? "w-full" : "flex-1"}`}>
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1">
+                    {profile.name}
+                  </h2>
+                  <p className="text-sm text-gray-600 mb-2">
+                    {profile.username}
+                  </p>
+                  <p className="text-sm text-gray-700 bg-gray-50/80 p-2 rounded-lg">
+                    {profile.notes}
+                  </p>
+                </div>
+                <div
+                  className={`flex ${
+                    isMobile ? "flex-col w-full gap-2" : "gap-3"
+                  }`}
                 >
-                  <FaEdit />
-                  Edit Profile
-                </motion.button>
-                <motion.button
-                  whileHover={{ y: -2, scale: 1.02 }}
-                  whileTap={{ y: 0, scale: 0.98 }}
-                  onClick={() => navigate("/diet-chart")}
-                  className={`${
-                    isMobile ? "w-full" : ""
-                  } px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2`}
-                >
-                  <FaClipboardList />
-                  View Diet Chart
-                </motion.button>
+                  <motion.button
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    whileTap={{ y: 0, scale: 0.98 }}
+                    onClick={() => navigate("/edit-profile")}
+                    className={`${
+                      isMobile ? "w-full" : ""
+                    } px-4 py-2 rounded-lg bg-white border-2 border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2`}
+                  >
+                    <FaEdit />
+                    Edit Profile
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    whileTap={{ y: 0, scale: 0.98 }}
+                    onClick={() => navigate("/diet-chart")}
+                    className={`${
+                      isMobile ? "w-full" : ""
+                    } px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2`}
+                  >
+                    <FaClipboardList />
+                    View Diet Chart
+                  </motion.button>
+                </div>
               </div>
+            </motion.div>
+
+            {/* Enhanced Quick Stats */}
+            <div
+              className={`grid ${
+                isMobile
+                  ? "grid-cols-2"
+                  : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+              } gap-4 md:gap-6`}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className={`bg-white/90 backdrop-blur-sm ${
+                  isMobile ? "p-3" : "p-4"
+                } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
+              >
+                <div
+                  className={`flex ${
+                    isMobile
+                      ? "flex-col items-center text-center gap-2"
+                      : "items-center gap-3"
+                  } mb-3`}
+                >
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center shadow-lg">
+                    <FaUser className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <h3
+                      className={`${
+                        isMobile ? "text-xs" : "text-sm"
+                      } font-semibold text-gray-700 mb-1`}
+                    >
+                      Age / Gender
+                    </h3>
+                    <p
+                      className={`${
+                        isMobile ? "text-sm" : "text-lg"
+                      } font-bold text-blue-600`}
+                    >
+                      {profile.basic.age || "—"} / {profile.basic.gender || "—"}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.3 }}
+                className={`bg-white/90 backdrop-blur-sm ${
+                  isMobile ? "p-3" : "p-4"
+                } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
+              >
+                <div
+                  className={`flex ${
+                    isMobile
+                      ? "flex-col items-center text-center gap-2"
+                      : "items-center gap-3"
+                  } mb-3`}
+                >
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center shadow-lg">
+                    <FaWeight className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <h3
+                      className={`${
+                        isMobile ? "text-xs" : "text-sm"
+                      } font-semibold text-gray-700 mb-1`}
+                    >
+                      Height / Weight
+                    </h3>
+                    <p
+                      className={`${
+                        isMobile ? "text-sm" : "text-lg"
+                      } font-bold text-green-600`}
+                    >
+                      {profile.anthro.height || "—"} cm /{" "}
+                      {profile.anthro.weight || "—"} kg
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.4 }}
+                className={`bg-white/90 backdrop-blur-sm ${
+                  isMobile ? "p-3" : "p-4"
+                } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
+              >
+                <div
+                  className={`flex ${
+                    isMobile
+                      ? "flex-col items-center text-center gap-2"
+                      : "items-center gap-3"
+                  } mb-3`}
+                >
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center shadow-lg">
+                    <FaChartLine className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <h3
+                      className={`${
+                        isMobile ? "text-xs" : "text-sm"
+                      } font-semibold text-gray-700 mb-1`}
+                    >
+                      BMI
+                    </h3>
+                    <p
+                      className={`${
+                        isMobile ? "text-sm" : "text-lg"
+                      } font-bold text-purple-600`}
+                    >
+                      {profile.anthro.bmi || "—"}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.5 }}
+                className={`bg-white/90 backdrop-blur-sm ${
+                  isMobile ? "p-3" : "p-4"
+                } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
+              >
+                <div
+                  className={`flex ${
+                    isMobile
+                      ? "flex-col items-center text-center gap-2"
+                      : "items-center gap-3"
+                  } mb-3`}
+                >
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-400 to-blue-400 flex items-center justify-center shadow-lg">
+                    <FaCalendarAlt className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <h3
+                      className={`${
+                        isMobile ? "text-xs" : "text-sm"
+                      } font-semibold text-gray-700 mb-1`}
+                    >
+                      Last Update
+                    </h3>
+                    <p
+                      className={`${
+                        isMobile ? "text-sm" : "text-lg"
+                      } font-bold text-cyan-600`}
+                    >
+                      {profile.basic.date || "—"}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
-
-          {/* Enhanced Quick Stats */}
-          <div
-            className={`grid ${
-              isMobile
-                ? "grid-cols-2"
-                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
-            } gap-4 md:gap-6`}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
-              className={`bg-white/90 backdrop-blur-sm ${
-                isMobile ? "p-3" : "p-4"
-              } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
-            >
-              <div
-                className={`flex ${
-                  isMobile
-                    ? "flex-col items-center text-center gap-2"
-                    : "items-center gap-3"
-                } mb-3`}
-              >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center shadow-lg">
-                  <FaUser className="text-white text-sm" />
-                </div>
-                <div>
-                  <h3
-                    className={`${
-                      isMobile ? "text-xs" : "text-sm"
-                    } font-semibold text-gray-700 mb-1`}
-                  >
-                    Age / Gender
-                  </h3>
-                  <p
-                    className={`${
-                      isMobile ? "text-sm" : "text-lg"
-                    } font-bold text-blue-600`}
-                  >
-                    {profile.basic.age || "—"} / {profile.basic.gender || "—"}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.3 }}
-              className={`bg-white/90 backdrop-blur-sm ${
-                isMobile ? "p-3" : "p-4"
-              } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
-            >
-              <div
-                className={`flex ${
-                  isMobile
-                    ? "flex-col items-center text-center gap-2"
-                    : "items-center gap-3"
-                } mb-3`}
-              >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center shadow-lg">
-                  <FaWeight className="text-white text-sm" />
-                </div>
-                <div>
-                  <h3
-                    className={`${
-                      isMobile ? "text-xs" : "text-sm"
-                    } font-semibold text-gray-700 mb-1`}
-                  >
-                    Height / Weight
-                  </h3>
-                  <p
-                    className={`${
-                      isMobile ? "text-sm" : "text-lg"
-                    } font-bold text-green-600`}
-                  >
-                    {profile.anthro.height || "—"} cm /{" "}
-                    {profile.anthro.weight || "—"} kg
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.4 }}
-              className={`bg-white/90 backdrop-blur-sm ${
-                isMobile ? "p-3" : "p-4"
-              } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
-            >
-              <div
-                className={`flex ${
-                  isMobile
-                    ? "flex-col items-center text-center gap-2"
-                    : "items-center gap-3"
-                } mb-3`}
-              >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center shadow-lg">
-                  <FaChartLine className="text-white text-sm" />
-                </div>
-                <div>
-                  <h3
-                    className={`${
-                      isMobile ? "text-xs" : "text-sm"
-                    } font-semibold text-gray-700 mb-1`}
-                  >
-                    BMI
-                  </h3>
-                  <p
-                    className={`${
-                      isMobile ? "text-sm" : "text-lg"
-                    } font-bold text-purple-600`}
-                  >
-                    {profile.anthro.bmi || "—"}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.5 }}
-              className={`bg-white/90 backdrop-blur-sm ${
-                isMobile ? "p-3" : "p-4"
-              } rounded-lg border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200`}
-            >
-              <div
-                className={`flex ${
-                  isMobile
-                    ? "flex-col items-center text-center gap-2"
-                    : "items-center gap-3"
-                } mb-3`}
-              >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-400 to-blue-400 flex items-center justify-center shadow-lg">
-                  <FaCalendarAlt className="text-white text-sm" />
-                </div>
-                <div>
-                  <h3
-                    className={`${
-                      isMobile ? "text-xs" : "text-sm"
-                    } font-semibold text-gray-700 mb-1`}
-                  >
-                    Last Update
-                  </h3>
-                  <p
-                    className={`${
-                      isMobile ? "text-sm" : "text-lg"
-                    } font-bold text-cyan-600`}
-                  >
-                    {profile.basic.date || "—"}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
+        </>
       ),
       details: (
         <motion.div
@@ -981,6 +1040,201 @@ export default function ProfileU() {
                 </div>
               )}
             </AnimatePresence>
+          </div>
+        </motion.div>
+      ),
+      feedback: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.6 }}
+          className="bg-white/90 backdrop-blur-sm p-4 md:p-6 rounded-lg border border-gray-200/60 shadow-xl"
+        >
+          <div
+            className={`flex ${
+              isMobile
+                ? "flex-col items-center text-center gap-3 mb-6"
+                : "items-center justify-between mb-6"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                <FaClipboardList className="text-white text-xl" />
+              </div>
+              <div className={`${isMobile ? "" : ""}`}>
+                <h3 className="text-xl md:text-2xl font-bold text-gray-800">
+                  Share Your Feedback
+                </h3>
+                <p className="text-sm text-gray-500">
+                  Every review updates the dietitian dashboard with aspect-based
+                  sentiment.
+                </p>
+              </div>
+            </div>
+            <div
+              className={`text-xs font-medium text-gray-500 ${
+                isMobile ? "text-center" : "text-right"
+              }`}
+            >
+              {ASPECT_CATEGORIES.length} aspects auto-analysed
+            </div>
+          </div>
+
+          <div
+            className={`grid ${
+              isMobile
+                ? "grid-cols-1 gap-4"
+                : "grid-cols-1 md:grid-cols-2 gap-6"
+            }`}
+          >
+            <form className="space-y-4" onSubmit={handleFeedbackSubmit}>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 flex items-center justify-between">
+                  Overall Rating
+                  <span className="text-teal-600">
+                    {feedbackForm.rating.toFixed(1)}
+                  </span>
+                </label>
+                <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="0.1"
+                  value={feedbackForm.rating}
+                  onChange={(e) =>
+                    setFeedbackForm((prev) => ({
+                      ...prev,
+                      rating: parseFloat(e.target.value),
+                    }))
+                  }
+                  className="w-full mt-2 accent-teal-500"
+                />
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>Needs work</span>
+                  <span>Excellent</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-gray-700">
+                  Channel
+                </label>
+                <select
+                  value={feedbackForm.channel}
+                  onChange={(e) =>
+                    setFeedbackForm((prev) => ({
+                      ...prev,
+                      channel: e.target.value,
+                    }))
+                  }
+                  className="w-full mt-2 p-3 rounded-lg border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 bg-gray-50/80"
+                >
+                  <option value="App">In-app</option>
+                  <option value="In-person">In-person visit</option>
+                  <option value="Phone">Phone</option>
+                  <option value="Email">Email</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-gray-700">
+                  Feedback (mention staff, plan, infrastructure…)
+                </label>
+                <textarea
+                  value={feedbackForm.comment}
+                  onChange={(e) =>
+                    setFeedbackForm((prev) => ({
+                      ...prev,
+                      comment: e.target.value,
+                    }))
+                  }
+                  rows={5}
+                  placeholder="Eg. The dietitian explained the treatment plan clearly, but the waiting area was crowded..."
+                  className="w-full mt-2 p-3 rounded-lg border border-gray-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 bg-gray-50/80 text-sm"
+                />
+              </div>
+
+              <motion.button
+                whileHover={{ y: -2, scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              >
+                <FaPaperPlane />
+                Submit feedback
+              </motion.button>
+            </form>
+
+            <div className="space-y-4">
+              <div className="bg-gray-50/80 rounded-lg p-4 border border-gray-200/60">
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                  Aspect sentiment preview
+                </h4>
+                {feedbackForm.comment.trim().length === 0 ? (
+                  <p className="text-xs text-gray-500">
+                    Start typing to see how each aspect is classified.
+                  </p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {aspectPreview.map((aspect) => (
+                      <span
+                        key={aspect.id}
+                        className={`text-xs font-medium px-2 py-1 rounded-full ${pillClasses(
+                          aspect.sentiment
+                        )}`}
+                      >
+                        {aspect.label} •{" "}
+                        {aspect.sentiment === "not-mentioned"
+                          ? "Not mentioned"
+                          : aspect.sentiment.charAt(0).toUpperCase() +
+                            aspect.sentiment.slice(1)}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {submittedFeedbacks.length > 0 && (
+                <div className="bg-white/80 rounded-lg p-4 border border-teal-100/80 shadow-inner">
+                  <h4 className="text-sm font-semibold text-teal-900 mb-3">
+                    Recently shared
+                  </h4>
+                  <div className="space-y-3 max-h-60 overflow-y-auto">
+                    {submittedFeedbacks.map((feedback) => (
+                      <div
+                        key={feedback.id}
+                        className="p-3 rounded-lg border border-gray-100 bg-gray-50/70"
+                      >
+                        <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+                          <span>{feedback.channel}</span>
+                          <span>{feedback.date}</span>
+                        </div>
+                        <p className="text-sm text-gray-700 mb-2 line-clamp-3">
+                          {feedback.comment}
+                        </p>
+                        <div className="flex flex-wrap gap-1">
+                          {feedback.analysis
+                            .filter(
+                              (aspect) => aspect.sentiment !== "not-mentioned"
+                            )
+                            .slice(0, 3)
+                            .map((aspect) => (
+                              <span
+                                key={`${feedback.id}-${aspect.id}`}
+                                className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${pillClasses(
+                                  aspect.sentiment
+                                )}`}
+                              >
+                                {aspect.label}
+                              </span>
+                            ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </motion.div>
       ),

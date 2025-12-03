@@ -45,6 +45,7 @@ import {
   FaPlus,
   FaMinus,
   FaStar,
+  FaSmile,
   FaShare,
   FaDownload,
   FaEdit,
@@ -58,6 +59,10 @@ import {
   FaTimes,
   FaClipboard,
 } from "react-icons/fa";
+import {
+  analyzeAspectSentiment,
+  ASPECT_CATEGORIES,
+} from "../utils/aspectSentiment";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -85,6 +90,12 @@ const TABS = [
   {
     id: "analytics",
     name: "Analytics",
+    icon: FaChartLine,
+    color: "#4A9B9B",
+  },
+  {
+    id: "feedbacks",
+    name: "Feedbacks",
     icon: FaChartLine,
     color: "#4A9B9B",
   },
@@ -505,6 +516,55 @@ const FAKE_PATIENTS = [
   },
 ];
 
+const FEEDBACK_SAMPLES = [
+  {
+    id: "fb1",
+    patientId: "p2",
+    patientName: "Rahul Mehta",
+    rating: 4.2,
+    channel: "In-person",
+    date: "2025-09-15",
+    comment:
+      "The dietitian is very supportive and the plan adjustments every week feel personalized. The front desk staff is still a bit slow during evening rush and the clinic waiting area gets crowded. The meal recommendation model helps me pick lower-carb dinners quickly.",
+  },
+  {
+    id: "fb2",
+    patientId: "p5",
+    patientName: "Meera Iyer",
+    rating: 4.6,
+    channel: "App",
+    date: "2025-09-12",
+    comment:
+      "I love how detailed the diet charts are and the infrastructure is spotless. The treatment plan explains why each meal matters. Staff follow-ups on hydration are great, though the AI recommendations sometimes repeat breakfast ideas.",
+  },
+  {
+    id: "fb3",
+    patientId: "p3",
+    patientName: "Sana Khan",
+    rating: 4.0,
+    channel: "Email",
+    date: "2025-09-09",
+    comment:
+      "Dietitian guidance for pregnancy is excellent and very calming. The treatment schedule could have clearer timelines. Staff are friendly, but the waiting room chairs are uncomfortable. Recommendation engine is helpful when I need iron-rich snacks.",
+  },
+];
+
+const ASPECT_ICONS = {
+  dietitian: FaUserMd,
+  treatment: FaFileMedical,
+  staff: FaUsers,
+  infrastructure: FaHome,
+  dietCharts: FaClipboardList,
+  recommendation: FaRocket,
+};
+
+const SENTIMENT_STYLES = {
+  positive: "bg-green-50 text-green-700 border-green-200",
+  negative: "bg-rose-50 text-rose-700 border-rose-200",
+  neutral: "bg-amber-50 text-amber-700 border-amber-200",
+  "not-mentioned": "bg-gray-50 text-gray-500 border-gray-200",
+};
+
 // Diet Plan Popup Component
 const DietPlanPopup = ({ patient, isOpen, onClose }) => {
   if (!isOpen || !patient) return null;
@@ -819,6 +879,82 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [showDietPlan, setShowDietPlan] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const analyzedFeedback = useMemo(
+    () =>
+      FEEDBACK_SAMPLES.map((entry) => ({
+        ...entry,
+        aspects: analyzeAspectSentiment(entry.comment),
+      })),
+    []
+  );
+  const aspectSummary = useMemo(() => {
+    const base = ASPECT_CATEGORIES.reduce((acc, aspect) => {
+      acc[aspect.id] = {
+        id: aspect.id,
+        label: aspect.label,
+        score: 0,
+        mentions: 0,
+        sentimentCounts: { positive: 0, negative: 0, neutral: 0 },
+      };
+      return acc;
+    }, {});
+
+    analyzedFeedback.forEach((feedback) => {
+      feedback.aspects.forEach((aspect) => {
+        if (aspect.sentiment === "not-mentioned") return;
+        const bucket = base[aspect.id];
+        bucket.score += aspect.score;
+        bucket.mentions += aspect.mentions;
+        if (bucket.sentimentCounts[aspect.sentiment] !== undefined) {
+          bucket.sentimentCounts[aspect.sentiment] += 1;
+        }
+      });
+    });
+
+    return Object.values(base);
+  }, [analyzedFeedback]);
+
+  const averageRating = useMemo(() => {
+    if (!analyzedFeedback.length) return "0.0";
+    const total = analyzedFeedback.reduce((sum, fb) => sum + fb.rating, 0);
+    return (total / analyzedFeedback.length).toFixed(1);
+  }, [analyzedFeedback]);
+
+  const totalAspectMentions = useMemo(() => {
+    if (!analyzedFeedback.length) return 0;
+    return analyzedFeedback.reduce(
+      (sum, fb) =>
+        sum + fb.aspects.reduce((acc, aspect) => acc + aspect.mentions, 0),
+      0
+    );
+  }, [analyzedFeedback]);
+
+  const positiveShare = useMemo(() => {
+    const sentiments = analyzedFeedback.flatMap((fb) =>
+      fb.aspects
+        .filter((aspect) => aspect.sentiment !== "not-mentioned")
+        .map((aspect) => aspect.sentiment)
+    );
+    if (!sentiments.length) return 0;
+    const positives = sentiments.filter((sent) => sent === "positive").length;
+    return Math.round((positives / sentiments.length) * 100);
+  }, [analyzedFeedback]);
+
+  const sentimentLabel = (sentiment) => {
+    switch (sentiment) {
+      case "positive":
+        return "Positive";
+      case "negative":
+        return "Negative";
+      case "neutral":
+        return "Neutral";
+      default:
+        return "Not Mentioned";
+    }
+  };
+
+  const badgeClasses = (sentiment) =>
+    SENTIMENT_STYLES[sentiment] || SENTIMENT_STYLES["not-mentioned"];
 
   // Calendar state
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -1927,6 +2063,230 @@ export default function Dashboard() {
           </div>
         </motion.div>
       ),
+      feedbacks: (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-5"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
+              className="bg-gradient-to-br from-white via-green-50/60 to-teal-50/40 p-4 rounded-xl border border-green-100 shadow"
+            >
+              <div className="text-sm text-green-700 font-semibold mb-1">
+                Avg. Patient Rating
+              </div>
+              <div className="text-3xl font-bold text-green-900">
+                {averageRating}
+                <span className="text-base font-medium text-green-600 ml-1">
+                  / 5
+                </span>
+              </div>
+              <p className="text-xs text-green-800 mt-1">
+                Based on last {analyzedFeedback.length} qualitative reviews
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.1 }}
+              className="bg-gradient-to-br from-white via-cyan-50/60 to-blue-50/40 p-4 rounded-xl border border-cyan-100 shadow"
+            >
+              <div className="text-sm text-cyan-700 font-semibold mb-1">
+                Aspect Mentions
+              </div>
+              <div className="text-3xl font-bold text-cyan-900">
+                {totalAspectMentions}
+              </div>
+              <p className="text-xs text-cyan-800 mt-1">
+                Dietitian, treatment, infrastructure & more
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.15 }}
+              className="bg-gradient-to-br from-white via-amber-50/60 to-orange-50/40 p-4 rounded-xl border border-amber-100 shadow"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm text-amber-700 font-semibold mb-1">
+                    Positive Aspect Share
+                  </div>
+                  <div className="text-3xl font-bold text-amber-900">
+                    {positiveShare}%
+                  </div>
+                </div>
+                <FaSmile className="text-amber-500 text-3xl" />
+              </div>
+              <p className="text-xs text-amber-800 mt-1">
+                Net sentiment across highlighted categories
+              </p>
+            </motion.div>
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.2 }}
+              className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-teal-100 shadow space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-teal-900">
+                  Aspect Sentiment Matrix
+                </h3>
+                <span className="text-sm text-gray-500">
+                  {ASPECT_CATEGORIES.length} tracked areas
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {aspectSummary.map((aspect) => {
+                  const Icon =
+                    ASPECT_ICONS[aspect.id] || (() => <FaChartLine />);
+                  const dominant =
+                    aspect.sentimentCounts.positive >=
+                    Math.max(
+                      aspect.sentimentCounts.negative,
+                      aspect.sentimentCounts.neutral
+                    )
+                      ? "positive"
+                      : aspect.sentimentCounts.negative >
+                        aspect.sentimentCounts.neutral
+                      ? "negative"
+                      : aspect.sentimentCounts.neutral > 0
+                      ? "neutral"
+                      : "not-mentioned";
+                  const totalMentions =
+                    aspect.sentimentCounts.positive +
+                    aspect.sentimentCounts.negative +
+                    aspect.sentimentCounts.neutral;
+                  const positiveRate =
+                    totalMentions === 0
+                      ? 0
+                      : Math.round(
+                          (aspect.sentimentCounts.positive / totalMentions) *
+                            100
+                        );
+
+                  return (
+                    <div
+                      key={aspect.id}
+                      className="p-4 rounded-lg border border-teal-100 bg-teal-50/40"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow">
+                            <Icon className="text-teal-700" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-teal-900">
+                              {aspect.label}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {aspect.mentions} mentions
+                            </p>
+                          </div>
+                        </div>
+                        <span
+                          className={`text-xs font-semibold px-2 py-1 rounded-full border ${badgeClasses(
+                            dominant
+                          )}`}
+                        >
+                          {sentimentLabel(dominant)}
+                        </span>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs font-medium text-gray-600">
+                          <span>Positive</span>
+                          <span>{positiveRate}%</span>
+                        </div>
+                        <div className="w-full bg-white rounded-full h-2">
+                          <div
+                            className="bg-gradient-to-r from-teal-500 to-cyan-500 h-2 rounded-full"
+                            style={{ width: `${positiveRate}%` }}
+                          />
+                        </div>
+                        <div className="flex justify-between text-[11px] text-gray-500">
+                          <span>{aspect.sentimentCounts.positive} pos</span>
+                          <span>{aspect.sentimentCounts.neutral} neutral</span>
+                          <span>{aspect.sentimentCounts.negative} neg</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.25 }}
+              className="bg-white/95 backdrop-blur-sm p-4 rounded-xl border border-teal-100 shadow space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-teal-900">
+                  Latest Patient Feedback
+                </h3>
+                <span className="text-xs text-gray-500">
+                  Aspect-based sentiment preview
+                </span>
+              </div>
+              <div className="space-y-3">
+                {analyzedFeedback.map((feedback) => (
+                  <motion.div
+                    key={feedback.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 rounded-lg border border-gray-100 bg-gray-50/70"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <p className="font-semibold text-gray-800">
+                          {feedback.patientName}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {feedback.channel} • {feedback.date}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-bold text-teal-700">
+                          {feedback.rating.toFixed(1)}
+                        </p>
+                        <p className="text-xs text-gray-500">rating</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-700 mb-3">
+                      {feedback.comment}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {feedback.aspects
+                        .filter(
+                          (aspect) => aspect.sentiment !== "not-mentioned"
+                        )
+                        .slice(0, 4)
+                        .map((aspect) => (
+                          <span
+                            key={`${feedback.id}-${aspect.id}`}
+                            className={`text-xs font-medium px-2 py-1 rounded-full border ${badgeClasses(
+                              aspect.sentiment
+                            )}`}
+                          >
+                            {aspect.label} • {sentimentLabel(aspect.sentiment)}
+                          </span>
+                        ))}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      ),
     };
   };
 
@@ -2045,6 +2405,7 @@ export default function Dashboard() {
                     {tab.id === "patients" && "Patient management"}
                     {tab.id === "calendar" && "Appointments & plans"}
                     {tab.id === "analytics" && "Performance metrics"}
+                    {tab.id === "feedbacks" && "Patients Feedback "}
                   </div>
                 </div>
                 {activeTab === tab.id && (
@@ -2056,25 +2417,6 @@ export default function Dashboard() {
                 )}
               </motion.button>
             ))}
-          </div>
-
-          {/* Quick Stats */}
-          <div className="mt-8 p-4 bg-white/60 rounded-lg">
-            <div className="text-xs font-medium text-gray-600 mb-3">
-              Quick Stats
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-white/60 p-3 rounded-lg text-center">
-                <div className="text-lg font-bold text-teal-600">
-                  {patients.length}
-                </div>
-                <div className="text-xs text-gray-600">Patients</div>
-              </div>
-              <div className="bg-white/60 p-3 rounded-lg text-center">
-                <div className="text-lg font-bold text-cyan-600">4</div>
-                <div className="text-xs text-gray-600">Plans</div>
-              </div>
-            </div>
           </div>
         </motion.div>
       </div>
