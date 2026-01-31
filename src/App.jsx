@@ -23,7 +23,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AppLayout />}>
-          <Route index element={<Onboarding />} />
+          <Route index element={<HomeD />} />
           <Route path="login" element={<Login />} />
           <Route path="onboarding" element={<Onboarding />} />
           <Route path="dhome" element={<HomeD />} />
